@@ -7,14 +7,15 @@ The story runs **REPLICA first**: the page has to be *representable* before it
 can be *queryable*. REPLICA produces FID-HTML — layout, geometry and style at
 scale, without hand labels — which is what the grounding models are then built
 on; and those models in turn sharpen REPLICA's own segmentation, ordering and
-grounding. The closing slide draws that loop.
+grounding. Slide 75, just before the thank-you, draws that loop.
 
 | Slides | Part | |
 |---|---|---|
 | 1 | Title | |
 | 2–18 | **REPLICA** | ICDAR 2026 Oral |
 | 19–75 | **Grounding** — M3Grounder → DoCoG → DocLayout-VL | CVPR 2026 · ECCV 2026 Oral · ECCV 2026 |
-| 76 | The loop closes — REPLICA feeds the grounding models, they feed it back | |
+| 75 | The loop closes — REPLICA feeds the grounding models, they feed it back | |
+| 76 | Thank you | |
 
 A team slide closes each of the four papers. Photos go in `team/` — see
 [`team/README.md`](team/README.md) for the filenames; anyone without a photo

@@ -124,6 +124,8 @@ def team_slide(key: str) -> str:
 
 # Team slides for Sai's three papers go at the end of each paper's run, i.e.
 # immediately before whatever starts the next section.
+THANKS_ANCHOR = '<!-- ====== 47 · THANKS ====== -->'
+
 INSERTS = [
     ('m3 team',    '<!-- ====== 20 · DOCOG DIVIDER ====== -->', 'm3'),
     ('docog team', '<!-- ====== 33 · DLVL DIVIDER ====== -->',  'docog'),
@@ -215,6 +217,14 @@ def main() -> None:
     # …and one after REPLICA
     rep_slides = rep_slides.rstrip('\n') + '\n\n' + team_slide('replica')
 
+    # The loop slide is the last thing said before "thank you", so it goes
+    # immediately ahead of Sai's closing slide rather than after it.
+    if up_slides.count(THANKS_ANCHOR) != 1:
+        die(f'closing slide: anchor {THANKS_ANCHOR!r} appears '
+            f'{up_slides.count(THANKS_ANCHOR)}× upstream (expected 1)')
+    up_slides = up_slides.replace(
+        THANKS_ANCHOR, rep_closing.rstrip('\n') + '\n\n' + THANKS_ANCHOR)
+
     clash = global_classes(up_css) & global_classes(rep_css)
     if clash:
         die('these class names are now defined by BOTH stylesheets and would '
@@ -225,8 +235,7 @@ def main() -> None:
            + rep_css.rstrip('\n') + '\n</style>\n</head>\n<body>\n'
            + '<div class="deck" id="deck">\n\n'
            + rep_slides.rstrip('\n') + '\n\n'
-           + up_slides.lstrip('\n').rstrip('\n') + '\n\n'
-           + rep_closing.rstrip('\n') + '\n'
+           + up_slides.lstrip('\n').rstrip('\n') + '\n'
            + '\n</div>\n\n<div id="bar"></div><div id="count"></div>\n\n'
            + '<script>' + up_engine.rstrip('\n') + '\n</script>\n'
            + '<script>\n' + rep_js.rstrip('\n') + '\n</script>\n'
@@ -245,9 +254,9 @@ def main() -> None:
     # commented-out slides are still in the source text; count only live ones
     live = lambda t: len(re.findall(r'<section class="slide',
                                     re.sub(r'<!--.*?-->', '', t, flags=re.S)))
-    n_rep, n_up, n_end = live(rep_slides), live(up_slides), live(rep_closing)
-    print(f'built {OUT.name}: {n_rep} REPLICA + {n_up} grounding + {n_end} closing '
-          f'= {n_rep + n_up + n_end} slides')
+    n_rep, n_up = live(rep_slides), live(up_slides)
+    print(f'built {OUT.name}: {n_rep} REPLICA + {n_up} grounding '
+          f'(incl. team slides and the closing loop) = {n_rep + n_up} slides')
     print(f'upstream figures synced to grounding/')
 
 

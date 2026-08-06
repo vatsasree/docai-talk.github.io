@@ -189,28 +189,79 @@
     const d = $('#qualDots'); if(!d) return;
     d.innerHTML = QUAL.map((_,i)=>`<span class="qdot${i?'':' on'}"></span>`).join('');
   })();
-  // the rendered pages have their own page width; scale one to fit its box
-  function fitQual(){
-    const f = $('#qualFrame'); if(!f) return;
-    const box = f.parentElement;
-    // Every FID-HTML render has its own page dimensions — a receipt is not a
-    // magazine spread. Measure the loaded page rather than assuming one size,
-    // or the shorter documents render cropped or letterboxed.
-    let W = 433, H = 774;
-    try{
-      const d = f.contentDocument;
-      if(d && d.body){
-        const w = Math.max(d.body.scrollWidth, d.documentElement.scrollWidth);
-        const h = Math.max(d.body.scrollHeight, d.documentElement.scrollHeight);
-        if(w > 40 && h > 40){ W = w; H = h; }
-      }
-    }catch(e){ /* not readable yet — fall back to the default page size */ }
-    const sc = Math.min(box.clientWidth / W, box.clientHeight / H);
-    f.style.width = W + 'px'; f.style.height = H + 'px';
-    f.style.transform = `scale(${sc})`;
-    f.style.left = Math.round((box.clientWidth  - W * sc) / 2) + 'px';
-    f.style.top  = Math.round((box.clientHeight - H * sc) / 2) + 'px';
+  // The source scan and the FID-HTML render must occupy the *same rectangle* on
+  // screen. A size difference between them reads as a layout error in the
+  // reconstruction, which is the one thing this slide must not suggest. So:
+  // measure the rendered page, then force both sides into one rect taken from
+  // the source image's own aspect.
+  const docSizes = {};
+  function measureDoc(url){
+    // only successful measurements are cached — caching a failure would pin the
+    // wrong size for the rest of the talk
+    if(docSizes[url]) return Promise.resolve(docSizes[url]);
+    return new Promise(resolve => {
+      const probe = document.createElement('iframe');
+      // 20px, not the display size: scrollWidth/scrollHeight can never report
+      // smaller than the frame itself, so measuring inside a full-size frame
+      // just returns the frame — and then feeds that back as the next size.
+      probe.style.cssText = 'position:fixed;left:-9999px;top:0;width:20px;height:20px;border:0';
+      probe.onload = () => {
+        // These pages declare their page box on <body> (width:1654px;height:2339px).
+        // Read that rather than scroll overflow, which collapses to the frame
+        // whenever the page happens not to overflow it.
+        const read = () => {
+          const d = probe.contentDocument;
+          if(!d || !d.body) return null;
+          const w = Math.max(d.body.offsetWidth, d.body.scrollWidth, d.documentElement.scrollWidth);
+          const h = Math.max(d.body.offsetHeight, d.body.scrollHeight, d.documentElement.scrollHeight);
+          return (w > 40 && h > 40) ? [w, h] : null;
+        };
+        const finish = dim => {
+          probe.remove();
+          if(dim) docSizes[url] = dim;
+          resolve(dim);
+        };
+        // a large page may not have laid out at load; give it a few chances
+        let tries = 0;
+        (function attempt(){
+          const dim = read();
+          if(dim || ++tries > 6) finish(dim);
+          else setTimeout(attempt, 120);
+        })();
+      };
+      probe.onerror = () => { probe.remove(); resolve(docSizes[url] = null); };
+      document.body.appendChild(probe);
+      probe.src = url;
+    });
   }
+
+  function fitQual(){
+    const img = $('#qualImg'), f = $('#qualFrame');
+    if(!img || !f || !img.naturalWidth) return;
+    const box = f.parentElement;
+    const bw = box.clientWidth, bh = box.clientHeight;
+    if(!bw || !bh) return;
+
+    // one shared rectangle, sized from the source page
+    const ar = img.naturalWidth / img.naturalHeight;
+    const rw = Math.min(bw, bh * ar), rh = rw / ar;
+    Object.assign(img.style, {width:rw + 'px', height:rh + 'px', objectFit:'fill',
+                             maxWidth:'none', maxHeight:'none'});
+
+    const dim = docSizes[f.getAttribute('src')];
+    if(!dim) return;
+    const [dw, dh] = dim;
+    // scale each axis onto that rect. Page and scan agree to within a couple of
+    // pixels, so this is imperceptible — and it makes the two rectangles exactly
+    // equal rather than nearly equal.
+    Object.assign(f.style, {
+      width: dw + 'px', height: dh + 'px', transformOrigin: 'top left',
+      transform: 'scale(' + (rw / dw) + ',' + (rh / dh) + ')',
+      left: Math.round((bw - rw) / 2) + 'px',
+      top:  Math.round((bh - rh) / 2) + 'px'
+    });
+  }
+
   function renderQual(n){
     const q = QUAL[Math.max(0, Math.min(n, QUAL.length - 1))];
     const img = $('#qualImg'), fr = $('#qualFrame');
@@ -221,10 +272,13 @@
     if(!fr.getAttribute('src').endsWith(hsrc)) fr.setAttribute('src', hsrc);
     $('#qualCap').innerHTML = q.cap;
     $$('#qualDots .qdot').forEach((d,i)=>d.classList.toggle('on', i === Math.min(n, QUAL.length-1)));
-    // re-fit once the new page has actually parsed
+    if(img.decode) img.decode().then(fitQual).catch(()=>{});
+    else img.addEventListener('load', fitQual, {once:true});
+    measureDoc(hsrc).then(() => { fitQual(); setTimeout(fitQual, 120); });
     fr.addEventListener('load', fitQual, {once:true});
-    [60, 260, 700].forEach(t=>setTimeout(fitQual, t));
   }
+  // measure every pair up front, so switching documents never shows a wrong size
+  QUAL.forEach(q => measureDoc('replica/static/images/qual/' + q.img + '_corrected.html'));
 
   /* ---------- live figures: preload, fit, and keyboard control ----------
      Three separate complaints, one place:
