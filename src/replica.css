@@ -1,0 +1,156 @@
+/* ===================== REPLICA (paper 0) — added components =====================
+   Authored in the same vh/vw idiom as the rest of the deck so the REPLICA half
+   sits in the same design system as the grounding half. */
+:root{ --replica:#B7791F; --repnavy:#1E3A5F; }
+
+/* ---- mutual enablement diagram ---- */
+.enable{display:flex;align-items:center;justify-content:center;flex:1;min-height:0}
+.enable svg{max-width:100%;max-height:100%}
+
+/* ---- agents vs tools ---- */
+/* size to content, not to the slide, or the cards open a hole in the middle */
+.atgrid{display:grid;grid-template-columns:1fr 1fr;gap:2vw;flex:0 0 auto;align-items:stretch}
+.atcard{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:2.2vh 2vh;
+  display:flex;flex-direction:column;gap:1.1vh;box-shadow:0 2px 10px rgba(10,30,60,.05);border-top:5px solid var(--ac)}
+.atcard .hd{display:flex;align-items:baseline;gap:.8vw}
+.atcard .hd h3{font-size:2.9vh;color:var(--ac)}
+.atcard .hd .sub{font-size:1.7vh;color:var(--faint);letter-spacing:.1em;text-transform:uppercase;font-weight:700}
+.atcard .big{font-size:2.25vh;color:var(--ink);font-weight:600;line-height:1.35}
+.atcard p{font-size:2vh;color:#33424f}
+.atcard .ex{margin-top:.8vh;font-family:ui-monospace,Menlo,monospace;font-size:1.7vh;color:var(--ac);line-height:1.7}
+
+/* ---- fidelity ladder ---- */
+.lvsteps{display:flex;gap:.7vw;margin-bottom:1.4vh;flex:0 0 auto}
+.lvstep{border:1.5px solid var(--line);border-radius:999px;padding:.5vh 1.3vh;font-size:1.75vh;
+  color:var(--muted);background:#fff;font-weight:600;transition:.25s}
+.lvstep.done{border-color:var(--accent);color:var(--accent)}
+.lvstep.on{border-color:var(--accent);background:var(--accent);color:#fff}
+.lad{display:grid;grid-template-columns:1fr 1fr;gap:1.6vw;flex:1;min-height:0}
+.ladcol{display:flex;flex-direction:column;min-height:0}
+.lbox{background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 3px 14px rgba(10,30,60,.08);
+  flex:1;min-height:0;overflow:hidden;position:relative;display:flex;align-items:flex-start;justify-content:center}
+/* geometry only exists from level 2 — that is the whole point of the level */
+.lbox.sized{aspect-ratio:1.34/1;flex:0 0 auto;align-self:center;width:100%;max-height:100%}
+.lcap{font-size:1.7vh;color:var(--muted);margin-top:.8vh;text-align:center}
+.lwhat{font-size:1.9vh;line-height:1.4;color:#33424f;background:#fff;border:1px solid var(--line);
+  border-left:5px solid var(--accent);border-radius:0 10px 10px 0;padding:1.1vh 1.4vh;margin-top:.8vh;flex:0 0 auto;min-height:9.5vh}
+.lwhat b{color:var(--repnavy)}
+
+/* the mini invoice. L0 is a text stream; each level adds one thing back. */
+.doc{position:relative;width:100%;padding:1.4vh 1.6vh;font-size:1.32vh;line-height:1.5;color:#33424f;text-align:left}
+.doc .d-bar,.doc .d-stamp{display:none}
+.doc .d-title,.doc .d-sub,.doc .d-foot,.doc p{display:inline;font-size:inherit;font-weight:400;margin:0}
+.doc .d-tab,.doc .d-tab tbody,.doc .d-tab tr,.doc .d-tab td,.doc .d-tab th{display:inline;border:0;padding:0;font-weight:400}
+.doc .d-tab td::after,.doc .d-tab th::after{content:" "}
+/* L1 — logical structure */
+.doc.L1 .d-title{display:block;font-size:2.1vh;font-weight:700;margin-bottom:.3vh}
+.doc.L1 .d-sub{display:block;font-size:1.2vh;color:var(--faint);margin-bottom:.8vh}
+.doc.L1 p{display:block;margin-bottom:.7vh}
+.doc.L1 .d-tab{display:table;width:100%;border-collapse:collapse;margin:.7vh 0}
+.doc.L1 .d-tab tbody{display:table-row-group}
+.doc.L1 .d-tab tr{display:table-row}
+.doc.L1 .d-tab td,.doc.L1 .d-tab th{display:table-cell;padding:.28vh .5vh;border-bottom:1px solid #e6ebf0}
+.doc.L1 .d-tab th{font-weight:700}
+.doc.L1 .d-tab td::after,.doc.L1 .d-tab th::after{content:""}
+.doc.L1 .d-foot{display:block;margin-top:.7vh;font-size:1.15vh;color:var(--faint)}
+/* L2 — physical position */
+.doc.L2 .d-body{column-count:2;column-gap:1.6vh}
+.doc.L2 .d-tab{column-span:all}
+.doc.L2 .d-tab .num{text-align:right}
+.doc.L2 .d-tab th.num{text-align:right}
+/* L3 — visual fidelity */
+.doc.L3{padding-top:2.4vh}
+.doc.L3 .d-bar{display:block;position:absolute;left:0;right:0;top:0;height:.9vh;
+  background:linear-gradient(90deg,var(--repnavy),var(--replica))}
+.doc.L3 .d-stamp{display:block;position:absolute;right:1.4vh;top:3.2vh;color:#c0392b;border:.28vh solid #c0392b;
+  border-radius:.4vh;padding:.15vh .7vh;font-size:1.35vh;font-weight:800;letter-spacing:.08em;transform:rotate(-11deg)}
+.doc.L3 .d-title{font-family:Georgia,serif;color:var(--repnavy);letter-spacing:.02em}
+.doc.L3 .d-tab th{background:#eef2f7;color:var(--repnavy)}
+.doc.L3 .d-void td{text-decoration:line-through;color:#9aa6b2}
+.doc.L3 .d-body b{font-size:1.5vh;color:var(--repnavy)}
+
+/* ---- pipeline stages ---- */
+.stagerow{display:flex;gap:.8vw;flex:1;min-height:0}
+.stagecard{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;
+  display:flex;flex-direction:column;flex:0 0 5.6vw;transition:flex .45s ease,opacity .3s;opacity:.5}
+.stagecard.seen{opacity:1}
+.stagecard.open{flex:1 1 auto}
+.stagecard .sc-h{display:flex;align-items:center;gap:.6vw;padding:1.1vh 1.1vh;background:var(--sc);color:#fff;flex:0 0 auto}
+.stagecard .sc-n{font-size:2.4vh;font-weight:800;opacity:.65}
+.stagecard .sc-t{font-size:2.15vh;font-weight:700;white-space:nowrap}
+.stagecard.open .sc-q{font-size:1.6vh;color:#ffffffcc;margin-left:auto;font-style:italic;white-space:nowrap}
+.stagecard:not(.open) .sc-q{display:none}
+.stagecard:not(.open) .sc-h{flex-direction:column;height:100%;justify-content:flex-start;padding-top:1.6vh}
+.stagecard:not(.open) .sc-t{writing-mode:vertical-rl;margin-top:1vh;font-size:1.9vh}
+.stagecard .sc-b{display:flex;flex-direction:column;min-height:0;flex:1;padding:1.1vh}
+.stagecard:not(.open) .sc-b{display:none}
+.stagecard .sc-fig{flex:1;min-height:0;display:flex;align-items:center;justify-content:center}
+.stagecard .sc-fig img{max-width:100%;max-height:100%;object-fit:contain}
+.stagecard ul{list-style:none;margin-top:.9vh;display:flex;flex-direction:column;gap:.55vh;flex:0 0 auto}
+.stagecard li{font-size:1.72vh;line-height:1.35;color:#33424f;padding-left:1.5vh;position:relative}
+.stagecard li::before{content:"";position:absolute;left:0;top:.72vh;width:.7vh;height:.7vh;border-radius:50%;background:var(--sc)}
+.stagecard li.out::before{background:var(--replica)}
+.stagecard li b{color:var(--sc)}
+.stagecard li.out b{color:var(--replica)}
+
+/* ---- metrics table ---- */
+.mtab{width:100%;border-collapse:collapse;margin-top:1.2vh}
+.mtab th{font-size:1.5vh;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;
+  padding:.8vh 1vh;border-bottom:2px solid var(--line);text-align:left}
+.mtab td{font-size:2.05vh;color:#33424f;padding:1.15vh 1vh;border-bottom:1px solid var(--line);vertical-align:middle}
+.mtab td.ax{font-weight:700;color:var(--ac);white-space:nowrap}
+.mtab td.q{font-style:italic;color:var(--ink)}
+.mtab td.mm{font-family:ui-monospace,Menlo,monospace;font-size:1.85vh;white-space:nowrap}
+.mtab tr.total td{background:#f2f6fa;font-weight:700;border-bottom:none}
+.newchip{display:inline-block;font-size:1.35vh;font-weight:800;letter-spacing:.06em;color:#fff;
+  background:var(--replica);border-radius:999px;padding:.12vh .7vh;margin-left:.5vh;vertical-align:.2vh}
+.oldchip{display:inline-block;font-size:1.35vh;font-weight:700;letter-spacing:.06em;color:var(--faint);
+  border:1px solid var(--line);border-radius:999px;padding:.12vh .7vh;margin-left:.5vh;vertical-align:.2vh}
+
+/* ---- results table (interactive) ---- */
+/* shrink to the rows actually shown, and scroll once a category is expanded */
+.rwrap{flex:0 1 auto;min-height:0;overflow:auto;border:1px solid var(--line);border-radius:12px;background:#fff}
+.rtab{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.rtab th,.rtab td{padding:.5vh .5vw;font-size:1.62vh;text-align:center;border-bottom:1px solid var(--line);
+  transition:opacity .3s,background .3s}
+.rtab thead th{position:sticky;top:0;background:#fff;z-index:2}
+.rtab th.gh{font-size:1.34vh;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;
+  border-bottom:2px solid var(--line)}
+.rtab th.gh.b{border-left:1px solid var(--line)}
+.rtab tr.hd2 th{font-size:1.45vh;color:var(--faint);font-weight:700;border-bottom:2px solid var(--line)}
+.rtab td.m,.rtab th.m{text-align:left;font-weight:600;color:#33424f;white-space:nowrap}
+.rtab tr.cat td{background:#eef2f6;text-align:left;font-size:1.45vh;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);font-weight:800;cursor:pointer;user-select:none}
+.rtab tr.cat td:hover{background:#e3eaf1}
+.rtab tr.cat .car{display:inline-block;width:1.4vh;color:var(--replica)}
+.rtab tr.cat .cn{font-size:1.35vh;color:var(--faint);letter-spacing:0;text-transform:none;margin-left:.6vh}
+.rtab tr.xtra{display:none}
+.rtab tr.xtra.open{display:table-row}
+.rtab tr.ours td{background:#fdf6e8;font-weight:800;color:var(--replica);border-bottom:none}
+.rtab tr.ours td.m{color:var(--replica)}
+/* axis focus: everything not in the live axis group recedes */
+.rtab.focus td.q,.rtab.focus th.q{opacity:.22}
+.rtab td.lit,.rtab th.lit{background:#fff8ea}
+.rtab th.gh.lit{color:var(--replica);background:#fff3d9}
+.rtab td.mark{outline:.25vh solid var(--bad);outline-offset:-.25vh;border-radius:.5vh;color:var(--bad);font-weight:800}
+.rtab td.good{outline:.25vh solid var(--replica);outline-offset:-.25vh;border-radius:.5vh}
+.rnote{flex:0 0 auto;margin-top:1vh;display:flex;flex-direction:column;gap:.6vh}
+.rline{display:flex;gap:.8vw;align-items:baseline;background:#fff;border:1px solid var(--line);
+  border-left:5px solid var(--accent);border-radius:0 10px 10px 0;padding:.85vh 1.2vh}
+.rline.bad{border-left-color:var(--bad)}
+.rline.win{border-left-color:var(--replica)}
+.rline .t{font-size:1.95vh;font-weight:700;color:var(--ink);white-space:nowrap}
+.rline .d{font-size:1.85vh;color:var(--muted);line-height:1.35}
+.rline .d b{color:var(--bad)}
+.rline.win .d b{color:var(--replica)}
+
+/* ---- qualitative pair ---- */
+.qual{display:grid;grid-template-columns:1fr 1fr;gap:1.4vw;flex:1;min-height:0}
+.qbox{background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden;
+  flex:1;min-height:0;display:flex;align-items:center;justify-content:center;position:relative}
+.qbox img{max-width:100%;max-height:100%;object-fit:contain}
+.qbox iframe{border:0;position:absolute;top:0;left:0;transform-origin:top left;background:#fff}
+.qdots{display:flex;gap:.5vw;margin-left:auto}
+.qdot{width:1.1vh;height:1.1vh;border-radius:50%;background:var(--line)}
+.qdot.on{background:var(--replica)}
+.steps{display:none}

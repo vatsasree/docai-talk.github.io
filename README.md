@@ -60,10 +60,47 @@ source-vs-render pairs, and the downstream applications. The fidelity ladder
 (slide 5) and the four-stage pipeline (slide 12) are native to this deck and
 build up with the arrow keys.
 
-## The grounding half
+## The grounding half — and keeping it in sync
 
-Sai Madhusudan's 54 slides, unchanged. Two additions only: `replica-agents.github.io`
-and REPLICA's venue on the closing slide.
+Sai's 54 slides are **not edited in this repo**. `index.html` is generated: his
+deck is pulled from his repo on every build and used verbatim, apart from a few
+declared rewrites (asset paths, and adding REPLICA's link and venue to the
+closing slide).
+
+When he changes his deck:
+
+```bash
+./sync.sh
+```
+
+That pulls his latest commit, re-copies his figures into `grounding/`, and
+recomposes `index.html`. Then `git diff --stat`, click through, commit.
+
+**Never hand-edit `index.html`** — the next build overwrites it. The REPLICA
+half lives in `src/`:
+
+```
+src/replica.css          styles for the REPLICA components
+src/replica.slides.html  the 21 REPLICA slides
+src/replica.js           the ladder, stage accordion, results table, qual pairs
+build.py                 composes the two halves
+sync.sh                  pull upstream, then build
+```
+
+### The build fails loudly rather than quietly
+
+Every rewrite and every assumption about Sai's deck is asserted, so a change on
+his side that would silently break the merge stops the build with the reason:
+
+- a rewrite no longer matches — e.g. he edits the closing slide, which would
+  otherwise drop REPLICA's link without a trace
+- his engine stops using `.slide` / `.frag` / `.show` / `#deck`, which the
+  REPLICA interactive slides read to step themselves
+- he defines a bare class this deck already defines (`.doc`, `.rtab`, …), which
+  would restyle REPLICA slides from across the deck
+
+Adding, removing or editing his slides needs no action — they flow straight
+through and the slide count updates itself.
 
 ## Layout
 

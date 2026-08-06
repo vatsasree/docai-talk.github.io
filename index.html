@@ -281,7 +281,6 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
 .qdot{width:1.1vh;height:1.1vh;border-radius:50%;background:var(--line)}
 .qdot.on{background:var(--replica)}
 .steps{display:none}
-
 </style>
 </head>
 <body>
@@ -770,7 +769,6 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   <div class="callout" style="margin-top:2vh;margin-bottom:auto">The page is now a <b>representable, measurable object</b>. Everything that follows asks what you can do once it is.</div>
   <div class="footer"><span class="act">REPLICA</span><span>Summary</span></div>
 </section>
-
 
 <!-- ====== 1 · TITLE ====== -->
 <section class="slide hero" style="--accent:var(--blue)">
@@ -2159,8 +2157,8 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
     slides.forEach((s,j)=>s.classList.toggle('on',j===n));
     frags(slides[n]).forEach(el=>el.classList.toggle('show',ALL||!!revealAll));
     loadIframe(slides[n]);
-    // replaceState, not location.hash: inside the master deck's frame every
-    // hash assignment would otherwise pile up in the browser's back history.
+    // replaceState, not location.hash: one entry per slide would otherwise
+    // fill the browser's back history for the whole talk.
     i=n; history.replaceState(null,'','#'+(n+1));
     bar.style.width=((n+1)/slides.length*100)+'%';
     count.textContent=(n+1)+' / '+slides.length;
@@ -2178,8 +2176,8 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   window.deckNext=next; window.deckPrev=prev;
   document.querySelectorAll('.iframe-slide').forEach(s=>{
     const nb=document.createElement('div'); nb.className='navbtns';
-    const b1=document.createElement('button'); b1.textContent='‹'; b1.dataset.dir='prev'; b1.onclick=e=>{e.stopPropagation();prev()};
-    const b2=document.createElement('button'); b2.textContent='›'; b2.dataset.dir='next'; b2.onclick=e=>{e.stopPropagation();next()};
+    const b1=document.createElement('button'); b1.textContent='‹'; b1.onclick=e=>{e.stopPropagation();prev()};
+    const b2=document.createElement('button'); b2.textContent='›'; b2.onclick=e=>{e.stopPropagation();next()};
     nb.append(b1,b2); s.appendChild(nb);
   });
   addEventListener('keydown',e=>{
