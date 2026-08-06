@@ -4,3 +4,7 @@ node_modules/
 .claude/
 .upstream/
 __pycache__/
+
+# the 24667x36194 source scan of the benchmark grid — no browser can decode it;
+# the deck uses Benchset-Samples-web.jpg. Original kept outside the repo.
+replica/static/images/Benchset-Samples.jpeg
