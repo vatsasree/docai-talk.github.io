@@ -54,6 +54,82 @@ PATCHES = [
      '<p class="sub" style="font-size:1.85vh;margin-top:2.6vh">REPLICA (ICDAR 2026, Oral) · M3Grounder (CVPR 2026)', 1),
 ]
 
+# ------------------------------------------------------------------ team ---
+# One team slide after each paper. Photos are optional: drop <slug>.jpg (or
+# .png) into team/ and it appears; until then the slide shows initials, so a
+# missing photo never looks like a broken slide.
+#   ('Display Name', 'photo file in team/', 'marker')
+# marker: '*' / '†' / '' — matches the equal-contribution marks on the divider
+TEAM = {
+    'replica': ('REPLICA', 'var(--replica)', [
+        ('Raghuveer R', 'Raghuveer.jpg', '*'),
+        ('Anirudh Srinivasan', 'Anirudh.jpg', '*'),
+        ('Venkata Kesav Venna', 'Kesav.jpg', '*'),
+        ('Sreevatsa S', 'Sreevatsa.jpg', ''),
+        ('Aryan Jain', 'Aryan.jpg', ''),
+        ('Sahithi Kukkala', 'Sahithi.jpg', ''),
+        ('Ravi Kiran Sarvadevabhatla', 'RaviKiran.jpg', ''),
+    ]),
+    'm3': ('M3Grounder', 'var(--m3)', [
+        ('Venkata Kesav Venna', 'Kesav.jpg', '*'),
+        ('Sai Madhusudan Gunda', 'SaiMadhu.jpg', '*'),
+        ('Jyothi Swaroopa Jinka', 'Swaroopa.jpg', '†'),
+        ('Hrithik Sagar Rachakonda', 'Hrithik.png', '†'),
+        ('Anirudh Srinivasan', 'Anirudh.jpg', ''),
+        ('Ravi Kiran Sarvadevabhatla', 'RaviKiran.jpg', ''),
+    ]),
+    'docog': ('DoCoG', 'var(--docog)', [
+        ('Sai Madhusudan Gunda', 'SaiMadhu.jpg', '*'),
+        ('Jyothi Swaroopa Jinka', 'Swaroopa.jpg', '*'),
+        ('Hrithik Sagar Rachakonda', 'Hrithik.png', '*'),
+        ('Aryan Jain', 'Aryan.jpg', '†'),
+        ('Venkata Kesav Venna', 'Kesav.jpg', '†'),
+        ('Anirudh Srinivasan', 'Anirudh.jpg', ''),
+        ('Ravi Kiran Sarvadevabhatla', 'RaviKiran.jpg', ''),
+    ]),
+    'dlvl': ('DocLayout-VL', 'var(--dlvl)', [
+        ('Venkata Kesav Venna', 'Kesav.jpg', '*'),
+        ('Srihari Bandarupalli', 'Srihari.jpg', '*'),
+        ('Anirudh Srinivasan', 'Anirudh.jpg', '*'),
+        ('Raghuveer R', 'Raghuveer.jpg', ''),
+        ('Sai Madhusudan Gunda', 'SaiMadhu.jpg', ''),
+        ('Ravi Kiran Sarvadevabhatla', 'RaviKiran.jpg', ''),
+    ]),
+}
+
+
+def team_slide(key: str) -> str:
+    paper, accent, members = TEAM[key]
+    people = []
+    for name, slug, mark in members:
+        initials = ''.join(w[0] for w in name.split()[:2]).upper()
+        # onerror hands over to the initials circle underneath
+        people.append(
+            f'<figure class="person">'
+            f'<span class="ph"><span class="ini">{initials}</span>'
+            f'<img src="team/{slug}" alt="{name}" loading="lazy"'
+            f' onerror="this.remove()"></span>'
+            f'<figcaption>{name}<sup>{mark}</sup></figcaption></figure>')
+    marks = [m for _, _, m in members if m]
+    note = ('<span class="tiny">' + ' · '.join(
+        f'{m} equal contribution' for m in sorted(set(marks))) + '</span>') if marks else ''
+    return (f'<!-- ====== TEAM · {paper} ====== -->\n'
+            f'<section class="slide" style="--accent:{accent}">\n'
+            f'  <div class="kicker">{paper} · the team</div>\n'
+            f'  <h2>Built by</h2>\n'
+            f'  <div class="team">{"".join(people)}</div>\n'
+            f'  <div class="teamfoot">BharatGen · IIIT Hyderabad &nbsp; {note}</div>\n'
+            f'</section>\n')
+
+
+# Team slides for Sai's three papers go at the end of each paper's run, i.e.
+# immediately before whatever starts the next section.
+INSERTS = [
+    ('m3 team',    '<!-- ====== 20 · DOCOG DIVIDER ====== -->', 'm3'),
+    ('docog team', '<!-- ====== 33 · DLVL DIVIDER ====== -->',  'docog'),
+    ('dlvl team',  '<!-- ====== 45 · SYNTHESIS ====== -->',     'dlvl'),
+]
+
 # What src/replica.js and src/replica.css rely on in Sai's engine and CSS.
 # If any of these disappear the REPLICA interactive slides stop stepping.
 CONTRACT = [
@@ -124,9 +200,20 @@ def main() -> None:
     up_slides  = slice_between(up, '<div class="deck" id="deck">', '\n</div>\n', 'the upstream slides')
     up_engine  = slice_between(up, '<script>', '</script>', 'the upstream engine')
 
-    rep_css    = (SRC / 'replica.css').read_text(encoding='utf-8')
-    rep_slides = (SRC / 'replica.slides.html').read_text(encoding='utf-8')
-    rep_js     = (SRC / 'replica.js').read_text(encoding='utf-8')
+    rep_css     = (SRC / 'replica.css').read_text(encoding='utf-8')
+    rep_slides  = (SRC / 'replica.slides.html').read_text(encoding='utf-8')
+    rep_closing = (SRC / 'replica.closing.html').read_text(encoding='utf-8')
+    rep_js      = (SRC / 'replica.js').read_text(encoding='utf-8')
+
+    # a team slide at the end of each of Sai's three papers
+    for desc, anchor, key in INSERTS:
+        if up_slides.count(anchor) != 1:
+            die(f'{desc}: anchor {anchor!r} appears '
+                f'{up_slides.count(anchor)}× upstream (expected 1)')
+        up_slides = up_slides.replace(anchor, team_slide(key) + '\n' + anchor)
+
+    # …and one after REPLICA
+    rep_slides = rep_slides.rstrip('\n') + '\n\n' + team_slide('replica')
 
     clash = global_classes(up_css) & global_classes(rep_css)
     if clash:
@@ -138,7 +225,8 @@ def main() -> None:
            + rep_css.rstrip('\n') + '\n</style>\n</head>\n<body>\n'
            + '<div class="deck" id="deck">\n\n'
            + rep_slides.rstrip('\n') + '\n\n'
-           + up_slides.lstrip('\n').rstrip('\n') + '\n'
+           + up_slides.lstrip('\n').rstrip('\n') + '\n\n'
+           + rep_closing.rstrip('\n') + '\n'
            + '\n</div>\n\n<div id="bar"></div><div id="count"></div>\n\n'
            + '<script>' + up_engine.rstrip('\n') + '\n</script>\n'
            + '<script>\n' + rep_js.rstrip('\n') + '\n</script>\n'
@@ -154,9 +242,12 @@ def main() -> None:
         shutil.rmtree(dst, ignore_errors=True)
         shutil.copytree(src, dst, ignore=shutil.ignore_patterns('.DS_Store'))
 
-    n_rep = rep_slides.count('<section class="slide')
-    n_up  = up_slides.count('<section class="slide')
-    print(f'built {OUT.name}: {n_rep} REPLICA + {n_up} grounding = {n_rep + n_up} slides')
+    # commented-out slides are still in the source text; count only live ones
+    live = lambda t: len(re.findall(r'<section class="slide',
+                                    re.sub(r'<!--.*?-->', '', t, flags=re.S)))
+    n_rep, n_up, n_end = live(rep_slides), live(up_slides), live(rep_closing)
+    print(f'built {OUT.name}: {n_rep} REPLICA + {n_up} grounding + {n_end} closing '
+          f'= {n_rep + n_up + n_end} slides')
     print(f'upstream figures synced to grounding/')
 
 

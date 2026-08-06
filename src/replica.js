@@ -24,6 +24,9 @@
     const doc = $('#ladderDoc'); if(!doc) return;
     const lv = Math.max(0, Math.min(n, 3));
     $('#ladderBox').classList.toggle('sized', lv >= 2);   // geometry starts at L2
+    // from L2 the reconstruction takes the source page's exact width and
+    // aspect — outline both so the audience sees the dimensions agree
+    document.querySelector('#ladderSlide .lad').classList.toggle('matched', lv >= 2);
     doc.classList.toggle('L1', lv >= 1);                  // cumulative
     doc.classList.toggle('L2', lv >= 2);
     doc.classList.toggle('L3', lv >= 3);
@@ -153,6 +156,26 @@
         if(+c.dataset.c > 0) c.classList.add('good');
       });
     }
+    // Final beat: a flat table gives the audience nothing to scan while the
+    // speaker talks. Grade every cell instead, so the collapse on position
+    // reads as a block of red and REPLICA's row stays the one gold line.
+    const graded = step.ax === 'OS';
+    t.classList.toggle('graded', graded);
+    const legend = document.getElementById('resLegend');
+    if(legend) legend.classList.toggle('on', graded);
+    if(!graded) return;
+    t.querySelectorAll('td,th').forEach(c=>c.classList.remove('lit','q'));
+    t.querySelectorAll('tbody tr.row').forEach(tr=>{
+      tr.querySelectorAll('td[data-c]').forEach(c=>{
+        const ci = +c.dataset.c;
+        if(ci === 0) return;
+        const v = parseFloat(c.textContent);
+        if(isNaN(v)) return;
+        // NTED is the one column where lower is better
+        const good = (ci === 3) ? 1 - v : v;
+        c.classList.add('g' + (good < 0.30 ? 0 : good < 0.55 ? 1 : good < 0.75 ? 2 : 3));
+      });
+    });
   }
 
   /* ---------- qualitative pairs ---------- */
@@ -169,7 +192,19 @@
   // the rendered pages have their own page width; scale one to fit its box
   function fitQual(){
     const f = $('#qualFrame'); if(!f) return;
-    const box = f.parentElement, W = 433, H = 774;
+    const box = f.parentElement;
+    // Every FID-HTML render has its own page dimensions — a receipt is not a
+    // magazine spread. Measure the loaded page rather than assuming one size,
+    // or the shorter documents render cropped or letterboxed.
+    let W = 433, H = 774;
+    try{
+      const d = f.contentDocument;
+      if(d && d.body){
+        const w = Math.max(d.body.scrollWidth, d.documentElement.scrollWidth);
+        const h = Math.max(d.body.scrollHeight, d.documentElement.scrollHeight);
+        if(w > 40 && h > 40){ W = w; H = h; }
+      }
+    }catch(e){ /* not readable yet — fall back to the default page size */ }
     const sc = Math.min(box.clientWidth / W, box.clientHeight / H);
     f.style.width = W + 'px'; f.style.height = H + 'px';
     f.style.transform = `scale(${sc})`;
@@ -186,8 +221,128 @@
     if(!fr.getAttribute('src').endsWith(hsrc)) fr.setAttribute('src', hsrc);
     $('#qualCap').innerHTML = q.cap;
     $$('#qualDots .qdot').forEach((d,i)=>d.classList.toggle('on', i === Math.min(n, QUAL.length-1)));
-    setTimeout(fitQual, 60);
+    // re-fit once the new page has actually parsed
+    fr.addEventListener('load', fitQual, {once:true});
+    [60, 260, 700].forEach(t=>setTimeout(fitQual, t));
   }
+
+  /* ---------- live figures: preload, fit, and keyboard control ----------
+     Three separate complaints, one place:
+       · transitions into a demo felt jerky — the iframe only started loading
+         when the slide appeared, so the first frame was blank
+       · the pipeline demo scrolled instead of fitting on screen
+       · the figures could not be driven from the keyboard / presenter remote */
+
+  // Load the next slide's figure while the current one is still on screen.
+  function preloadNeighbours(){
+    const all = [...document.querySelectorAll('.slide')];
+    const i = all.findIndex(s => s.classList.contains('on'));
+    [i + 1, i + 2, i - 1].forEach(j => {
+      const s = all[j]; if(!s) return;
+      const f = s.querySelector('iframe[data-src]');
+      if(f && !f.src) f.src = f.dataset.src;
+    });
+  }
+
+  // Figures declared with data-fit="W H" are scaled to fit whole, never scrolled.
+  function fitFigures(){
+    document.querySelectorAll('.slide.on iframe[data-fit]').forEach(f => {
+      const [W, H] = f.dataset.fit.split(/\s+/).map(Number);
+      const box = f.parentElement;
+      const sc = Math.min(box.clientWidth / W, box.clientHeight / H);
+      Object.assign(f.style, {
+        width: W + 'px', height: H + 'px', position: 'absolute',
+        transformOrigin: 'top left', transform: 'scale(' + sc + ')',
+        left: Math.round((box.clientWidth  - W * sc) / 2) + 'px',
+        top:  Math.round((box.clientHeight - H * sc) / 2) + 'px'
+      });
+      box.style.position = 'relative';
+      box.style.overflow = 'hidden';
+    });
+  }
+
+  const post = (f, msg) => { try{ f.contentWindow.postMessage(msg, '*'); }catch(e){} };
+
+  // data-embednav="nav"  — the figure cycles through its own states, one per
+  //                        build-up step, then the deck moves on as usual.
+  // data-embednav="demo" — the pipeline walkthrough; it has no fixed number of
+  //                        steps, so read its own progress counter to decide
+  //                        when a further press should leave the slide.
+  const navSeen = {};
+  // Readiness has to come from the load event, not from contentDocument. An
+  // iframe that has just been given a src still reports the initial about:blank
+  // as readyState "complete", so anything posted then goes into a dead document
+  // and the figure never moves. Flag every figure on its own load instead.
+  document.querySelectorAll('.ifwrap iframe').forEach(f => {
+    f.addEventListener('load', () => {
+      f.dataset.ready = '1';
+      fitFigures();
+      (f._waiting || []).forEach(fn => fn());
+      f._waiting = [];
+    });
+  });
+  function whenReady(f, fn){
+    if(f.dataset.ready) fn();
+    else (f._waiting = f._waiting || []).push(fn);
+  }
+
+  // Once you click inside a figure, focus lives in that iframe and arrow keys
+  // never reach the deck again — the figure looks frozen and so does the talk.
+  // The figures are same-origin, so hand their arrow keys back to the deck and
+  // let the normal path decide what the press means.
+  const RELAY = ['ArrowRight', 'ArrowLeft', 'PageDown', 'PageUp', ' ', 'Spacebar'];
+  function relayKeys(f){
+    whenReady(f, () => {
+      try{
+        f.contentWindow.addEventListener('keydown', e => {
+          if(!RELAY.includes(e.key) || e.metaKey || e.ctrlKey || e.altKey) return;
+          e.preventDefault();
+          e.stopPropagation();   // don't let the figure act on it twice
+          // dispatch on body, not window: window listeners fire in registration
+          // order at the target phase, so a window-targeted event would reach the
+          // deck engine before this file's capture handler could claim it.
+          document.body.dispatchEvent(
+            new KeyboardEvent('keydown', {key:e.key, bubbles:true, cancelable:true}));
+        }, true);
+      }catch(err){ /* cross-origin figure — the ‹ › buttons still work */ }
+    });
+  }
+  document.querySelectorAll('.slide[data-embednav] iframe').forEach(relayKeys);
+  function driveNav(slide, n){
+    const f = slide.querySelector('iframe'); if(!f) return;
+    const key = slide.dataset.k || (slide.dataset.k = 'n' + Math.random());
+    whenReady(f, () => {
+      const was = navSeen[key] || 0;
+      const dir = n > was ? 1 : -1;
+      for(let i = 0; i < Math.abs(n - was); i++) post(f, {type:'replica:nav', dir});
+      navSeen[key] = n;
+    });
+  }
+  function demoAt(f){
+    try{
+      const el = f.contentDocument.getElementById('pdemoStepCount');
+      const m = (el.textContent || '').match(/Stage\s*(\d+).*?(\d+)\s*\/\s*(\d+)/);
+      if(m) return {stage:+m[1], beat:+m[2], total:+m[3]};
+    }catch(e){}
+    return null;
+  }
+  addEventListener('keydown', e => {
+    if(e.metaKey || e.ctrlKey || e.altKey) return;
+    const s = document.querySelector('.slide.on');
+    if(!s || s.dataset.embednav !== 'demo') return;
+    const fwd = e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown';
+    const back = e.key === 'ArrowLeft' || e.key === 'PageUp';
+    if(!fwd && !back) return;
+    const f = s.querySelector('iframe'); if(!f) return;
+    // hold the key rather than skipping the slide while the demo is still loading
+    if(!f.dataset.ready){ e.preventDefault(); e.stopImmediatePropagation(); return; }
+    const at = demoAt(f);
+    // let the deck have the key at the very end (forward) or very start (back)
+    if(fwd && at && at.stage >= 4 && at.beat >= at.total) return;
+    if(back && at && at.stage <= 1 && at.beat <= 0) return;
+    e.preventDefault(); e.stopImmediatePropagation();
+    post(f, {type:'replica:demo', action: fwd ? 'step' : 'back'});
+  }, true);
 
   /* ---------- drive everything off the engine's fragment state ---------- */
   buildResults();
@@ -198,6 +353,9 @@
     else if(s.id === 'stagesSlide') renderStages(n);
     else if(s.id === 'resSlide') renderResults(n);
     else if(s.id === 'qualSlide') renderQual(n);
+    else if(s.dataset.embednav === 'nav') driveNav(s, n);
+    preloadNeighbours();
+    fitFigures();
   }
   // setTimeout, not requestAnimationFrame: rAF is paused whenever the page is
   // not being painted, which would leave `queued` stuck true and freeze every
@@ -208,6 +366,7 @@
     queued = true;
     setTimeout(()=>{ queued = false; sync(); }, 0);
   }).observe(document.getElementById('deck'), {subtree:true, attributes:true, attributeFilter:['class']});
-  addEventListener('resize', fitQual);
+  addEventListener('resize', ()=>{ fitQual(); fitFigures(); });
+
   sync();
 })();

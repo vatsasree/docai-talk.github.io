@@ -152,12 +152,18 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   color:var(--muted);background:#fff;font-weight:600;transition:.25s}
 .lvstep.done{border-color:var(--accent);color:var(--accent)}
 .lvstep.on{border-color:var(--accent);background:var(--accent);color:#fff}
-.lad{display:grid;grid-template-columns:1fr 1fr;gap:1.6vw;flex:1;min-height:0}
+.lad{display:grid;grid-template-columns:1fr 1fr;gap:1.6vw;flex:1;min-height:0;--pw:23vw}
 .ladcol{display:flex;flex-direction:column;min-height:0}
 .lbox{background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 3px 14px rgba(10,30,60,.08);
-  flex:1;min-height:0;overflow:hidden;position:relative;display:flex;align-items:flex-start;justify-content:center}
-/* geometry only exists from level 2 — that is the whole point of the level */
-.lbox.sized{aspect-ratio:1.34/1;flex:0 0 auto;align-self:center;width:100%;max-height:100%}
+  flex:1;min-height:0;overflow:hidden;position:relative;display:flex;align-items:flex-start;justify-content:center;
+  transition:border-color .3s,box-shadow .3s}
+/* The page only has dimensions from level 2. Before that the reconstruction
+   fills whatever space it is given — it has no shape of its own. From level 2
+   it takes the source page's exact width and aspect, which is the point of the
+   level: physical structure means absolute position on a page of known size. */
+.lbox.sized{width:var(--pw);aspect-ratio:.8;flex:0 0 auto;align-self:center;max-height:100%}
+/* once the two agree, say so */
+.lad.matched .lbox{border-color:var(--accent);box-shadow:0 0 0 .3vh color-mix(in srgb,var(--accent) 20%,transparent)}
 .lcap{font-size:1.7vh;color:var(--muted);margin-top:.8vh;text-align:center}
 .lwhat{font-size:1.9vh;line-height:1.4;color:#33424f;background:#fff;border:1px solid var(--line);
   border-left:5px solid var(--accent);border-radius:0 10px 10px 0;padding:1.1vh 1.4vh;margin-top:.8vh;flex:0 0 auto;min-height:9.5vh}
@@ -253,7 +259,9 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
 .rtab tr.cat .cn{font-size:1.35vh;color:var(--faint);letter-spacing:0;text-transform:none;margin-left:.6vh}
 .rtab tr.xtra{display:none}
 .rtab tr.xtra.open{display:table-row}
-.rtab tr.ours td{background:#fdf6e8;font-weight:800;color:var(--replica);border-bottom:none}
+/* the comparison row must stay on screen when a category is expanded */
+.rtab tr.ours td{background:#fdf6e8;font-weight:800;color:var(--replica);border-bottom:none;
+  position:sticky;bottom:0;z-index:3;box-shadow:0 -1px 0 var(--line)}
 .rtab tr.ours td.m{color:var(--replica)}
 /* axis focus: everything not in the live axis group recedes */
 .rtab.focus td.q,.rtab.focus th.q{opacity:.22}
@@ -281,6 +289,38 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
 .qdot{width:1.1vh;height:1.1vh;border-radius:50%;background:var(--line)}
 .qdot.on{background:var(--replica)}
 .steps{display:none}
+
+/* ---- team slides ---- */
+/* wraps to centred rows of four — names get room instead of colliding */
+.team{display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-start;
+  gap:2.6vh 2vw;margin:auto;padding:1vh 0;max-width:74vw}
+.person{display:flex;flex-direction:column;align-items:center;gap:1vh;width:15.5vw;
+  overflow-wrap:break-word}
+.person .ph{position:relative;width:8.6vw;height:8.6vw;border-radius:50%;overflow:hidden;
+  background:color-mix(in srgb,var(--accent) 12%,#fff);border:.35vh solid var(--accent);
+  display:flex;align-items:center;justify-content:center;box-shadow:0 3px 12px rgba(10,30,60,.10)}
+.person .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.person .ini{font-size:3vh;font-weight:800;color:var(--accent);letter-spacing:.04em}
+.person figcaption{font-size:1.8vh;line-height:1.25;color:var(--ink);text-align:center;
+  font-weight:600;width:100%}
+.person sup{color:var(--accent);font-weight:800}
+.teamfoot{text-align:center;font-size:1.8vh;color:var(--muted);padding-bottom:1vh}
+.teamfoot .tiny{color:var(--faint)}
+
+/* ---- results table: final read-out ----
+   Once every axis has been walked, a single flat table gives the audience
+   nothing to look at while the speaker talks. Grade the cells instead: weak
+   numbers recede in red, strong ones in green, and REPLICA's row stays gold. */
+.rtab.graded td.g0{background:#fdeceb;color:#9b2c20}
+.rtab.graded td.g1{background:#fdf3e7;color:#96601a}
+.rtab.graded td.g2{background:#f3f7f2;color:#4a6551}
+.rtab.graded td.g3{background:#e9f5ec;color:#1c6b3a;font-weight:700}
+.rtab.graded tr.ours td{background:#fdf1d8;color:var(--replica)}
+.rtab.graded tr.ours td.m{background:#fdf1d8}
+.rlegend{display:flex;align-items:center;gap:.5vw;font-size:1.55vh;color:var(--muted);
+  margin-left:auto;opacity:0;transition:opacity .3s}
+.rlegend.on{opacity:1}
+.rlegend i{display:inline-block;width:2.2vh;height:1.4vh;border-radius:3px}
 </style>
 </head>
 <body>
@@ -320,52 +360,6 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
     <span><img src="grounding/assets/logo_iiith.jpg" alt="IIIT Hyderabad"></span>
   </div>
   </div>
-</section>
-
-<!-- ====== 2 · THE LOOP: REPLICA ⇄ GROUNDING ====== -->
-<section class="slide" style="--accent:var(--replica)">
-  <div class="kicker">How the four systems fit together</div>
-  <h2>One representation, <span class="k">two directions of travel</span></h2>
-  <div class="svgbox" style="flex:1;min-height:0;margin-top:1vh">
-  <svg viewBox="0 0 1000 430" aria-label="REPLICA and the grounding models enable each other">
-    <defs>
-      <marker id="aG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#B7791F"/></marker>
-      <marker id="aB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#05539C"/></marker>
-    </defs>
-
-    <!-- REPLICA -->
-    <rect x="30" y="120" width="300" height="190" rx="20" fill="#fff" stroke="#B7791F" stroke-width="3"/>
-    <rect x="30" y="120" width="300" height="10" rx="5" fill="#B7791F"/>
-    <text x="180" y="180" text-anchor="middle" font-size="38" font-weight="800" fill="#B7791F">REPLICA</text>
-    <text x="180" y="214" text-anchor="middle" font-size="20" fill="#5b6b7a">rebuilds the page as</text>
-    <text x="180" y="250" text-anchor="middle" font-size="27" font-weight="800" fill="#1E3A5F">FID-HTML</text>
-    <text x="180" y="282" text-anchor="middle" font-size="18" fill="#8a97a5">text · structure · position · style</text>
-
-    <!-- grounding models -->
-    <rect x="670" y="60" width="300" height="310" rx="20" fill="#f2f6fa" stroke="#dde5ec" stroke-width="2"/>
-    <text x="820" y="95" text-anchor="middle" font-size="17" font-weight="700" fill="#8a97a5" letter-spacing="2">GROUNDED UNDERSTANDING</text>
-    <rect x="700" y="115" width="240" height="62" rx="12" fill="#fff" stroke="#05539C" stroke-width="2.5"/>
-    <text x="820" y="146" text-anchor="middle" font-size="24" font-weight="800" fill="#05539C">M3Grounder</text>
-    <text x="820" y="166" text-anchor="middle" font-size="16" fill="#8a97a5">masks as evidence</text>
-    <rect x="700" y="189" width="240" height="62" rx="12" fill="#fff" stroke="#7C3AED" stroke-width="2.5"/>
-    <text x="820" y="220" text-anchor="middle" font-size="24" font-weight="800" fill="#7C3AED">DoCoG</text>
-    <text x="820" y="240" text-anchor="middle" font-size="16" fill="#8a97a5">grounded reasoning</text>
-    <rect x="700" y="263" width="240" height="62" rx="12" fill="#fff" stroke="#0E7C61" stroke-width="2.5"/>
-    <text x="820" y="294" text-anchor="middle" font-size="24" font-weight="800" fill="#0E7C61">DocLayout-VL</text>
-    <text x="820" y="314" text-anchor="middle" font-size="16" fill="#8a97a5">the page as a tree</text>
-
-    <!-- enables — label stacked clear of both the arrow and the right-hand panel -->
-    <text x="498" y="112" text-anchor="middle" font-size="23" font-weight="800" fill="#B7791F">enables</text>
-    <text x="498" y="136" text-anchor="middle" font-size="17" fill="#5b6b7a">layout, geometry &amp; style — at scale</text>
-    <path d="M345 178 C 460 178, 545 152, 658 148" fill="none" stroke="#B7791F" stroke-width="4" marker-end="url(#aG)"/>
-
-    <!-- enriches -->
-    <path d="M658 292 C 545 288, 460 264, 345 262" fill="none" stroke="#05539C" stroke-width="4" marker-end="url(#aB)"/>
-    <text x="498" y="322" text-anchor="middle" font-size="23" font-weight="800" fill="#05539C">enriches</text>
-    <text x="498" y="346" text-anchor="middle" font-size="17" fill="#5b6b7a">sharper segmentation, ordering &amp; grounding</text>
-  </svg>
-  </div>
-  <div class="callout" style="margin-top:1vh">The page has to be <b>representable</b> before it can be <b>queryable</b> — so we start with REPLICA.</div>
 </section>
 
 <!-- ====== 3 · REPLICA DIVIDER ====== -->
@@ -475,7 +469,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
 </section>
 
 <!-- ====== 7 · TEASER (paper Fig. 1A, live) ====== -->
-<section class="slide iframe-slide" style="--accent:var(--replica)">
+<section class="slide iframe-slide" data-embednav="nav" style="--accent:var(--replica)">
   <div class="kicker">REPLICA · Where the field stands</div>
   <h2 style="font-size:3.4vh">Everyone recovers text. <span class="k">Nobody recovers the page.</span></h2>
   <div class="ifwrap"><iframe data-src="replica/index.html?embed=teaser&part=compare" loading="lazy" title="Teaser comparison (paper Fig. 1A)"></iframe></div>
@@ -483,6 +477,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
     <span class="small">Paper Fig. 1A, live — pick a method to compare against the input, then use ‹ › to continue</span>
     <a href="replica/index.html?embed=teaser&part=compare" target="_blank">open standalone ↗</a>
   </div>
+  <span class="steps"><i class="frag"></i><i class="frag"></i><i class="frag"></i></span>
   <div class="footer"><span class="act">REPLICA</span><span>Where the field stands</span></div>
 </section>
 
@@ -511,14 +506,15 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
 </section>
 
 <!-- ====== 10 · FID-HTML ANATOMY (paper Fig. 3, live) ====== -->
-<section class="slide iframe-slide" style="--accent:var(--replica)">
+<section class="slide iframe-slide" data-embednav="nav" style="--accent:var(--replica)">
   <div class="kicker">REPLICA · What FID-HTML encodes</div>
   <h2 style="font-size:3.4vh">Six dimensions — <span class="k">click one</span> to see where it lives in the source</h2>
   <div class="ifwrap"><iframe data-src="replica/index.html?embed=fidhtml&part=figure" loading="lazy" title="FID-HTML anatomy (paper Fig. 3)"></iframe></div>
   <div class="ifbar">
-    <span class="small">Paper Fig. 3, live — the code shown is the real source of the page beside it, not a mock-up</span>
+    <span class="small">Paper Fig. 3, live — <kbd>←</kbd> <kbd>→</kbd> step through the six dimensions; the code shown is the page’s real source</span>
     <a href="replica/index.html?embed=fidhtml&part=figure" target="_blank">open standalone ↗</a>
   </div>
+  <span class="steps"><i class="frag"></i><i class="frag"></i><i class="frag"></i><i class="frag"></i><i class="frag"></i><i class="frag"></i></span>
   <div class="footer"><span class="act">REPLICA</span><span>FID-HTML</span></div>
 </section>
 
@@ -601,12 +597,12 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
 </section>
 
 <!-- ====== 13 · PIPELINE DEMO (live) ====== -->
-<section class="slide iframe-slide" style="--accent:var(--replica)">
+<section class="slide iframe-slide" data-embednav="demo" style="--accent:var(--replica)">
   <div class="kicker">REPLICA · The pipeline on a real page</div>
   <h2 style="font-size:3.4vh">Segment → Localize → Assemble → Refine, <span class="k">running live</span></h2>
-  <div class="ifwrap"><iframe data-src="replica/index.html?embed=demo&doc=magazine&autoplay=1&rate=1.5" loading="lazy" title="REPLICA pipeline demo"></iframe></div>
+  <div class="ifwrap"><iframe data-src="replica/index.html?embed=demo&doc=magazine&autoplay=0&rate=1.5" data-fit="1560 900" loading="lazy" title="REPLICA pipeline demo"></iframe></div>
   <div class="ifbar">
-    <span class="small">Plays automatically at 1.5× · click inside to drive it — then use ‹ › to continue the talk</span>
+    <span class="small"><kbd>←</kbd> <kbd>→</kbd> walk the four stages beat by beat · the deck moves on once the last stage finishes</span>
     <a href="replica/index.html?embed=demo&doc=magazine" target="_blank">open standalone ↗</a>
   </div>
   <div class="footer"><span class="act">REPLICA</span><span>Approach · demo</span></div>
@@ -657,8 +653,11 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   <div class="footer"><span class="act">REPLICA</span><span>Evaluation · metrics</span></div>
 </section>
 
-<!-- ====== 16 · DO THE METRICS MATCH HUMANS? ====== -->
-<section class="slide" style="--accent:var(--replica)">
+<!-- REMOVED FOR THIS TALK (metric validation is not needed for this audience).
+     Delete this comment wrapper to bring the slide back.
+
+<!- - ====== 16 · DO THE METRICS MATCH HUMANS? ====== - ->
+<section class="slide" style="- -accent:var(- -replica)">
   <div class="kicker">REPLICA · Are the new metrics trustworthy?</div>
   <h2>They agree with <span class="k">expert judgment</span></h2>
   <p class="small">Seven expert annotators ranked reconstructions from five systems across 100 documents. We correlated those rankings with each metric.</p>
@@ -693,6 +692,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   <div class="callout">Every proposed metric clears <b>0.8</b>; the Overall Score aligns best — the automatic suite is a reliable stand-in for human perception.</div>
   <div class="footer"><span class="act">REPLICA</span><span>Evaluation · metric validation</span></div>
 </section>
+-->
 
 <!-- ====== 17 · MAIN RESULTS (interactive) ====== -->
 <section class="slide" id="resSlide" style="--accent:var(--replica)">
@@ -700,6 +700,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   <h2>Everyone passes text. <span class="k">The field collapses on position.</span></h2>
   <div class="rwrap"><table class="rtab" id="resTable"></table></div>
   <div class="rnote">
+    <div class="rlegend" id="resLegend"><span>weakest</span><i style="background:#fdeceb"></i><i style="background:#fdf3e7"></i><i style="background:#f3f7f2"></i><i style="background:#e9f5ec"></i><span>strongest</span></div>
     <div class="rline frag" data-ax="TE"><span class="t">Text extraction</span><span class="d">Strong baselines sit at <b style="color:var(--ink)">0.65–0.68</b> WRR. Largely solved — which is why the field feels finished.</span></div>
     <div class="rline frag" data-ax="LS"><span class="t">Logical structure</span><span class="d">Tree edit distance is passable for the better systems, but nothing about it says <i>where</i> anything is.</span></div>
     <div class="rline bad frag" data-ax="PS"><span class="t">Physical structure</span><span class="d">Total collapse: best baseline LPS <b>0.22</b>, best GPS <b>0.43</b>, most under 0.30. Nothing lands where it belongs.</span></div>
@@ -727,8 +728,11 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   <div class="footer"><span class="act">REPLICA</span><span>Evaluation · qualitative</span></div>
 </section>
 
-<!-- ====== 19 · DOWNSTREAM (live) ====== -->
-<section class="slide iframe-slide" style="--accent:var(--replica)">
+<!-- REMOVED FOR THIS TALK (downstream applications are out of scope for this talk).
+     Delete this comment wrapper to bring the slide back.
+
+<!- - ====== 19 · DOWNSTREAM (live) ====== - ->
+<section class="slide iframe-slide" style="- -accent:var(- -replica)">
   <div class="kicker">REPLICA · Beyond reconstruction</div>
   <h2 style="font-size:3.4vh">What FID-HTML <span class="k">unlocks</span></h2>
   <div class="ifwrap"><iframe data-src="replica/index.html?embed=downstream" loading="lazy" title="Downstream applications (paper Fig. 2)"></iframe></div>
@@ -738,9 +742,13 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   </div>
   <div class="footer"><span class="act">REPLICA</span><span>Applications</span></div>
 </section>
+-->
 
-<!-- ====== 20 · LIMITATIONS ====== -->
-<section class="slide" style="--accent:var(--replica)">
+<!-- REMOVED FOR THIS TALK (REPLICA limitations are out of scope for this talk).
+     Delete this comment wrapper to bring the slide back.
+
+<!- - ====== 20 · LIMITATIONS ====== - ->
+<section class="slide" style="- -accent:var(- -replica)">
   <div class="kicker">REPLICA · Being honest about the edges</div>
   <h2>Where REPLICA <span class="x">still falls short</span></h2>
   <div class="probs" style="margin-top:auto;margin-bottom:auto">
@@ -750,24 +758,62 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   </div>
   <div class="footer"><span class="act">REPLICA</span><span>Limitations</span></div>
 </section>
+-->
 
-<!-- ====== 21 · REPLICA SUMMARY ====== -->
+<!-- ====== 21 · HANDOFF INTO THE GROUNDING HALF ====== -->
 <section class="slide" style="--accent:var(--replica)">
-  <div class="kicker">REPLICA · One paradigm, three contributions</div>
-  <h2>Represent <span class="k">→</span> Measure <span class="k">→</span> Generate</h2>
-  <div class="cols" style="grid-template-columns:repeat(3,1fr);align-items:stretch;margin-top:auto">
-    <div class="card"><h3>Represent · FID-HTML</h3><p>A web-native format where position and style are <b>required</b>, inline, per element — fidelity by construction.</p></div>
-    <div class="card"><h3>Measure · VFDR-Bench</h3><p>5,000 expert-annotated documents in 15+ languages, and the first metrics to score <b>layout and rendered appearance</b>.</p></div>
-    <div class="card" style="border-color:var(--replica)"><h3>Generate · REPLICA</h3><p>Segment → Localize → Assemble → Refine. <b>Agents where judgment is needed, tools where determinism is.</b></p></div>
+  <div class="kicker">What REPLICA leaves behind</div>
+  <h2>One page in. <span class="k">A complete representation out.</span></h2>
+  <div class="svgbox" style="flex:1;min-height:0;margin-top:.6vh">
+  <svg viewBox="0 0 1000 330" aria-label="A page becomes FID-HTML, complete on all four axes">
+    <defs><marker id="aH" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#8a97a5"/></marker></defs>
+
+    <!-- the input page -->
+    <rect x="34" y="40" width="196" height="248" rx="8" fill="#fff" stroke="#dde5ec" stroke-width="2"/>
+    <rect x="58" y="66" width="104" height="9" rx="4.5" fill="#1E3A5F"/>
+    <rect x="58" y="90" width="148" height="6" rx="3" fill="#c7d2dd"/>
+    <rect x="58" y="103" width="148" height="6" rx="3" fill="#c7d2dd"/>
+    <rect x="58" y="116" width="120" height="6" rx="3" fill="#c7d2dd"/>
+    <rect x="58" y="140" width="68" height="6" rx="3" fill="#c7d2dd"/><rect x="138" y="140" width="68" height="6" rx="3" fill="#c7d2dd"/>
+    <rect x="58" y="153" width="68" height="6" rx="3" fill="#c7d2dd"/><rect x="138" y="153" width="68" height="6" rx="3" fill="#c7d2dd"/>
+    <rect x="58" y="166" width="68" height="6" rx="3" fill="#c7d2dd"/><rect x="138" y="166" width="68" height="6" rx="3" fill="#c7d2dd"/>
+    <rect x="58" y="192" width="148" height="52" rx="4" fill="#eef2f7" stroke="#dde5ec"/>
+    <rect x="58" y="258" width="96" height="6" rx="3" fill="#c7d2dd"/>
+    <text x="132" y="312" text-anchor="middle" font-size="17" fill="#5b6b7a">scanned or born-digital</text>
+
+    <!-- REPLICA -->
+    <path d="M252 164 h96" stroke="#8a97a5" stroke-width="3.5" marker-end="url(#aH)"/>
+    <text x="300" y="150" text-anchor="middle" font-size="21" font-weight="800" fill="#B7791F">REPLICA</text>
+
+    <!-- FID-HTML, complete on all four axes -->
+    <rect x="372" y="40" width="594" height="248" rx="14" fill="#fff" stroke="#B7791F" stroke-width="3"/>
+    <rect x="372" y="40" width="594" height="10" rx="5" fill="#B7791F"/>
+    <text x="669" y="96" text-anchor="middle" font-size="34" font-weight="800" fill="#1E3A5F">FID-HTML</text>
+    <text x="669" y="124" text-anchor="middle" font-size="18" fill="#8a97a5">the page, complete on every axis</text>
+
+    <g font-size="21" font-weight="700" fill="#16222e">
+      <circle cx="426" cy="168" r="14" fill="#0E7C61"/><path d="M419 168 l5 6 l10 -12" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="452" y="175">Text extraction</text>
+      <circle cx="700" cy="168" r="14" fill="#0E7C61"/><path d="M693 168 l5 6 l10 -12" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="726" y="175">Logical structure</text>
+      <circle cx="426" cy="230" r="14" fill="#0E7C61"/><path d="M419 230 l5 6 l10 -12" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="452" y="237">Physical structure</text>
+      <circle cx="700" cy="230" r="14" fill="#0E7C61"/><path d="M693 230 l5 6 l10 -12" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="726" y="237">Visual fidelity</text>
+    </g>
+    <text x="669" y="312" text-anchor="middle" font-size="19" fill="#5b6b7a">the highest-fidelity text representation of that page</text>
+  </svg>
   </div>
-  <div class="statrow" style="margin-top:2.4vh">
-    <div class="stat"><div class="v">0.93</div><div class="l">Visual fidelity (VFS)</div></div>
-    <div class="stat"><div class="v">0.86</div><div class="l">Overall score</div></div>
-    <div class="stat"><div class="v">0.86</div><div class="l">Global position (GPS)</div></div>
-    <div class="stat"><div class="v">39%</div><div class="l">over Qwen3-VL-30B<br>at 3.75× smaller</div></div>
-  </div>
-  <div class="callout" style="margin-top:2vh;margin-bottom:auto">The page is now a <b>representable, measurable object</b>. Everything that follows asks what you can do once it is.</div>
-  <div class="footer"><span class="act">REPLICA</span><span>Summary</span></div>
+  <div class="callout" style="margin-top:.8vh">A page that is <b>complete on all four axes</b> is no longer just a reconstruction — it is <b>labelled data</b>. Millions of them, without a single hand annotation.<br><span class="small" style="color:var(--muted)">That is what the next three systems are trained on.</span></div>
+  <div class="footer"><span class="act">REPLICA</span><span>Handoff</span></div>
+</section>
+
+<!-- ====== TEAM · REPLICA ====== -->
+<section class="slide" style="--accent:var(--replica)">
+  <div class="kicker">REPLICA · the team</div>
+  <h2>Built by</h2>
+  <div class="team"><figure class="person"><span class="ph"><span class="ini">RR</span><img src="team/Raghuveer.jpg" alt="Raghuveer R" loading="lazy" onerror="this.remove()"></span><figcaption>Raghuveer R<sup>*</sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">AS</span><img src="team/Anirudh.jpg" alt="Anirudh Srinivasan" loading="lazy" onerror="this.remove()"></span><figcaption>Anirudh Srinivasan<sup>*</sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">VK</span><img src="team/Kesav.jpg" alt="Venkata Kesav Venna" loading="lazy" onerror="this.remove()"></span><figcaption>Venkata Kesav Venna<sup>*</sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">SS</span><img src="team/Sreevatsa.jpg" alt="Sreevatsa S" loading="lazy" onerror="this.remove()"></span><figcaption>Sreevatsa S<sup></sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">AJ</span><img src="team/Aryan.jpg" alt="Aryan Jain" loading="lazy" onerror="this.remove()"></span><figcaption>Aryan Jain<sup></sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">SK</span><img src="team/Sahithi.jpg" alt="Sahithi Kukkala" loading="lazy" onerror="this.remove()"></span><figcaption>Sahithi Kukkala<sup></sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">RK</span><img src="team/RaviKiran.jpg" alt="Ravi Kiran Sarvadevabhatla" loading="lazy" onerror="this.remove()"></span><figcaption>Ravi Kiran Sarvadevabhatla<sup></sup></figcaption></figure></div>
+  <div class="teamfoot">BharatGen · IIIT Hyderabad &nbsp; <span class="tiny">* equal contribution</span></div>
 </section>
 
 <!-- ====== 1 · TITLE ====== -->
@@ -1364,6 +1410,14 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   <div class="footer"><span class="act">Paper 1 · M3Grounder</span><span>Examples · takeaway</span></div>
 </section>
 
+<!-- ====== TEAM · M3Grounder ====== -->
+<section class="slide" style="--accent:var(--m3)">
+  <div class="kicker">M3Grounder · the team</div>
+  <h2>Built by</h2>
+  <div class="team"><figure class="person"><span class="ph"><span class="ini">VK</span><img src="team/Kesav.jpg" alt="Venkata Kesav Venna" loading="lazy" onerror="this.remove()"></span><figcaption>Venkata Kesav Venna<sup>*</sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">SM</span><img src="team/SaiMadhu.jpg" alt="Sai Madhusudan Gunda" loading="lazy" onerror="this.remove()"></span><figcaption>Sai Madhusudan Gunda<sup>*</sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">JS</span><img src="team/Swaroopa.jpg" alt="Jyothi Swaroopa Jinka" loading="lazy" onerror="this.remove()"></span><figcaption>Jyothi Swaroopa Jinka<sup>†</sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">HS</span><img src="team/Hrithik.png" alt="Hrithik Sagar Rachakonda" loading="lazy" onerror="this.remove()"></span><figcaption>Hrithik Sagar Rachakonda<sup>†</sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">AS</span><img src="team/Anirudh.jpg" alt="Anirudh Srinivasan" loading="lazy" onerror="this.remove()"></span><figcaption>Anirudh Srinivasan<sup></sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">RK</span><img src="team/RaviKiran.jpg" alt="Ravi Kiran Sarvadevabhatla" loading="lazy" onerror="this.remove()"></span><figcaption>Ravi Kiran Sarvadevabhatla<sup></sup></figcaption></figure></div>
+  <div class="teamfoot">BharatGen · IIIT Hyderabad &nbsp; <span class="tiny">* equal contribution · † equal contribution</span></div>
+</section>
+
 <!-- ====== 20 · DOCOG DIVIDER ====== -->
 <section class="slide divider" style="--accent:var(--docog)">
   <div class="time">Paper 2</div>
@@ -1776,6 +1830,14 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   <div class="footer"><span class="act">Paper 2 · DoCoG</span><span>Takeaway</span></div>
 </section>
 
+<!-- ====== TEAM · DoCoG ====== -->
+<section class="slide" style="--accent:var(--docog)">
+  <div class="kicker">DoCoG · the team</div>
+  <h2>Built by</h2>
+  <div class="team"><figure class="person"><span class="ph"><span class="ini">SM</span><img src="team/SaiMadhu.jpg" alt="Sai Madhusudan Gunda" loading="lazy" onerror="this.remove()"></span><figcaption>Sai Madhusudan Gunda<sup>*</sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">JS</span><img src="team/Swaroopa.jpg" alt="Jyothi Swaroopa Jinka" loading="lazy" onerror="this.remove()"></span><figcaption>Jyothi Swaroopa Jinka<sup>*</sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">HS</span><img src="team/Hrithik.png" alt="Hrithik Sagar Rachakonda" loading="lazy" onerror="this.remove()"></span><figcaption>Hrithik Sagar Rachakonda<sup>*</sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">AJ</span><img src="team/Aryan.jpg" alt="Aryan Jain" loading="lazy" onerror="this.remove()"></span><figcaption>Aryan Jain<sup>†</sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">VK</span><img src="team/Kesav.jpg" alt="Venkata Kesav Venna" loading="lazy" onerror="this.remove()"></span><figcaption>Venkata Kesav Venna<sup>†</sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">AS</span><img src="team/Anirudh.jpg" alt="Anirudh Srinivasan" loading="lazy" onerror="this.remove()"></span><figcaption>Anirudh Srinivasan<sup></sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">RK</span><img src="team/RaviKiran.jpg" alt="Ravi Kiran Sarvadevabhatla" loading="lazy" onerror="this.remove()"></span><figcaption>Ravi Kiran Sarvadevabhatla<sup></sup></figcaption></figure></div>
+  <div class="teamfoot">BharatGen · IIIT Hyderabad &nbsp; <span class="tiny">* equal contribution · † equal contribution</span></div>
+</section>
+
 <!-- ====== 33 · DLVL DIVIDER ====== -->
 <section class="slide divider" style="--accent:var(--dlvl)">
   <div class="time">Paper 3</div>
@@ -2071,6 +2133,14 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   <div class="footer"><span class="act">Paper 3 · DocLayout-VL</span><span>Takeaway</span></div>
 </section>
 
+<!-- ====== TEAM · DocLayout-VL ====== -->
+<section class="slide" style="--accent:var(--dlvl)">
+  <div class="kicker">DocLayout-VL · the team</div>
+  <h2>Built by</h2>
+  <div class="team"><figure class="person"><span class="ph"><span class="ini">VK</span><img src="team/Kesav.jpg" alt="Venkata Kesav Venna" loading="lazy" onerror="this.remove()"></span><figcaption>Venkata Kesav Venna<sup>*</sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">SB</span><img src="team/Srihari.jpg" alt="Srihari Bandarupalli" loading="lazy" onerror="this.remove()"></span><figcaption>Srihari Bandarupalli<sup>*</sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">AS</span><img src="team/Anirudh.jpg" alt="Anirudh Srinivasan" loading="lazy" onerror="this.remove()"></span><figcaption>Anirudh Srinivasan<sup>*</sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">RR</span><img src="team/Raghuveer.jpg" alt="Raghuveer R" loading="lazy" onerror="this.remove()"></span><figcaption>Raghuveer R<sup></sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">SM</span><img src="team/SaiMadhu.jpg" alt="Sai Madhusudan Gunda" loading="lazy" onerror="this.remove()"></span><figcaption>Sai Madhusudan Gunda<sup></sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">RK</span><img src="team/RaviKiran.jpg" alt="Ravi Kiran Sarvadevabhatla" loading="lazy" onerror="this.remove()"></span><figcaption>Ravi Kiran Sarvadevabhatla<sup></sup></figcaption></figure></div>
+  <div class="teamfoot">BharatGen · IIIT Hyderabad &nbsp; <span class="tiny">* equal contribution</span></div>
+</section>
+
 <!-- ====== 45 · SYNTHESIS ====== -->
 <section class="slide" style="--accent:var(--blue)">
   <div class="kicker">Synthesis</div>
@@ -2135,6 +2205,48 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   <p class="sub" style="margin-top:1.8vh">replica-agents.github.io · m3grounder.github.io<br>docog-eccv.github.io · doclayoutvl.github.io</p>
   <div class="logos"><span><img src="grounding/assets/logo_bharatgen.png" alt="BharatGen"></span><span><img src="grounding/assets/logo_iiith.jpg" alt="IIIT Hyderabad"></span></div>
   <p class="sub" style="font-size:1.85vh;margin-top:2.6vh">REPLICA (ICDAR 2026, Oral) · M3Grounder (CVPR 2026) · DoCoG (ECCV 2026, Oral) · DocLayout-VL (ECCV 2026)<br>BharatGen · IIIT Hyderabad</p>
+</section>
+
+<!-- ====== FINAL · THE LOOP CLOSES ====== -->
+<section class="slide" style="--accent:var(--replica)">
+  <div class="kicker">Where the four systems meet</div>
+  <h2>REPLICA builds the data. The grounding models <span class="k">pay it back</span>.</h2>
+  <div class="svgbox" style="flex:1;min-height:0;margin-top:1vh">
+  <svg viewBox="0 0 1000 430" aria-label="REPLICA generates supervision for the grounding models, which in turn improve REPLICA">
+    <defs>
+      <marker id="aG2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#B7791F"/></marker>
+      <marker id="aB2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#05539C"/></marker>
+    </defs>
+
+    <rect x="30" y="120" width="300" height="190" rx="20" fill="#fff" stroke="#B7791F" stroke-width="3"/>
+    <rect x="30" y="120" width="300" height="10" rx="5" fill="#B7791F"/>
+    <text x="180" y="180" text-anchor="middle" font-size="38" font-weight="800" fill="#B7791F">REPLICA</text>
+    <text x="180" y="214" text-anchor="middle" font-size="20" fill="#5b6b7a">rebuilds any page as</text>
+    <text x="180" y="250" text-anchor="middle" font-size="27" font-weight="800" fill="#1E3A5F">FID-HTML</text>
+    <text x="180" y="282" text-anchor="middle" font-size="18" fill="#8a97a5">text · structure · position · style</text>
+
+    <rect x="670" y="60" width="300" height="310" rx="20" fill="#f2f6fa" stroke="#dde5ec" stroke-width="2"/>
+    <text x="820" y="95" text-anchor="middle" font-size="17" font-weight="700" fill="#8a97a5" letter-spacing="2">GROUNDED UNDERSTANDING</text>
+    <rect x="700" y="115" width="240" height="62" rx="12" fill="#fff" stroke="#05539C" stroke-width="2.5"/>
+    <text x="820" y="146" text-anchor="middle" font-size="24" font-weight="800" fill="#05539C">M3Grounder</text>
+    <text x="820" y="166" text-anchor="middle" font-size="16" fill="#8a97a5">masks as evidence</text>
+    <rect x="700" y="189" width="240" height="62" rx="12" fill="#fff" stroke="#7C3AED" stroke-width="2.5"/>
+    <text x="820" y="220" text-anchor="middle" font-size="24" font-weight="800" fill="#7C3AED">DoCoG</text>
+    <text x="820" y="240" text-anchor="middle" font-size="16" fill="#8a97a5">grounded reasoning</text>
+    <rect x="700" y="263" width="240" height="62" rx="12" fill="#fff" stroke="#0E7C61" stroke-width="2.5"/>
+    <text x="820" y="294" text-anchor="middle" font-size="24" font-weight="800" fill="#0E7C61">DocLayout-VL</text>
+    <text x="820" y="314" text-anchor="middle" font-size="16" fill="#8a97a5">the page as a tree</text>
+
+    <text x="452" y="108" text-anchor="middle" font-size="21" font-weight="800" fill="#B7791F">generates the training data</text>
+    <text x="452" y="134" text-anchor="middle" font-size="16" fill="#5b6b7a">millions of pages, labelled by construction</text>
+    <path d="M345 178 C 460 178, 545 152, 658 148" fill="none" stroke="#B7791F" stroke-width="4" marker-end="url(#aG2)"/>
+
+    <path d="M658 292 C 545 288, 460 264, 345 262" fill="none" stroke="#05539C" stroke-width="4" marker-end="url(#aB2)"/>
+    <text x="452" y="322" text-anchor="middle" font-size="21" font-weight="800" fill="#05539C">sharpen every stage</text>
+    <text x="452" y="348" text-anchor="middle" font-size="16" fill="#5b6b7a">better segmentation, reading order and grounding</text>
+  </svg>
+  </div>
+  <div class="callout" style="margin-top:1vh">Neither half stands alone. <b>Representation makes the supervision; the supervision makes the models; the models make the representation better.</b></div>
 </section>
 
 </div>
@@ -2232,6 +2344,9 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
     const doc = $('#ladderDoc'); if(!doc) return;
     const lv = Math.max(0, Math.min(n, 3));
     $('#ladderBox').classList.toggle('sized', lv >= 2);   // geometry starts at L2
+    // from L2 the reconstruction takes the source page's exact width and
+    // aspect — outline both so the audience sees the dimensions agree
+    document.querySelector('#ladderSlide .lad').classList.toggle('matched', lv >= 2);
     doc.classList.toggle('L1', lv >= 1);                  // cumulative
     doc.classList.toggle('L2', lv >= 2);
     doc.classList.toggle('L3', lv >= 3);
@@ -2361,6 +2476,26 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
         if(+c.dataset.c > 0) c.classList.add('good');
       });
     }
+    // Final beat: a flat table gives the audience nothing to scan while the
+    // speaker talks. Grade every cell instead, so the collapse on position
+    // reads as a block of red and REPLICA's row stays the one gold line.
+    const graded = step.ax === 'OS';
+    t.classList.toggle('graded', graded);
+    const legend = document.getElementById('resLegend');
+    if(legend) legend.classList.toggle('on', graded);
+    if(!graded) return;
+    t.querySelectorAll('td,th').forEach(c=>c.classList.remove('lit','q'));
+    t.querySelectorAll('tbody tr.row').forEach(tr=>{
+      tr.querySelectorAll('td[data-c]').forEach(c=>{
+        const ci = +c.dataset.c;
+        if(ci === 0) return;
+        const v = parseFloat(c.textContent);
+        if(isNaN(v)) return;
+        // NTED is the one column where lower is better
+        const good = (ci === 3) ? 1 - v : v;
+        c.classList.add('g' + (good < 0.30 ? 0 : good < 0.55 ? 1 : good < 0.75 ? 2 : 3));
+      });
+    });
   }
 
   /* ---------- qualitative pairs ---------- */
@@ -2377,7 +2512,19 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   // the rendered pages have their own page width; scale one to fit its box
   function fitQual(){
     const f = $('#qualFrame'); if(!f) return;
-    const box = f.parentElement, W = 433, H = 774;
+    const box = f.parentElement;
+    // Every FID-HTML render has its own page dimensions — a receipt is not a
+    // magazine spread. Measure the loaded page rather than assuming one size,
+    // or the shorter documents render cropped or letterboxed.
+    let W = 433, H = 774;
+    try{
+      const d = f.contentDocument;
+      if(d && d.body){
+        const w = Math.max(d.body.scrollWidth, d.documentElement.scrollWidth);
+        const h = Math.max(d.body.scrollHeight, d.documentElement.scrollHeight);
+        if(w > 40 && h > 40){ W = w; H = h; }
+      }
+    }catch(e){ /* not readable yet — fall back to the default page size */ }
     const sc = Math.min(box.clientWidth / W, box.clientHeight / H);
     f.style.width = W + 'px'; f.style.height = H + 'px';
     f.style.transform = `scale(${sc})`;
@@ -2394,8 +2541,128 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
     if(!fr.getAttribute('src').endsWith(hsrc)) fr.setAttribute('src', hsrc);
     $('#qualCap').innerHTML = q.cap;
     $$('#qualDots .qdot').forEach((d,i)=>d.classList.toggle('on', i === Math.min(n, QUAL.length-1)));
-    setTimeout(fitQual, 60);
+    // re-fit once the new page has actually parsed
+    fr.addEventListener('load', fitQual, {once:true});
+    [60, 260, 700].forEach(t=>setTimeout(fitQual, t));
   }
+
+  /* ---------- live figures: preload, fit, and keyboard control ----------
+     Three separate complaints, one place:
+       · transitions into a demo felt jerky — the iframe only started loading
+         when the slide appeared, so the first frame was blank
+       · the pipeline demo scrolled instead of fitting on screen
+       · the figures could not be driven from the keyboard / presenter remote */
+
+  // Load the next slide's figure while the current one is still on screen.
+  function preloadNeighbours(){
+    const all = [...document.querySelectorAll('.slide')];
+    const i = all.findIndex(s => s.classList.contains('on'));
+    [i + 1, i + 2, i - 1].forEach(j => {
+      const s = all[j]; if(!s) return;
+      const f = s.querySelector('iframe[data-src]');
+      if(f && !f.src) f.src = f.dataset.src;
+    });
+  }
+
+  // Figures declared with data-fit="W H" are scaled to fit whole, never scrolled.
+  function fitFigures(){
+    document.querySelectorAll('.slide.on iframe[data-fit]').forEach(f => {
+      const [W, H] = f.dataset.fit.split(/\s+/).map(Number);
+      const box = f.parentElement;
+      const sc = Math.min(box.clientWidth / W, box.clientHeight / H);
+      Object.assign(f.style, {
+        width: W + 'px', height: H + 'px', position: 'absolute',
+        transformOrigin: 'top left', transform: 'scale(' + sc + ')',
+        left: Math.round((box.clientWidth  - W * sc) / 2) + 'px',
+        top:  Math.round((box.clientHeight - H * sc) / 2) + 'px'
+      });
+      box.style.position = 'relative';
+      box.style.overflow = 'hidden';
+    });
+  }
+
+  const post = (f, msg) => { try{ f.contentWindow.postMessage(msg, '*'); }catch(e){} };
+
+  // data-embednav="nav"  — the figure cycles through its own states, one per
+  //                        build-up step, then the deck moves on as usual.
+  // data-embednav="demo" — the pipeline walkthrough; it has no fixed number of
+  //                        steps, so read its own progress counter to decide
+  //                        when a further press should leave the slide.
+  const navSeen = {};
+  // Readiness has to come from the load event, not from contentDocument. An
+  // iframe that has just been given a src still reports the initial about:blank
+  // as readyState "complete", so anything posted then goes into a dead document
+  // and the figure never moves. Flag every figure on its own load instead.
+  document.querySelectorAll('.ifwrap iframe').forEach(f => {
+    f.addEventListener('load', () => {
+      f.dataset.ready = '1';
+      fitFigures();
+      (f._waiting || []).forEach(fn => fn());
+      f._waiting = [];
+    });
+  });
+  function whenReady(f, fn){
+    if(f.dataset.ready) fn();
+    else (f._waiting = f._waiting || []).push(fn);
+  }
+
+  // Once you click inside a figure, focus lives in that iframe and arrow keys
+  // never reach the deck again — the figure looks frozen and so does the talk.
+  // The figures are same-origin, so hand their arrow keys back to the deck and
+  // let the normal path decide what the press means.
+  const RELAY = ['ArrowRight', 'ArrowLeft', 'PageDown', 'PageUp', ' ', 'Spacebar'];
+  function relayKeys(f){
+    whenReady(f, () => {
+      try{
+        f.contentWindow.addEventListener('keydown', e => {
+          if(!RELAY.includes(e.key) || e.metaKey || e.ctrlKey || e.altKey) return;
+          e.preventDefault();
+          e.stopPropagation();   // don't let the figure act on it twice
+          // dispatch on body, not window: window listeners fire in registration
+          // order at the target phase, so a window-targeted event would reach the
+          // deck engine before this file's capture handler could claim it.
+          document.body.dispatchEvent(
+            new KeyboardEvent('keydown', {key:e.key, bubbles:true, cancelable:true}));
+        }, true);
+      }catch(err){ /* cross-origin figure — the ‹ › buttons still work */ }
+    });
+  }
+  document.querySelectorAll('.slide[data-embednav] iframe').forEach(relayKeys);
+  function driveNav(slide, n){
+    const f = slide.querySelector('iframe'); if(!f) return;
+    const key = slide.dataset.k || (slide.dataset.k = 'n' + Math.random());
+    whenReady(f, () => {
+      const was = navSeen[key] || 0;
+      const dir = n > was ? 1 : -1;
+      for(let i = 0; i < Math.abs(n - was); i++) post(f, {type:'replica:nav', dir});
+      navSeen[key] = n;
+    });
+  }
+  function demoAt(f){
+    try{
+      const el = f.contentDocument.getElementById('pdemoStepCount');
+      const m = (el.textContent || '').match(/Stage\s*(\d+).*?(\d+)\s*\/\s*(\d+)/);
+      if(m) return {stage:+m[1], beat:+m[2], total:+m[3]};
+    }catch(e){}
+    return null;
+  }
+  addEventListener('keydown', e => {
+    if(e.metaKey || e.ctrlKey || e.altKey) return;
+    const s = document.querySelector('.slide.on');
+    if(!s || s.dataset.embednav !== 'demo') return;
+    const fwd = e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown';
+    const back = e.key === 'ArrowLeft' || e.key === 'PageUp';
+    if(!fwd && !back) return;
+    const f = s.querySelector('iframe'); if(!f) return;
+    // hold the key rather than skipping the slide while the demo is still loading
+    if(!f.dataset.ready){ e.preventDefault(); e.stopImmediatePropagation(); return; }
+    const at = demoAt(f);
+    // let the deck have the key at the very end (forward) or very start (back)
+    if(fwd && at && at.stage >= 4 && at.beat >= at.total) return;
+    if(back && at && at.stage <= 1 && at.beat <= 0) return;
+    e.preventDefault(); e.stopImmediatePropagation();
+    post(f, {type:'replica:demo', action: fwd ? 'step' : 'back'});
+  }, true);
 
   /* ---------- drive everything off the engine's fragment state ---------- */
   buildResults();
@@ -2406,6 +2673,9 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
     else if(s.id === 'stagesSlide') renderStages(n);
     else if(s.id === 'resSlide') renderResults(n);
     else if(s.id === 'qualSlide') renderQual(n);
+    else if(s.dataset.embednav === 'nav') driveNav(s, n);
+    preloadNeighbours();
+    fitFigures();
   }
   // setTimeout, not requestAnimationFrame: rAF is paused whenever the page is
   // not being painted, which would leave `queued` stuck true and freeze every
@@ -2416,7 +2686,8 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
     queued = true;
     setTimeout(()=>{ queued = false; sync(); }, 0);
   }).observe(document.getElementById('deck'), {subtree:true, attributes:true, attributeFilter:['class']});
-  addEventListener('resize', fitQual);
+  addEventListener('resize', ()=>{ fitQual(); fitFigures(); });
+
   sync();
 })();
 </script>

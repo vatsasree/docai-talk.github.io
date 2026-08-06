@@ -25,12 +25,18 @@
   color:var(--muted);background:#fff;font-weight:600;transition:.25s}
 .lvstep.done{border-color:var(--accent);color:var(--accent)}
 .lvstep.on{border-color:var(--accent);background:var(--accent);color:#fff}
-.lad{display:grid;grid-template-columns:1fr 1fr;gap:1.6vw;flex:1;min-height:0}
+.lad{display:grid;grid-template-columns:1fr 1fr;gap:1.6vw;flex:1;min-height:0;--pw:23vw}
 .ladcol{display:flex;flex-direction:column;min-height:0}
 .lbox{background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 3px 14px rgba(10,30,60,.08);
-  flex:1;min-height:0;overflow:hidden;position:relative;display:flex;align-items:flex-start;justify-content:center}
-/* geometry only exists from level 2 — that is the whole point of the level */
-.lbox.sized{aspect-ratio:1.34/1;flex:0 0 auto;align-self:center;width:100%;max-height:100%}
+  flex:1;min-height:0;overflow:hidden;position:relative;display:flex;align-items:flex-start;justify-content:center;
+  transition:border-color .3s,box-shadow .3s}
+/* The page only has dimensions from level 2. Before that the reconstruction
+   fills whatever space it is given — it has no shape of its own. From level 2
+   it takes the source page's exact width and aspect, which is the point of the
+   level: physical structure means absolute position on a page of known size. */
+.lbox.sized{width:var(--pw);aspect-ratio:.8;flex:0 0 auto;align-self:center;max-height:100%}
+/* once the two agree, say so */
+.lad.matched .lbox{border-color:var(--accent);box-shadow:0 0 0 .3vh color-mix(in srgb,var(--accent) 20%,transparent)}
 .lcap{font-size:1.7vh;color:var(--muted);margin-top:.8vh;text-align:center}
 .lwhat{font-size:1.9vh;line-height:1.4;color:#33424f;background:#fff;border:1px solid var(--line);
   border-left:5px solid var(--accent);border-radius:0 10px 10px 0;padding:1.1vh 1.4vh;margin-top:.8vh;flex:0 0 auto;min-height:9.5vh}
@@ -126,7 +132,9 @@
 .rtab tr.cat .cn{font-size:1.35vh;color:var(--faint);letter-spacing:0;text-transform:none;margin-left:.6vh}
 .rtab tr.xtra{display:none}
 .rtab tr.xtra.open{display:table-row}
-.rtab tr.ours td{background:#fdf6e8;font-weight:800;color:var(--replica);border-bottom:none}
+/* the comparison row must stay on screen when a category is expanded */
+.rtab tr.ours td{background:#fdf6e8;font-weight:800;color:var(--replica);border-bottom:none;
+  position:sticky;bottom:0;z-index:3;box-shadow:0 -1px 0 var(--line)}
 .rtab tr.ours td.m{color:var(--replica)}
 /* axis focus: everything not in the live axis group recedes */
 .rtab.focus td.q,.rtab.focus th.q{opacity:.22}
@@ -154,3 +162,35 @@
 .qdot{width:1.1vh;height:1.1vh;border-radius:50%;background:var(--line)}
 .qdot.on{background:var(--replica)}
 .steps{display:none}
+
+/* ---- team slides ---- */
+/* wraps to centred rows of four — names get room instead of colliding */
+.team{display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-start;
+  gap:2.6vh 2vw;margin:auto;padding:1vh 0;max-width:74vw}
+.person{display:flex;flex-direction:column;align-items:center;gap:1vh;width:15.5vw;
+  overflow-wrap:break-word}
+.person .ph{position:relative;width:8.6vw;height:8.6vw;border-radius:50%;overflow:hidden;
+  background:color-mix(in srgb,var(--accent) 12%,#fff);border:.35vh solid var(--accent);
+  display:flex;align-items:center;justify-content:center;box-shadow:0 3px 12px rgba(10,30,60,.10)}
+.person .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.person .ini{font-size:3vh;font-weight:800;color:var(--accent);letter-spacing:.04em}
+.person figcaption{font-size:1.8vh;line-height:1.25;color:var(--ink);text-align:center;
+  font-weight:600;width:100%}
+.person sup{color:var(--accent);font-weight:800}
+.teamfoot{text-align:center;font-size:1.8vh;color:var(--muted);padding-bottom:1vh}
+.teamfoot .tiny{color:var(--faint)}
+
+/* ---- results table: final read-out ----
+   Once every axis has been walked, a single flat table gives the audience
+   nothing to look at while the speaker talks. Grade the cells instead: weak
+   numbers recede in red, strong ones in green, and REPLICA's row stays gold. */
+.rtab.graded td.g0{background:#fdeceb;color:#9b2c20}
+.rtab.graded td.g1{background:#fdf3e7;color:#96601a}
+.rtab.graded td.g2{background:#f3f7f2;color:#4a6551}
+.rtab.graded td.g3{background:#e9f5ec;color:#1c6b3a;font-weight:700}
+.rtab.graded tr.ours td{background:#fdf1d8;color:var(--replica)}
+.rtab.graded tr.ours td.m{background:#fdf1d8}
+.rlegend{display:flex;align-items:center;gap:.5vw;font-size:1.55vh;color:var(--muted);
+  margin-left:auto;opacity:0;transition:opacity .3s}
+.rlegend.on{opacity:1}
+.rlegend i{display:inline-block;width:2.2vh;height:1.4vh;border-radius:3px}

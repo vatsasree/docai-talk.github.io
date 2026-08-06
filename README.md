@@ -1,19 +1,24 @@
 # Rebuilding the Page — and Grounding It
 
-A single 75-slide talk for an industry / sponsor review, in one self-contained
+A single 76-slide talk for an industry / sponsor review, in one self-contained
 `index.html`.
 
 The story runs **REPLICA first**: the page has to be *representable* before it
 can be *queryable*. REPLICA produces FID-HTML — layout, geometry and style at
 scale, without hand labels — which is what the grounding models are then built
 on; and those models in turn sharpen REPLICA's own segmentation, ordering and
-grounding. Slide 2 is that loop, drawn.
+grounding. The closing slide draws that loop.
 
 | Slides | Part | |
 |---|---|---|
-| 1–2 | Title and the enablement loop | |
-| 3–21 | **REPLICA** | ICDAR 2026 Oral |
-| 22–75 | **Grounding** — M3Grounder → DoCoG → DocLayout-VL | CVPR 2026 · ECCV 2026 Oral · ECCV 2026 |
+| 1 | Title | |
+| 2–18 | **REPLICA** | ICDAR 2026 Oral |
+| 19–75 | **Grounding** — M3Grounder → DoCoG → DocLayout-VL | CVPR 2026 · ECCV 2026 Oral · ECCV 2026 |
+| 76 | The loop closes — REPLICA feeds the grounding models, they feed it back | |
+
+A team slide closes each of the four papers. Photos go in `team/` — see
+[`team/README.md`](team/README.md) for the filenames; anyone without a photo
+shows their initials, so the slide never looks unfinished.
 
 One engine, one design system, one continuous slide count. No bridge or
 interlude slides between the parts.
@@ -41,24 +46,37 @@ python3 -m http.server 8000
 Rebuilt from the ICDAR deck into this deck's engine and design language, with
 the changes from the review:
 
-- **Removed** — the ablation table, the agent/tool reliability table, and the
-  formal notation (agent/tool symbols, the objective equation, the per-stage
-  maths). The agentic argument is now carried in words.
-- **Added** — slide 15, *Which metric measures what*: one row per axis with the
+- **Removed** — the ablation table, the agent/tool reliability table, the
+  metric-vs-human-agreement slide, the downstream applications and the
+  limitations, and all formal notation (agent/tool symbols, the objective
+  equation, the per-stage maths). The agentic argument is carried in words.
+  The removed slides are commented out in `src/replica.slides.html`, each with
+  the reason — delete the comment wrapper to bring one back.
+- **Ends on a handoff** — slide 17 shows a page becoming FID-HTML with all four
+  axes ticked, and names that as the labelled data the grounding half trains on.
+- **Added** — slide 14, *Which metric measures what*: one row per axis with the
   question it asks, its metric, and a one-line plain-language account of how it
-  is computed. Two axes carry a **NEW** badge. Slide 16 validates those metrics
-  against seven expert annotators (Pearson r, all > 0.8).
-- **Rebuilt** — slide 17, the main results table. Collapsible by method
+  is computed. Two axes carry a **NEW** badge.
+- **Rebuilt** — slide 15, the main results table. Collapsible by method
   category (each shows its best system until you click), column-grouped by
   axis, and it reveals **one axis group at a time**: the live group is
   highlighted, the rest recede, and the exact cells the takeaway quotes are
-  outlined in the table — so the spoken claim and the table always agree.
+  outlined in the table — so the spoken claim and the table always agree. On the
+  final step the whole table is graded weakest-to-strongest, so the collapse on
+  position reads as a block of red with REPLICA the one gold row; that row stays
+  pinned when a category is expanded.
 
 Live and interactive throughout: the Fig. 1 comparison and radar, the FID-HTML
-format table and anatomy, the running pipeline demo, the qualitative
-source-vs-render pairs, and the downstream applications. The fidelity ladder
-(slide 5) and the four-stage pipeline (slide 12) are native to this deck and
-build up with the arrow keys.
+format table and anatomy, the running pipeline demo, and the qualitative
+source-vs-render pairs. The fidelity ladder (slide 4) and the four-stage
+pipeline (slide 11) are native to this deck and build up with the arrow keys.
+
+**Every live figure is driven from the keyboard**, including after you have
+clicked inside one: the figures relay arrow keys back to the deck. The six
+FID-HTML dimensions (slide 9) and the pipeline demo (slide 12) step with
+`←` / `→`, and the deck moves on by itself once the demo's last stage
+finishes. Figures for the next slide are loaded in advance so transitions do
+not flash.
 
 ## The grounding half — and keeping it in sync
 
@@ -81,7 +99,8 @@ half lives in `src/`:
 
 ```
 src/replica.css          styles for the REPLICA components
-src/replica.slides.html  the 21 REPLICA slides
+src/replica.slides.html  the REPLICA slides (some commented out — see below)
+src/replica.closing.html the final loop slide, after the grounding half
 src/replica.js           the ladder, stage accordion, results table, qual pairs
 build.py                 composes the two halves
 sync.sh                  pull upstream, then build
@@ -106,8 +125,9 @@ through and the slide count updates itself.
 
 ```
 index.html            the whole deck — markup, styles, engine
-grounding/assets/     figures for slides 22–75
-grounding/interactive/  5 interactive apps (slides 33, 43, 49, 58, 66)
+grounding/assets/     figures for slides 19–75
+grounding/interactive/  5 interactive apps in the grounding half
+team/                 team photos — see team/README.md
 replica/index.html    REPLICA project site — the deck iframes it for live figures
 replica/static/       REPLICA figures, demo frames, qualitative renders
 ```
