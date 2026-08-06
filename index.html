@@ -2122,8 +2122,8 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
 <section class="slide" style="--accent:var(--dlvl)">
   <div class="kicker">DocLayout-VL · The deepest ablation</div>
   <h2>Architecture beats <span class="k">data scale</span></h2>
-  <div class="cols vc" style="grid-template-columns:1.3fr .7fr">
-    <div class="chartcard">
+  <div class="vc" style="display:flex;flex:1;align-items:center;justify-content:center">
+    <div class="chartcard" style="width:72%">
       <h3>Overall score vs training-data fraction (Qwen3-VL-8B)</h3>
       <svg viewBox="0 0 784 370" role="img" aria-label="Slopegraph: configurations at 25 and 100 percent data">
         <text x="640" y="30" font-size="13.5" fill="#b42318" font-weight="700">the gap never closes</text>
@@ -2151,12 +2151,6 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
         <path d="M732 229 v-125" stroke="#b42318" stroke-width="2" marker-end="url(#arr8)" stroke-dasharray="6 4"/>
         <defs><marker id="arr8" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#b42318"/></marker></defs>
       </svg>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:1.2vh;justify-content:center">
-      <div class="card"><p class="small">4× more data lifts the plain VLM by only ~5 points — <b>the architecture gap never closes</b>.</p></div>
-      <div class="stat frag"><div class="v bad" style="font-size:3.8vh">77.5 → 58.3</div><div class="l">hierarchical Open mIoU without HGC</div></div>
-      <div class="stat frag"><div class="v bad" style="font-size:3.8vh">32.5</div><div class="l">hierarchical Open mIoU, base VLM alone — everything is load-bearing</div></div>
-      <p class="tiny frag">Limitations: single-page · long trees add latency · fixed-schema detectors still cheaper when semantics aren't needed.</p>
     </div>
   </div>
   <div class="footer"><span class="act">Paper 3 · DocLayout-VL</span><span>Scaling</span></div>
@@ -2231,17 +2225,21 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   <div class="kicker">Lessons</div>
   <h2>Takeaways</h2>
   <div class="vc" style="display:flex;flex-direction:column;gap:2.2vh;justify-content:center;width:58%;margin:0 auto;flex:1">
-    <div class="card" style="display:flex;gap:1.6vw;align-items:center;padding:2.6vh 2vw">
-      <svg viewBox="0 0 44 44" style="width:5vh;flex:0 0 auto"><rect x="4" y="8" width="36" height="28" rx="4" fill="none" stroke="#b42318" stroke-width="2" stroke-dasharray="4 3"/><path d="M12 30 q-4 -10 4 -14 q8 -5 16 0 q8 4 2 12 q-6 8 -14 6 q-6 -1 -8 -4 z" fill="#05539C"/></svg>
-      <h3 style="font-size:3.2vh;margin:0">Masks are better</h3>
+    <div class="card" style="display:flex;gap:1.6vw;align-items:center;padding:2.2vh 2vw">
+      <svg viewBox="0 0 44 44" style="width:4.6vh;flex:0 0 auto"><rect x="4" y="8" width="36" height="28" rx="4" fill="none" stroke="#b42318" stroke-width="2" stroke-dasharray="4 3"/><path d="M12 30 q-4 -10 4 -14 q8 -5 16 0 q8 4 2 12 q-6 8 -14 6 q-6 -1 -8 -4 z" fill="#05539C"/></svg>
+      <h3 style="font-size:3vh;margin:0">Masks are a good addition &mdash; and they let us leverage prompting</h3>
     </div>
-    <div class="card frag" style="display:flex;gap:1.6vw;align-items:center;padding:2.6vh 2vw">
-      <svg viewBox="0 0 44 44" style="width:5vh;flex:0 0 auto"><text x="22" y="31" text-anchor="middle" font-size="26" font-style="italic" font-family="Georgia,serif" fill="#05539C">&#119973;</text></svg>
-      <h3 style="font-size:3.2vh;margin:0">Novel losses are good</h3>
+    <div class="card frag" style="display:flex;gap:1.6vw;align-items:center;padding:2.2vh 2vw">
+      <svg viewBox="0 0 44 44" style="width:4.6vh;flex:0 0 auto"><g fill="#05539C"><rect x="8" y="7" width="28" height="7.5" rx="3.75"/><rect x="8" y="18" width="28" height="7.5" rx="3.75" opacity=".72"/><rect x="8" y="29" width="28" height="7.5" rx="3.75" opacity=".45"/></g></svg>
+      <h3 style="font-size:3vh;margin:0">Data scale really matters&hellip;</h3>
     </div>
-    <div class="card frag" style="display:flex;gap:1.6vw;align-items:center;padding:2.6vh 2vw">
-      <svg viewBox="0 0 44 44" style="width:5vh;flex:0 0 auto"><rect x="6" y="24" width="8" height="14" rx="2" fill="#7d8b99"/><rect x="18" y="14" width="8" height="24" rx="2" fill="#7d8b99"/><rect x="30" y="6" width="8" height="32" rx="2" fill="#F59222"/></svg>
-      <h3 style="font-size:3.2vh;margin:0">Benchmark not just answers but also grounding &mdash; for trust</h3>
+    <div class="card frag" style="display:flex;gap:1.6vw;align-items:center;padding:2.2vh 2vw">
+      <svg viewBox="0 0 44 44" style="width:4.6vh;flex:0 0 auto"><g fill="#05539C"><rect x="16" y="6" width="12" height="12" rx="2.5"/><rect x="7" y="26" width="12" height="12" rx="2.5" opacity=".8"/><rect x="25" y="26" width="12" height="12" rx="2.5" opacity=".8"/></g><path d="M22 18 v4 M22 22 h-9 v4 M22 22 h9 v4" stroke="#7d8b99" stroke-width="2" fill="none"/></svg>
+      <h3 style="font-size:3vh;margin:0">&hellip;and architecture matters just as much</h3>
+    </div>
+    <div class="card frag" style="display:flex;gap:1.6vw;align-items:center;padding:2.2vh 2vw">
+      <svg viewBox="0 0 44 44" style="width:4.6vh;flex:0 0 auto"><rect x="6" y="24" width="8" height="14" rx="2" fill="#7d8b99"/><rect x="18" y="14" width="8" height="24" rx="2" fill="#7d8b99"/><rect x="30" y="6" width="8" height="32" rx="2" fill="#F59222"/></svg>
+      <h3 style="font-size:3vh;margin:0">Benchmark not just answers but also grounding &mdash; for trust</h3>
     </div>
   </div>
   <div class="footer"><span class="act">Synthesis</span><span>Takeaways</span></div>
