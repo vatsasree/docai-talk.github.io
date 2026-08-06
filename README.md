@@ -70,7 +70,7 @@ and REPLICA's venue on the closing slide.
 ```
 index.html            the whole deck — markup, styles, engine
 grounding/assets/     figures for slides 22–75
-grounding/interactive/  4 interactive apps (slides 33, 43, 49, 65)
+grounding/interactive/  5 interactive apps (slides 33, 43, 49, 58, 66)
 replica/index.html    REPLICA project site — the deck iframes it for live figures
 replica/static/       REPLICA figures, demo frames, qualitative renders
 ```
