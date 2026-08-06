@@ -248,9 +248,12 @@
     Object.assign(img.style, {width:rw + 'px', height:rh + 'px', objectFit:'fill',
                              maxWidth:'none', maxHeight:'none'});
 
-    const dim = docSizes[f.getAttribute('src')];
-    if(!dim) return;
-    const [dw, dh] = dim;
+    // If the page could not be measured — opened over file://, or any context
+    // where the frame counts as cross-origin — fall back to the scan's own
+    // pixel size. The FID-HTML page is authored to the source page's
+    // dimensions, so this is the right number, and it keeps the render from
+    // collapsing to an iframe's default 300x150 and showing one corner.
+    const [dw, dh] = docSizes[f.getAttribute('src')] || [img.naturalWidth, img.naturalHeight];
     // scale each axis onto that rect. Page and scan agree to within a couple of
     // pixels, so this is imperceptible — and it makes the two rectangles exactly
     // equal rather than nearly equal.
