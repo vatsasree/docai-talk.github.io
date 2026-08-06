@@ -140,7 +140,7 @@ footer{position:fixed;left:0;right:0;bottom:0;padding:6px 18px;font-size:13px;co
   <div class="controls">
     <button class="ctl primary" id="btnPlay">▶ Play</button>
     <button class="ctl" id="btnRestart">↺ Restart</button>
-    <select class="ctl" id="speed"><option value="1">1×</option><option value="1.5">1.5×</option><option value="2">2×</option><option value="0.7">0.7×</option></select>
+    <select class="ctl" id="speed"><option value="0.5" selected>0.5×</option><option value="1">1×</option><option value="1.5">1.5×</option><option value="2">2×</option></select>
     <button class="ctl" id="zfit" title="Fit to screen">⛶ Fit</button>
     <button class="ctl primary" id="zfollow" title="Camera follows the active module">🎥 Auto-zoom</button>
   </div>
@@ -532,7 +532,7 @@ function travellerSq(pathId,color,dur,delay){
   requestAnimationFrame(step);
 }
 
-const engine={t:0,playing:false,paused:false,stopped:false,speed:1,idx:0,done:false,raf:null,last:0};
+const engine={t:0,playing:false,paused:false,stopped:false,speed:0.5,idx:0,done:false,raf:null,last:0};
 function tick(now){
   if(!engine.playing)return;
   if(!engine.paused){

@@ -136,8 +136,8 @@ footer{flex:0 0 var(--footH);display:flex;align-items:center;gap:14px;padding:0 
       <button class="pbtn primary" id="play">▶ Play</button>
       <button class="pbtn" id="restart">↻ Restart</button>
       <div id="speeds">
-        <button class="sp" data-s="0.7">0.7×</button>
-        <button class="sp on" data-s="1">1×</button>
+        <button class="sp on" data-s="0.5">0.5×</button>
+        <button class="sp" data-s="1">1×</button>
         <button class="sp" data-s="1.5">1.5×</button>
         <button class="sp" data-s="2">2×</button>
       </div>
@@ -903,7 +903,7 @@ function fitAll(instant){ moveCam(FULL, instant); }
 /* ============================== timeline ================================= */
 const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const SETTLE  = 1.1;                       /* camera settles before narration */
-let clock = 0, speed = 1, playing = false, lastNow = 0;
+let clock = 0, speed = 0.5, playing = false, lastNow = 0;
 
 const RAIL = ["Input","VLM","[GROUND]","Projections","Segmentation","Masks"];
 const railEls = [];

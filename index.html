@@ -1613,6 +1613,40 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   <div class="footer"><span class="act">Paper 2 · DoCoG</span><span>Stage-1 data</span></div>
 </section>
 
+<!-- ====== DPO PRIMER ====== -->
+<section class="slide" style="--accent:var(--docog)">
+  <div class="kicker">DoCoG · Training stage 2 · the idea</div>
+  <h2>DPO in one minute: <span class="k">prefer the better answer</span></h2>
+  <div class="cols vc" style="grid-template-columns:1.25fr .75fr">
+    <div class="svgbox">
+    <svg viewBox="0 0 720 310" style="width:100%">
+      <defs><marker id="arrDP" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#8a97a5"/></marker></defs>
+      <rect x="16" y="118" width="150" height="64" rx="12" fill="#fff" stroke="#dde5ec" stroke-width="2"/>
+      <text x="91" y="146" text-anchor="middle" font-size="14" font-weight="700" fill="#16222e">same question</text>
+      <text x="91" y="166" text-anchor="middle" font-size="11.5" fill="#5b6b7a">(image, q)</text>
+      <path d="M166 150 h36" stroke="#8a97a5" stroke-width="2.5" fill="none" marker-end="url(#arrDP)"/>
+      <rect x="210" y="118" width="150" height="64" rx="12" fill="#7C3AED"/>
+      <text x="285" y="146" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">VLM</text>
+      <text x="285" y="166" text-anchor="middle" font-size="11.5" fill="#e6d5ff">writes several answers</text>
+      <path d="M360 136 L420 84" stroke="#8a97a5" stroke-width="2.5" fill="none" marker-end="url(#arrDP)"/>
+      <path d="M360 164 L420 216" stroke="#8a97a5" stroke-width="2.5" fill="none" marker-end="url(#arrDP)"/>
+      <rect x="430" y="36" width="264" height="86" rx="12" fill="#fff" stroke="#0ca30c" stroke-width="2"/>
+      <text x="562" y="72" text-anchor="middle" font-size="14.5" font-weight="700" fill="#006300">✓ better answer</text>
+      <text x="562" y="94" text-anchor="middle" font-size="12" fill="#5b6b7a">right — and well grounded</text>
+      <rect x="430" y="178" width="264" height="86" rx="12" fill="#fff" stroke="#d03b3b" stroke-width="2"/>
+      <text x="562" y="214" text-anchor="middle" font-size="14.5" font-weight="700" fill="#b42318">✗ worse answer</text>
+      <text x="562" y="236" text-anchor="middle" font-size="12" fill="#5b6b7a">wrong, or unsupported</text>
+      <text x="360" y="300" text-anchor="middle" font-size="14" fill="#33424f">train: nudge the model <tspan font-weight="700" fill="#006300">toward ✓</tspan>, <tspan font-weight="700" fill="#b42318">away from ✗</tspan> — that is all DPO is</text>
+    </svg>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:1.2vh;justify-content:center">
+      <div class="card"><p class="small">No new labels, no reward model — the model learns from <b>its own outputs</b>, ranked better vs worse.</p></div>
+      <div class="card frag"><p class="small">In DoCoG this update touches <b>only the VLM</b> — the part that writes the text. Why everything else stays frozen → next slide.</p></div>
+    </div>
+  </div>
+  <div class="footer"><span class="act">Paper 2 · DoCoG</span><span>DPO · the idea</span></div>
+</section>
+
 <!-- ====== 27 · DOCOG DPO ====== -->
 <section class="slide" style="--accent:var(--docog)">
   <div class="kicker">DoCoG · Training stage 2</div>
@@ -1729,7 +1763,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
       <path d="M216 69 h38" stroke="#8a97a5" stroke-width="2.5" fill="none" marker-end="url(#arrS2)"/>
       <rect x="262" y="36" width="200" height="66" rx="12" fill="#fff" stroke="#7d8b99" stroke-width="2"/>
       <text x="362" y="63" text-anchor="middle" font-size="14.5" font-weight="700" fill="#33424f">reward</text>
-      <text x="362" y="84" text-anchor="middle" font-size="11.5" fill="#5b6b7a">FR gate → AQ + CQ + GQ</text>
+      <text x="362" y="84" text-anchor="middle" font-size="11.5" fill="#5b6b7a">format check → AQ + CQ + GQ</text>
       <path d="M462 69 h38" stroke="#8a97a5" stroke-width="2.5" fill="none" marker-end="url(#arrS2)"/>
       <rect x="508" y="36" width="196" height="66" rx="12" fill="#fff" stroke="#7d8b99" stroke-width="2"/>
       <text x="606" y="63" text-anchor="middle" font-size="14.5" font-weight="700" fill="#33424f">DoCoG-PQA</text>
@@ -1758,12 +1792,12 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
 <!-- ====== 28 · DOCOG REWARDS ====== -->
 <section class="slide" style="--accent:var(--docog)">
   <div class="kicker">DoCoG · Preference data</div>
-  <h2>DoCoG-PQA: 20K pairs — <span class="k">one gate, three scores</span></h2>
+  <h2>DoCoG-PQA: 20K pairs — <span class="k">one format check, three scores</span></h2>
   <div class="vc" style="display:flex;flex-direction:column;gap:1.6vh">
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1.2vw">
-    <div class="card" style="border-top:4px solid #7d8b99"><h3>FR · format <span style="font-weight:400;color:#8a97a5">— the gate</span></h3><p class="small">Do steps, answer, and <span class="tok g">[GND]</span> references all <b>parse</b>? Fail ⇒ <b>rejected before scoring</b>.</p></div>
+    <div class="card" style="border-top:4px solid #7d8b99"><h3>FR · format <span style="font-weight:400;color:#8a97a5">— must pass first</span></h3><p class="small">Do steps, answer, and <span class="tok g">[GND]</span> references all <b>parse</b>? Fail ⇒ <b>rejected before scoring</b>.</p></div>
     <div class="card frag"><h3>AQ · answer</h3><p class="small">Matches ground truth — after <b>normalization + numeric tolerance</b>. Rule-based, <b>no LLM judge</b>.</p></div>
-    <div class="card frag"><h3>CQ · chain</h3><p class="small"><b>ROSCOE gate</b> (below threshold ⇒ 0), then <b>bipartite</b> step matching (E5 similarity) → step-level <b>F1</b>.</p></div>
+    <div class="card frag"><h3>CQ · chain</h3><p class="small"><b>ROSCOE check</b> (below threshold ⇒ 0), then <b>bipartite</b> step matching (E5 similarity) → step-level <b>F1</b>.</p></div>
     <div class="card frag"><h3>GQ · grounding</h3><p class="small">A mask counts iff <b>IoU ≥ 0.5</b> + <b>same element type</b> + <b>right step</b>. All steps + answer = GQ<sub>all</sub> · answer only = GQ<sub>fa</sub> · GQ = mean.</p></div>
   </div>
   <div class="cols frag" style="grid-template-columns:1fr 1fr">
@@ -1828,6 +1862,13 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   </div>
   <div class="callout" style="margin-top:.8vh"><b>Takeaway #2</b> — grounding every step makes the <b>answers better</b> (AQ 78.1 → 85.8) — and DPO around frozen modules needs an <b>anchor loss</b>.</div>
   <div class="footer"><span class="act">Paper 2 · DoCoG</span><span>Takeaway</span></div>
+</section>
+
+<!-- ====== DOCOG POSTER ====== -->
+<section class="slide" style="--accent:var(--docog)">
+  <div class="kicker">DoCoG · In one image</div>
+  <figure class="fig" style="flex:1;min-height:0"><img src="grounding/assets/docog_poster.png" alt="DoCoG: the answer and its grounding — take both pills" style="max-height:80vh"></figure>
+  <div class="footer"><span class="act">Paper 2 · DoCoG</span><span>Poster</span></div>
 </section>
 
 <!-- ====== TEAM · DoCoG ====== -->
@@ -2131,6 +2172,13 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   <div class="callout"><b>Takeaway #3</b> — with one [LAY] token per region, layout is no longer a preprocessing step — it's a <b>model output you can prompt</b>: tree, masks, explanations.</div>
   </div>
   <div class="footer"><span class="act">Paper 3 · DocLayout-VL</span><span>Takeaway</span></div>
+</section>
+
+<!-- ====== DLVL SAM FOR DOCS ====== -->
+<section class="slide" style="--accent:var(--dlvl)">
+  <div class="kicker">DocLayout-VL · SAM for documents</div>
+  <figure class="fig" style="flex:1;min-height:0"><img src="grounding/assets/dlvl_samfordocs.png" alt="Segment Anything for Documents is here — DocLayout-VL" style="max-height:80vh"></figure>
+  <div class="footer"><span class="act">Paper 3 · DocLayout-VL</span><span>SAM for documents</span></div>
 </section>
 
 <!-- ====== TEAM · DocLayout-VL ====== -->
