@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Understanding the Page — and Rebuilding It</title>
+<style>
+:root{
+  --ink:#0b1220; --ink-2:#111a2b; --paper:#f6f8fa;
+  --blue:#3b8fe0; --blue-deep:#05539C;
+  --gold:#d4a437; --navy:#1e3a5f;
+  --orange:#F59222;
+  --txt:#e8eef6; --txt-2:#9fb0c4; --txt-3:#64748b;
+  --line:#22304a;
+  --serif:Georgia,"Times New Roman",serif;
+  --sans:"Avenir Next","Segoe UI",Inter,system-ui,-apple-system,sans-serif;
+  --mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:#05080f}
+body{font-family:var(--sans);color:var(--txt);-webkit-font-smoothing:antialiased}
+
+#deck{position:fixed;inset:0}
+.mslide{position:absolute;inset:0;display:none;flex-direction:column;
+  padding:7vh 6vw 6vh;background:
+  radial-gradient(80vw 60vh at 12% -15%, #14243d 0%, transparent 60%),
+  radial-gradient(70vw 55vh at 100% 115%, #1c1a2e 0%, transparent 60%), var(--ink)}
+.mslide.on{display:flex}
+
+/* ---- chapter slides are full-bleed frames: no padding, no background ---- */
+.mslide.chapter{padding:0;background:#0d1117}
+.mslide.chapter iframe{width:100%;height:100%;border:0;display:block}
+
+.eyebrow{font-family:var(--mono);font-size:1.55vh;letter-spacing:.24em;text-transform:uppercase;
+  font-weight:700;color:var(--accent,var(--blue));margin-bottom:1.6vh}
+h1{font-family:var(--serif);font-size:6.2vh;line-height:1.08;letter-spacing:-.02em;font-weight:700}
+h2{font-family:var(--serif);font-size:4.6vh;line-height:1.12;letter-spacing:-.015em;font-weight:700;margin-bottom:1.2vh}
+h2 em{font-style:normal;color:var(--accent,var(--blue))}
+.lede{font-size:2.4vh;line-height:1.5;color:var(--txt-2);max-width:96ch;margin-top:1.4vh}
+.lede b{color:var(--txt);font-weight:600}
+.body{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center}
+
+/* ---- title ---- */
+.hero{align-items:center;justify-content:center;text-align:center}
+.hero h1{font-size:7vh;max-width:24ch}
+.hero h1 .a{color:var(--blue)}
+.hero h1 .b{color:var(--gold)}
+.hero .sub{font-size:2.5vh;color:var(--txt-2);margin-top:2.6vh;max-width:80ch;line-height:1.5}
+.rule{width:9vw;height:3px;background:linear-gradient(90deg,var(--blue),var(--gold));margin:3vh auto;border-radius:2px}
+.venues{display:flex;gap:1vw;justify-content:center;flex-wrap:wrap;margin-top:1vh}
+.venue{font-family:var(--mono);font-size:1.5vh;letter-spacing:.1em;text-transform:uppercase;
+  border:1px solid var(--line);border-radius:999px;padding:.7vh 1.5vh;color:var(--txt-2);background:#0e1729}
+.venue b{color:var(--txt);font-weight:700}
+.venue.oral{border-color:#5a4a1e;color:var(--gold)}
+.logos{display:flex;gap:1.6vw;align-items:center;justify-content:center;margin-top:3.4vh}
+.logos span{background:#fff;border-radius:12px;padding:1.2vh 1.8vh;display:flex;align-items:center}
+.logos img{height:6.4vh;object-fit:contain}
+
+/* ---- two-column argument ---- */
+.split{display:grid;grid-template-columns:1fr auto 1fr;gap:2.4vw;align-items:stretch;margin-top:3vh}
+.side{border:1px solid var(--line);border-radius:18px;padding:3vh 2.6vh;background:#0e1729;
+  display:flex;flex-direction:column;gap:1.4vh;border-top:4px solid var(--sc,var(--blue))}
+.side .tag{font-family:var(--mono);font-size:1.4vh;letter-spacing:.2em;text-transform:uppercase;color:var(--sc,var(--blue));font-weight:700}
+.side h3{font-family:var(--serif);font-size:3.1vh;font-weight:700;line-height:1.15}
+.side p{font-size:2vh;line-height:1.5;color:var(--txt-2)}
+.side ul{list-style:none;display:flex;flex-direction:column;gap:.9vh;margin-top:.4vh}
+.side li{font-size:1.95vh;color:var(--txt-2);padding-left:1.6vh;position:relative;line-height:1.4}
+.side li::before{content:"";position:absolute;left:0;top:.9vh;width:6px;height:6px;border-radius:50%;background:var(--sc,var(--blue))}
+.side li b{color:var(--txt);font-weight:600}
+.vs{align-self:center;font-family:var(--mono);font-size:1.5vh;letter-spacing:.18em;color:var(--txt-3);
+  writing-mode:vertical-rl;text-transform:uppercase}
+.unify{margin-top:3vh;border:1px solid var(--line);border-left:5px solid var(--orange);border-radius:0 14px 14px 0;
+  background:#101a2c;padding:2vh 2.6vh;font-size:2.25vh;line-height:1.45;color:var(--txt-2)}
+.unify b{color:var(--txt)}
+
+/* ---- roadmap ---- */
+.road{display:grid;grid-template-columns:repeat(4,1fr);gap:1.4vw;margin-top:3vh;align-items:stretch}
+.sys{border:1px solid var(--line);border-radius:16px;background:#0e1729;padding:2.4vh 2vh;
+  display:flex;flex-direction:column;gap:1vh;border-top:4px solid var(--sc)}
+.sys .n{font-family:var(--mono);font-size:1.4vh;color:var(--txt-3);letter-spacing:.16em}
+.sys h4{font-size:2.6vh;font-weight:700;color:var(--sc);letter-spacing:-.01em}
+.sys .v{font-family:var(--mono);font-size:1.4vh;color:var(--txt-3);letter-spacing:.06em}
+.sys .v .oral{color:var(--gold);font-weight:700}
+.sys p{font-size:1.9vh;line-height:1.45;color:var(--txt-2);margin-top:.4vh}
+.partband{display:grid;grid-template-columns:repeat(4,1fr);gap:1.4vw;margin-top:1.6vh}
+.band{border-radius:999px;padding:.9vh 0;text-align:center;font-family:var(--mono);font-size:1.4vh;
+  letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:#08101d}
+.band.p1{grid-column:1 / span 3;background:linear-gradient(90deg,var(--blue),#6fb2ec)}
+.band.p2{grid-column:4 / span 1;background:linear-gradient(90deg,var(--gold),#e9c876)}
+
+/* ---- part dividers ---- */
+.divider{justify-content:center;background:
+  linear-gradient(115deg, color-mix(in srgb,var(--accent) 88%,#000) 0%, var(--accent) 55%, color-mix(in srgb,var(--accent) 70%,#fff) 100%)}
+.divider .eyebrow{color:#ffffffbb}
+.divider h1{color:#fff;font-size:8vh;max-width:22ch}
+.divider .lede{color:#ffffffdd;font-size:2.9vh;max-width:70ch}
+.divider .chips{display:flex;gap:1vw;flex-wrap:wrap;margin-top:3.4vh}
+.divider .chips span{border:1.5px solid #ffffff66;border-radius:999px;padding:.8vh 1.8vh;
+  font-size:1.9vh;color:#fff;font-weight:600}
+.divider .clock{position:absolute;top:6vh;right:6vw;border:2px solid #ffffff55;border-radius:999px;
+  padding:.8vh 2vh;font-family:var(--mono);font-size:1.8vh;color:#fff;font-weight:700}
+
+/* ---- synthesis grid ---- */
+.recipe{display:grid;grid-template-columns:auto repeat(4,1fr);gap:1vh 1.2vw;margin-top:2.4vh;align-items:stretch}
+.recipe .hd{font-family:var(--mono);font-size:1.35vh;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--txt-3);display:flex;align-items:flex-end;padding-bottom:.8vh}
+/* column, not row: the sub-label sits under the label instead of colliding with it */
+.recipe .rl{font-family:var(--mono);font-size:1.4vh;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--txt-2);display:flex;flex-direction:column;align-items:flex-end;justify-content:center;
+  text-align:right;gap:.5vh;padding-right:.8vw;font-weight:700;width:13vw;line-height:1.3}
+.recipe .rl span{display:block;letter-spacing:.06em}
+.recipe .cell{border:1px solid var(--line);border-radius:12px;background:#0e1729;padding:1.4vh 1.4vh;
+  font-size:1.8vh;line-height:1.4;color:var(--txt-2)}
+.recipe .cell b{color:var(--txt);font-weight:600}
+.recipe .hd.s{color:var(--sc);font-weight:700}
+.recipe .cell.s{border-top:3px solid var(--sc)}
+.closing{margin-top:2.6vh;font-size:2.3vh;color:var(--txt-2);line-height:1.5}
+.closing b{color:var(--txt)}
+
+/* ---- chrome ---- */
+#bar{position:fixed;left:0;top:0;height:3px;z-index:60;width:0;
+  background:linear-gradient(90deg,var(--blue),var(--gold));transition:width .3s ease}
+#hud{position:fixed;top:2.2vh;right:1.6vw;z-index:60;display:flex;align-items:center;gap:.7vw;
+  font-family:var(--mono);font-size:1.5vh;letter-spacing:.1em;color:#cbd8e8;background:#0b1220e6;
+  border:1px solid #ffffff22;border-radius:999px;padding:.7vh 1.4vh;opacity:0;transition:opacity .4s;
+  pointer-events:none;backdrop-filter:blur(6px)}
+#hud.show{opacity:1}
+#hud .dot{width:7px;height:7px;border-radius:50%;background:var(--hc,var(--blue))}
+#hud .sep{color:#ffffff44}
+
+#menu{position:fixed;inset:0;z-index:70;background:#050810f2;display:none;
+  padding:8vh 8vw;backdrop-filter:blur(4px)}
+#menu.on{display:block}
+#menu h3{font-family:var(--mono);font-size:1.5vh;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--txt-3);margin-bottom:2.4vh}
+#menu ol{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:1vh 2vw}
+#menu li{display:flex;align-items:center;gap:1.2vw;padding:1.4vh 1.8vh;border:1px solid var(--line);
+  border-radius:12px;cursor:pointer;background:#0d1626;transition:.15s}
+#menu li:hover{background:#152238;border-color:#3a4d6e}
+#menu li.cur{border-color:var(--gold);background:#1a1c22}
+#menu li .k{font-family:var(--mono);font-size:1.5vh;color:var(--txt-3);min-width:2.6vw}
+#menu li .t{font-size:2vh;color:var(--txt)}
+#menu li .c{margin-left:auto;font-family:var(--mono);font-size:1.4vh;color:var(--mc,var(--txt-3))}
+#menu .hint{margin-top:3vh;font-size:1.8vh;color:var(--txt-3)}
+kbd{font-family:var(--mono);background:#16233a;border:1px solid var(--line);border-bottom-width:3px;
+  border-radius:6px;padding:.2vh .8vh;font-size:1.6vh;color:var(--txt-2)}
+
+.f{opacity:0;transform:translateY(1.2vh);transition:opacity .35s ease,transform .35s ease}
+.f.on{opacity:1;transform:none}
+</style>
+</head>
+<body>
+<div id="deck">
+
+<!-- ============================ 0 · TITLE ============================ -->
+<section class="mslide hero" data-label="Title">
+  <div class="eyebrow" style="--accent:var(--gold)">BharatGen · IIIT Hyderabad</div>
+  <h1>Understanding the Page —<br>and <span class="b">Rebuilding</span> It</h1>
+  <div class="rule"></div>
+  <p class="sub">Four systems on one problem: making a document page something a model can
+    <b style="color:var(--blue)">point at</b>, reason over, and <b style="color:var(--gold)">put back together</b>.</p>
+  <div class="venues" style="margin-top:3vh">
+    <span class="venue"><b>M3Grounder</b> · CVPR 2026</span>
+    <span class="venue oral"><b>DoCoG</b> · ECCV 2026 · Oral</span>
+    <span class="venue"><b>DocLayout-VL</b> · ECCV 2026</span>
+    <span class="venue oral"><b>REPLICA</b> · ICDAR 2026 · Oral</span>
+  </div>
+  <div class="logos">
+    <span><img src="chapters/grounding/assets/logo_bharatgen.png" alt="BharatGen"></span>
+    <span><img src="chapters/grounding/assets/logo_iiith.jpg" alt="IIIT Hyderabad"></span>
+  </div>
+</section>
+
+<!-- ======================= 1 · THE THROUGH-LINE ====================== -->
+<section class="mslide" data-label="The through-line" style="--accent:var(--blue)">
+  <div class="eyebrow">The through-line</div>
+  <h2>A page is a <em>spatial object</em>, not a string of text</h2>
+  <p class="lede">Flatten a document into tokens and two different things break — and they break
+    in opposite directions. This talk is those two failures, and what fixing each one takes.</p>
+  <div class="body">
+    <div class="split">
+      <div class="side" style="--sc:var(--blue)">
+        <div class="tag">Part I · Reading</div>
+        <h3>Where is the evidence?</h3>
+        <p>The model answers, but cannot show you <i>which pixels</i> the answer came from — so you cannot check it.</p>
+        <ul>
+          <li>A bounding box is the wrong shape for a pie wedge, a curved label, a merged cell</li>
+          <li>Evidence is <b>multi-granular</b>: a span, a row, a whole region</li>
+          <li>Reasoning has many steps — each step needs <b>its own</b> evidence</li>
+        </ul>
+      </div>
+      <div class="vs">the same page</div>
+      <div class="side" style="--sc:var(--gold)">
+        <div class="tag">Part II · Rebuilding</div>
+        <h3>Can you put it back?</h3>
+        <p>The words survive the round-trip. The <i>page</i> does not — layout, geometry and styling are gone.</p>
+        <ul>
+          <li>OCR and parsers recover text and some structure, <b>never the geometry</b></li>
+          <li>Without position, you cannot tell which number belongs to which row</li>
+          <li>Without style, a <b>struck-through</b> line reads as a live one</li>
+        </ul>
+      </div>
+    </div>
+    <div class="unify">
+      <b>One commitment underneath both halves:</b> keep the page's geometry in the representation —
+      as pixel-accurate <b>masks</b> (Part I) and as a constrained, measurable <b>HTML</b> that renders back
+      to the original (Part II). Everything else in this talk follows from that.
+    </div>
+  </div>
+</section>
+
+<!-- =========================== 2 · ROADMAP =========================== -->
+<section class="mslide" data-label="Roadmap" style="--accent:var(--orange)">
+  <div class="eyebrow">Roadmap</div>
+  <h2>Four systems, <em>two movements</em></h2>
+  <p class="lede">Part I builds up from grounding a single answer to grounding the entire page.
+    Part II takes that page and reconstructs it.</p>
+  <div class="body">
+    <div class="road">
+      <div class="sys" style="--sc:var(--blue)">
+        <div class="n">01</div>
+        <h4>M3Grounder</h4>
+        <div class="v">CVPR 2026</div>
+        <p>Answers grounded in <b>masks</b>, not boxes — any shape, at three granularities.</p>
+      </div>
+      <div class="sys" style="--sc:#8b6ff0">
+        <div class="n">02</div>
+        <h4>DoCoG</h4>
+        <div class="v">ECCV 2026 · <span class="oral">Oral</span></div>
+        <p>Grounds every <b>step of the reasoning</b>, not just the final answer.</p>
+      </div>
+      <div class="sys" style="--sc:#2fa88a">
+        <div class="n">03</div>
+        <h4>DocLayout-VL</h4>
+        <div class="v">ECCV 2026</div>
+        <p>Grounds the <b>whole page</b>: a layout tree with a mask on every node.</p>
+      </div>
+      <div class="sys" style="--sc:var(--gold)">
+        <div class="n">04</div>
+        <h4>REPLICA</h4>
+        <div class="v">ICDAR 2026 · <span class="oral">Oral</span></div>
+        <p>Agents rebuild the page as <b>FID-HTML</b> that renders back to the original.</p>
+      </div>
+    </div>
+    <div class="partband">
+      <div class="band p1">Part I · Grounding the page</div>
+      <div class="band p2">Part II · Rebuilding it</div>
+    </div>
+    <div class="unify" style="margin-top:2.6vh">
+      <b>Watch for the shared recipe.</b> Each system does the same three things: pick a representation that
+      keeps geometry, build supervision for it <b>without hand-annotation</b>, then define a benchmark that
+      actually scores the thing you claim to have fixed.
+    </div>
+  </div>
+</section>
+
+<!-- ======================== 3 · PART I DIVIDER ======================= -->
+<section class="mslide divider" data-label="Part I — divider" style="--accent:var(--blue-deep)">
+  <div class="clock">≈ 35 min</div>
+  <div class="eyebrow">Part I</div>
+  <h1>Grounding<br>the Page</h1>
+  <p class="lede">From “here is the answer” to “here is the answer, and here is exactly where it lives.”</p>
+  <div class="chips">
+    <span>M3Grounder — masks as evidence</span>
+    <span>DoCoG — grounded chain-of-thought</span>
+    <span>DocLayout-VL — the page as a tree</span>
+  </div>
+</section>
+
+<!-- ===================== 4 · CHAPTER A (54 slides) =================== -->
+<section class="mslide chapter" data-label="Part I · Grounding" data-color="var(--blue)"
+         data-src="chapters/grounding/deck.html" data-count="54">
+</section>
+
+<!-- ========================== 5 · INTERLUDE ========================== -->
+<section class="mslide" data-label="Interlude" style="--accent:var(--orange)">
+  <div class="eyebrow">Between the parts</div>
+  <h2>We can now <em>point at</em> the whole page. We still can't <em>produce</em> one.</h2>
+  <div class="body">
+    <div class="split">
+      <div class="side" style="--sc:var(--blue)">
+        <div class="tag">What Part I settled</div>
+        <h3>The page became addressable</h3>
+        <ul>
+          <li>Evidence has <b>arbitrary shape</b> — masks, not boxes (M3Grounder)</li>
+          <li>Evidence attaches to <b>each reasoning step</b> (DoCoG)</li>
+          <li>The full page decomposes into a <b>tree of grounded regions</b> (DocLayout-VL)</li>
+        </ul>
+      </div>
+      <div class="vs">so what's left</div>
+      <div class="side" style="--sc:var(--gold)">
+        <div class="tag">What it leaves open</div>
+        <h3>Reading ≠ reconstructing</h3>
+        <ul>
+          <li>All three <b>consume</b> a page. None has to <b>emit</b> one</li>
+          <li>A layout tree says <i>what is where</i> — not what it <b>looks like</b></li>
+          <li>Nothing so far is scored on whether the output <b>renders back</b></li>
+        </ul>
+      </div>
+    </div>
+    <div class="unify">
+      <b>Part II closes the loop.</b> Take the grounded page and regenerate it — then judge the result the
+      only honest way: render it, and compare the pixels to the original.
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 6 · PART II DIVIDER ======================= -->
+<section class="mslide divider" data-label="Part II — divider" style="--accent:var(--navy)">
+  <div class="clock">≈ 20 min</div>
+  <div class="eyebrow">Part II</div>
+  <h1>Rebuilding<br>the Page</h1>
+  <p class="lede">Reconstruction you can <i>look at</i> — a representation that renders, and a metric that
+    scores what you see.</p>
+  <div class="chips">
+    <span>FID-HTML — a representation that guarantees fidelity</span>
+    <span>REPLICA — agents that segment, localize, assemble, refine</span>
+    <span>VFDR-Bench — scoring position and style, not just text</span>
+  </div>
+</section>
+
+<!-- ===================== 7 · CHAPTER B (28 slides) =================== -->
+<section class="mslide chapter" data-label="Part II · REPLICA" data-color="var(--gold)"
+         data-src="chapters/replica/deck.html" data-count="25">
+</section>
+
+<!-- ========================== 8 · SYNTHESIS ========================== -->
+<section class="mslide" data-label="Synthesis" style="--accent:var(--orange)">
+  <div class="eyebrow">Synthesis</div>
+  <h2>One recipe, <em>four systems</em></h2>
+  <p class="lede">Different papers, different venues — the same three moves each time.</p>
+  <div class="body">
+    <div class="recipe">
+      <div class="hd" style="width:13vw"></div>
+      <div class="hd s" style="--sc:var(--blue)">M3Grounder</div>
+      <div class="hd s" style="--sc:#8b6ff0">DoCoG</div>
+      <div class="hd s" style="--sc:#2fa88a">DocLayout-VL</div>
+      <div class="hd s" style="--sc:var(--gold)">REPLICA</div>
+
+      <div class="rl">Representation<br><span style="color:var(--txt-3);font-weight:400">keep the geometry</span></div>
+      <div class="cell s" style="--sc:var(--blue)"><b>Masks</b> at three granularities — any shape of evidence</div>
+      <div class="cell s" style="--sc:#8b6ff0"><b>Per-step</b> evidence, multi-type, joined through GIM</div>
+      <div class="cell s" style="--sc:#2fa88a"><b>Layout tree</b> with a mask on every node</div>
+      <div class="cell s" style="--sc:var(--gold)"><b>FID-HTML</b> — constrained HTML that must render back</div>
+
+      <div class="rl">Supervision<br><span style="color:var(--txt-3);font-weight:400">at scale, no hand-drawn labels</span></div>
+      <div class="cell"><b>GroundingDocQA</b> — 200K docs / 2M QA, synthesised from renderers</div>
+      <div class="cell"><b>DoCoG-QA</b> — 325K docs / 1.5M QA, multi-type by construction</div>
+      <div class="cell"><b>HOPLay-Docs-80M</b> — layout supervision at foundation scale</div>
+      <div class="cell"><b>Agents + tools</b> — supervision replaced by executable checks</div>
+
+      <div class="rl">Measurement<br><span style="color:var(--txt-3);font-weight:400">score the thing you fixed</span></div>
+      <div class="cell"><b>GDQA-Bench</b> — human-verified; boxes plateau, masks jump</div>
+      <div class="cell"><b>DoCoG-PQA</b> — one gate, three scores over the reasoning</div>
+      <div class="cell">Zero-shot layout — <b>architecture beats data scale</b></div>
+      <div class="cell"><b>VFDR-Bench</b> — position and style, where the field collapses</div>
+    </div>
+    <p class="closing">The consistent finding across all four: <b>the representation is the result.</b>
+      Boxes cap what grounding can express; text-only HTML caps what reconstruction can preserve.
+      Change what the model is allowed to say, and the metric moves.</p>
+  </div>
+</section>
+
+<!-- =========================== 9 · THANKS ============================ -->
+<section class="mslide hero" data-label="Thank you">
+  <div class="eyebrow" style="--accent:var(--gold)">Thank you</div>
+  <h1>Questions?</h1>
+  <div class="rule"></div>
+  <p class="sub" style="font-family:var(--mono);font-size:1.9vh;letter-spacing:.04em">
+    m3grounder.github.io &nbsp;·&nbsp; docog-eccv.github.io<br>
+    doclayoutvl.github.io &nbsp;·&nbsp; replica-agents.github.io
+  </p>
+  <div class="venues" style="margin-top:3vh">
+    <span class="venue"><b>M3Grounder</b> · CVPR 2026</span>
+    <span class="venue oral"><b>DoCoG</b> · ECCV 2026 · Oral</span>
+    <span class="venue"><b>DocLayout-VL</b> · ECCV 2026</span>
+    <span class="venue oral"><b>REPLICA</b> · ICDAR 2026 · Oral</span>
+  </div>
+  <div class="logos">
+    <span><img src="chapters/grounding/assets/logo_bharatgen.png" alt="BharatGen"></span>
+    <span><img src="chapters/grounding/assets/logo_iiith.jpg" alt="IIIT Hyderabad"></span>
+    <span><img src="chapters/replica/static/images/logos/icdar_logo.png" alt="ICDAR"></span>
+  </div>
+</section>
+
+</div>
+
+<div id="bar"></div>
+<div id="hud"><span class="dot"></span><span id="hudLabel"></span><span class="sep">·</span><span id="hudPos"></span></div>
+
+<div id="menu">
+  <h3>Jump to</h3>
+  <ol id="menuList"></ol>
+  <p class="hint">
+    <kbd>→</kbd> <kbd>space</kbd> next &nbsp; <kbd>←</kbd> back &nbsp;
+    <kbd>M</kbd> this menu &nbsp; <kbd>F</kbd> fullscreen &nbsp;
+    <kbd>Home</kbd>/<kbd>End</kbd> first/last &nbsp; <kbd>Esc</kbd> close<br>
+    Inside a chapter the original deck's own keys still work
+    (<kbd>G</kbd>/<kbd>O</kbd> overview, <kbd>N</kbd> notes, <kbd>V</kbd> source) — and stepping past its
+    last or first slide returns you here.
+  </p>
+</div>
+
+<script>
+(function(){
+  const deck   = document.getElementById('deck');
+  const slides = [...document.querySelectorAll('.mslide')];
+  const bar    = document.getElementById('bar');
+  const hud    = document.getElementById('hud');
+  const hudLbl = document.getElementById('hudLabel');
+  const hudPos = document.getElementById('hudPos');
+  const menu   = document.getElementById('menu');
+  const menuLs = document.getElementById('menuList');
+
+  // Weight the global progress bar by real slide counts, so the bar tracks the
+  // talk rather than the ten wrapper slides.
+  const weight = slides.map(s => s.classList.contains('chapter') ? (+s.dataset.count || 1) : 1);
+  const total  = weight.reduce((a,b)=>a+b,0);
+  const before = weight.map((_,n)=>weight.slice(0,n).reduce((a,b)=>a+b,0));
+
+  let cur = 0;
+  const childState = {};              // chapter index -> {index,total}
+
+  const isChapter = n => slides[n].classList.contains('chapter');
+  const fragsOf   = n => [...slides[n].querySelectorAll('.f')];
+
+  function frame(n){
+    const s = slides[n];
+    let f = s.querySelector('iframe');
+    if(!f){
+      f = document.createElement('iframe');
+      f.setAttribute('title', s.dataset.label || 'chapter');
+      f.src = s.dataset.src;
+      s.appendChild(f);
+    }
+    return f;
+  }
+  function cmd(action, extra){
+    if(!isChapter(cur)) return;
+    const w = frame(cur).contentWindow;
+    if(w) w.postMessage(Object.assign({channel:'docai', type:'cmd', action}, extra||{}), '*');
+  }
+
+  let hudTimer;
+  function paintHud(){
+    const s = slides[cur];
+    hud.style.setProperty('--hc', s.dataset.color || 'var(--blue)');
+    hudLbl.textContent = s.dataset.label || '';
+    if(isChapter(cur)){
+      const st = childState[cur];
+      hudPos.textContent = st ? (st.index + 1) + ' / ' + st.total : '…';
+    } else {
+      hudPos.textContent = (cur + 1) + ' / ' + slides.length;
+    }
+    hud.classList.add('show');
+    clearTimeout(hudTimer);
+    hudTimer = setTimeout(()=>hud.classList.remove('show'), 1800);
+  }
+  function paintBar(){
+    let done = before[cur];
+    if(isChapter(cur) && childState[cur]) done += childState[cur].index;
+    bar.style.width = (done / (total - 1) * 100) + '%';
+  }
+  function paintMenu(){
+    menuLs.querySelectorAll('li').forEach((li,n)=>li.classList.toggle('cur', n===cur));
+  }
+
+  function show(n, from){
+    cur = Math.max(0, Math.min(slides.length-1, n));
+    slides.forEach((s,j)=>s.classList.toggle('on', j===cur));
+    if(isChapter(cur)){
+      const f = frame(cur);
+      // A freshly created frame has not run bridge.js yet; wait for its ready.
+      const enter = () => f.contentWindow &&
+        f.contentWindow.postMessage({channel:'docai',type:'cmd',action:'enter',from:from||'next'}, '*');
+      if(f.dataset.ready) enter(); else f.addEventListener('load', enter, {once:true});
+      setTimeout(()=>{ try{ f.contentWindow.focus(); }catch(e){} }, 60);
+    } else {
+      fragsOf(cur).forEach(el=>el.classList.toggle('on', from === 'prev'));
+    }
+    history.replaceState(null, '', '#' + cur);
+    paintHud(); paintBar(); paintMenu();
+  }
+
+  function next(){
+    if(isChapter(cur)) return cmd('next');
+    const hidden = fragsOf(cur).filter(el=>!el.classList.contains('on'));
+    if(hidden.length){ hidden[0].classList.add('on'); return; }
+    if(cur < slides.length-1) show(cur+1, 'next');
+  }
+  function prev(){
+    if(isChapter(cur)) return cmd('prev');
+    const shown = fragsOf(cur).filter(el=>el.classList.contains('on'));
+    if(shown.length){ shown[shown.length-1].classList.remove('on'); return; }
+    if(cur > 0) show(cur-1, 'prev');
+  }
+
+  // ---- chapter → master ----
+  window.addEventListener('message', e => {
+    const d = e.data || {};
+    if(d.channel !== 'docai') return;
+    const n = slides.findIndex(s => { const f = s.querySelector('iframe'); return f && f.contentWindow === e.source; });
+    if(n < 0) return;
+    if(d.type === 'ready'){ slides[n].querySelector('iframe').dataset.ready = '1'; return; }
+    if(d.type === 'state'){
+      childState[n] = {index:d.index, total:d.total};
+      if(n === cur){ paintBar(); if(hud.classList.contains('show')) paintHud(); }
+      return;
+    }
+    if(d.type === 'exit' && n === cur){
+      d.dir === 'next' ? show(cur+1, 'next') : show(cur-1, 'prev');
+    }
+  });
+
+  // ---- menu ----
+  slides.forEach((s,n)=>{
+    const li = document.createElement('li');
+    li.innerHTML = '<span class="k">' + (n+1) + '</span><span class="t">' +
+      (s.dataset.label || '') + '</span>' +
+      (s.classList.contains('chapter') ? '<span class="c">' + s.dataset.count + ' slides</span>' : '');
+    if(s.dataset.color) li.style.setProperty('--mc', s.dataset.color);
+    li.addEventListener('click', ()=>{ menu.classList.remove('on'); show(n, 'next'); });
+    menuLs.appendChild(li);
+  });
+
+  addEventListener('keydown', e => {
+    if(e.metaKey || e.ctrlKey || e.altKey) return;
+    const k = e.key;
+    if(k === 'Escape'){ menu.classList.remove('on'); return; }
+    if(k === 'm' || k === 'M'){ e.preventDefault(); menu.classList.toggle('on'); return; }
+    if(menu.classList.contains('on')) return;
+    if(k === 'ArrowRight' || k === ' ' || k === 'PageDown'){ e.preventDefault(); next(); }
+    else if(k === 'ArrowLeft' || k === 'PageUp' || k === 'Backspace'){ e.preventDefault(); prev(); }
+    else if(k === 'Home'){ e.preventDefault(); show(0, 'next'); }
+    else if(k === 'End'){ e.preventDefault(); show(slides.length-1, 'prev'); }
+    else if(k === 'f' || k === 'F'){
+      e.preventDefault();
+      document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen();
+    }
+  });
+
+  deck.addEventListener('click', e => {
+    if(isChapter(cur)) return;                    // the chapter handles its own clicks
+    if(e.target.closest('a')) return;
+    (e.clientX > innerWidth * .35) ? next() : prev();
+  });
+
+  addEventListener('hashchange', ()=>{
+    const n = parseInt(location.hash.slice(1), 10);
+    if(!isNaN(n) && n !== cur) show(n, 'next');
+  });
+
+  const start = parseInt(location.hash.slice(1), 10);
+  show(isNaN(start) ? 0 : start, 'next');
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>M3Grounder — grounded answers, live</title>
+<style>
+  :root{
+    --blue:#05539C; --orange:#F59222; --ink:#16222e; --muted:#5b6b7a; --faint:#8a97a5;
+    --bg:#f6f8fa; --card:#fff; --line:#dde5ec;
+    --s0:#F59222; --s1:#7C3AED; --s2:#0E7C61;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);display:flex;flex-direction:column;overflow:hidden}
+  .tabs{display:flex;gap:8px;padding:10px 14px 8px;align-items:center;flex:0 0 auto}
+  .tab{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 16px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .15s}
+  .tab:hover{border-color:var(--blue);color:var(--blue)}
+  .tab.on{background:var(--blue);border-color:var(--blue);color:#fff}
+  .tabs .hint{margin-left:auto;font-size:11.5px;color:var(--faint)}
+  .main{flex:1;display:flex;gap:14px;padding:0 14px 12px;min-height:0}
+  .imgpane{flex:1.15;display:flex;flex-direction:column;min-width:0;min-height:0}
+  .imgwrap{position:relative;flex:1;min-height:0;border:1px solid var(--line);border-radius:12px;background:#fff;overflow:hidden;display:flex;align-items:center;justify-content:center}
+  .imgbox{position:relative;max-width:100%;max-height:100%}
+  .imgbox img{display:block;width:100%;height:100%}
+  .mask{position:absolute;border:2px solid;border-radius:3px;opacity:0;transition:opacity .45s ease;pointer-events:none}
+  .mask.show{opacity:1}
+  svg.polys{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+  svg.polys polygon{opacity:0;transition:opacity .45s ease}
+  svg.polys polygon.show{opacity:1}
+  .grans{display:flex;gap:6px;justify-content:center;padding-top:8px;flex:0 0 auto}
+  .gran{border:1px solid var(--line);background:#fff;border-radius:8px;padding:5px 14px;font-size:12.5px;font-weight:600;color:var(--muted);cursor:pointer}
+  .gran:hover{border-color:var(--blue);color:var(--blue)}
+  .gran.on{background:var(--blue);border-color:var(--blue);color:#fff}
+  .grans.hidden{visibility:hidden}
+  .chat{flex:1;display:flex;flex-direction:column;gap:10px;min-width:0;min-height:0;overflow:auto;padding-top:2px}
+  .bubble{border-radius:14px;padding:12px 15px;font-size:14.5px;line-height:1.65;max-width:95%}
+  .q{background:#e9eef5;color:var(--ink);align-self:flex-start;border:1px solid var(--line);opacity:0;transform:translateY(8px);transition:all .4s ease}
+  .q.show{opacity:1;transform:none}
+  .q .who,.a .who{display:block;font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-bottom:4px}
+  .a{background:#fff;border:1px solid var(--line);align-self:flex-end;box-shadow:0 2px 8px rgba(10,30,60,.06);display:none;min-height:44px}
+  .a.show{display:block}
+  .a .caret{display:inline-block;width:7px;height:15px;background:var(--blue);vertical-align:text-bottom;margin-left:1px;animation:blink .8s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+  .sp{font-weight:700;border-radius:4px;padding:0 2px}
+  .gtok{display:inline-block;font-family:Menlo,Consolas,monospace;font-size:11px;font-weight:700;background:#0d2740;border-radius:5px;padding:1px 6px;margin:0 2px;vertical-align:baseline}
+  .legend{display:none;gap:8px;flex-wrap:wrap;align-self:flex-end}
+  .legend.show{display:flex}
+  .lg{display:flex;align-items:center;gap:5px;font-size:11.5px;color:var(--muted);background:#fff;border:1px solid var(--line);border-radius:999px;padding:3px 10px}
+  .lg i{width:10px;height:10px;border-radius:3px;display:inline-block}
+</style>
+</head>
+<body>
+  <div class="tabs" id="tabs"><span class="hint">R restart · auto-cycles until you click</span></div>
+  <div class="main">
+    <div class="imgpane">
+      <div class="imgwrap"><div class="imgbox" id="imgbox"><img id="doc" alt="document"></div></div>
+      <div class="grans" id="grans">
+        <button class="gran on" data-g="phrase">Phrase</button>
+        <button class="gran" data-g="line">Line</button>
+        <button class="gran" data-g="block">Block</button>
+      </div>
+    </div>
+    <div class="chat">
+      <div class="bubble q" id="qb"><span class="who">Question</span><span id="qtext"></span></div>
+      <div class="bubble a" id="ab"><span class="who">M3Grounder</span><span id="atext"></span></div>
+      <div class="legend" id="legend"></div>
+    </div>
+  </div>
+
+<script>
+'use strict';
+var SPAN_COLORS=['#F59222','#7C3AED','#0E7C61'];
+var SPAN_FILLS=['rgba(245,146,34,.30)','rgba(124,58,237,.28)','rgba(14,124,97,.28)'];
+
+var EXAMPLES=[
+ {id:'finance',label:'Finance',image:'m3g_qual/finance_doc.png',
+  question:'What was the Customer Support renewal rate for the quarter ended June 30, 2019, and the Customer Support revenue in the Americas?',
+  spans:[
+   {text:'approximately 91%',bbox:{phrase:[{x:33.86,y:32.52,w:13.64,h:1.61}],line:[{x:7.86,y:32.52,w:83.36,h:1.88}],block:[{x:7.77,y:20.45,w:84.36,h:15.14}]}},
+   {text:'$718,209',bbox:{phrase:[{x:41.68,y:49.06,w:9.45,h:1.81}],line:[{x:7.95,y:48.92,w:83.27,h:2.09}],block:[{x:7.59,y:40.96,w:84.36,h:20.66}]}}
+  ],
+  tokens:[
+   {t:'text',c:'The document reports a Customer Support renewal rate of '},
+   {t:'open',k:0},{t:'text',c:'approximately 91%'},{t:'close'},{t:'ground',k:0},
+   {t:'text',c:' and an Americas Customer Support revenue of '},
+   {t:'open',k:1},{t:'text',c:'$718,209'},{t:'close'},{t:'ground',k:1},
+   {t:'text',c:' for 2019.'}
+  ]},
+ {id:'legal',label:'Legal',image:'m3g_qual/legal_doc.png',
+  question:'Which types of organizations may be considered as the Auditee according to this NDA?',
+  spans:[
+   {text:'Central Government Ministry/ Departments…',bbox:{
+     phrase:[{x:24.95,y:14.09,w:67.82,h:2.24},{x:9.23,y:16.34,w:32.91,h:2.37}],
+     line:[{x:8.86,y:14.03,w:84.82,h:2.24},{x:8.68,y:16.27,w:34.55,h:2.37}],
+     block:[{x:8.68,y:14.03,w:84.09,h:4.55}]}},
+   {text:'Autonomous Societies/ Not-for-profit companies…',bbox:{
+     phrase:[{x:25.5,y:34.59,w:67,h:2.31},{x:9.05,y:36.84,w:47.91,h:2.5}],
+     line:[{x:9.14,y:34.4,w:83.45,h:2.18},{x:9.05,y:36.64,w:47.91,h:2.56}],
+     block:[{x:9.14,y:34.53,w:84.45,h:4.55}]}}
+  ],
+  tokens:[
+   {t:'text',c:'The NDA specifies that the Auditee may belong to '},
+   {t:'open',k:0},{t:'text',c:'Central Government Ministry / State Government Departments'},{t:'close'},{t:'ground',k:0},
+   {t:'text',c:' as well as '},
+   {t:'open',k:1},{t:'text',c:'Autonomous Societies, Not-for-profit companies, Public & Private sector DLSP/DL Repository'},{t:'close'},{t:'ground',k:1},
+   {t:'text',c:'.'}
+  ]},
+ {id:'transcript',label:'Transcript',image:'m3g_qual/transcript_doc.png',
+  question:"What is the student's ID number and what grade did Data Analytics receive?",
+  spans:[
+   {text:'3123456',bbox:{phrase:[{x:22.95,y:13.90,w:7.73,h:1.67}],line:[{x:7.23,y:13.90,w:23.73,h:1.80}],block:[{x:7.32,y:13.77,w:23.27,h:1.99}]}},
+   {text:'HD',bbox:{phrase:[{x:85.50,y:27.61,w:3.45,h:1.48}],line:[{x:15.23,y:27.48,w:73.73,h:1.80}],block:[{x:6.95,y:22.33,w:84.36,h:15.38}]}}
+  ],
+  tokens:[
+   {t:'text',c:'The student ID is '},
+   {t:'open',k:0},{t:'text',c:'3123456'},{t:'close'},{t:'ground',k:0},
+   {t:'text',c:' and the grade for Data Analytics is '},
+   {t:'open',k:1},{t:'text',c:'HD'},{t:'close'},{t:'ground',k:1},
+   {t:'text',c:'.'}
+  ]},
+ {id:'coffee',label:'Coffee Chart',image:'m3g_qual/coffee_chart.png',
+  question:'Which coffee brand is being compared, and what is the average coffee price for New York?',
+  spans:[
+   {text:'Starbucks Coffee',masks:[
+     {points:[[82.18,47.77],[82.73,45.01],[83.91,42.55],[86.27,39.78],[88.45,39.02],[91.18,39.17],[92.64,41.17],[94.36,43.01],[95,45.78],[95.73,49.16],[93.55,49.31],[92.55,47.16],[91.64,44.85],[90.73,43.47],[88.73,43.01],[87.73,42.86],[86.18,44.7],[84.91,47.77],[84.27,50.38]]},
+     {points:[[83.55,55.76],[85.18,53.61],[86.82,55.91],[88.36,56.99],[90.09,56.68],[91.45,55.15],[92.55,53.3],[94.09,56.37],[93.09,58.37],[90.64,60.37],[88.18,60.98],[84.73,58.99]]}]},
+   {text:'New York',masks:[{points:[[3,41.01],[12.27,41.01],[12.27,44.55],[3,44.55]]}]},
+   {text:'$3.45',masks:[{points:[[62.45,41.32],[68,41.32],[68,44.39],[62.45,44.39]]}]}
+  ],
+  tokens:[
+   {t:'text',c:'The coffee brand being compared is '},
+   {t:'open',k:0},{t:'text',c:'Starbucks Coffee'},{t:'close'},{t:'ground',k:0},
+   {t:'text',c:', and the average coffee price for '},
+   {t:'open',k:1},{t:'text',c:'New York'},{t:'close'},{t:'ground',k:1},
+   {t:'text',c:' is '},
+   {t:'open',k:2},{t:'text',c:'$3.45'},{t:'close'},{t:'ground',k:2},
+   {t:'text',c:'.'}
+  ]}
+];
+
+var REDUCED=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+var tabsEl=document.getElementById('tabs'),imgbox=document.getElementById('imgbox'),
+    doc=document.getElementById('doc'),gransEl=document.getElementById('grans'),
+    qb=document.getElementById('qb'),qtext=document.getElementById('qtext'),
+    ab=document.getElementById('ab'),atext=document.getElementById('atext'),
+    legend=document.getElementById('legend');
+
+var cur=0,gran='phrase',timers=[],revealed=[],autoCycle=true,html='';
+
+/* size .imgbox to the contain-fit of the image so %-positioned masks align exactly */
+function fitImgbox(){
+  if(!doc.naturalWidth)return;
+  var wrap=imgbox.parentNode;
+  var s=Math.min(wrap.clientWidth/doc.naturalWidth,wrap.clientHeight/doc.naturalHeight);
+  imgbox.style.width=(doc.naturalWidth*s)+'px';
+  imgbox.style.height=(doc.naturalHeight*s)+'px';
+}
+doc.addEventListener('load',fitImgbox);
+window.addEventListener('resize',fitImgbox);
+
+/* build tabs */
+EXAMPLES.forEach(function(ex,i){
+  var b=document.createElement('button');
+  b.className='tab'+(i===0?' on':'');b.textContent=ex.label;
+  b.addEventListener('click',function(){autoCycle=false;select(i);});
+  tabsEl.insertBefore(b,tabsEl.querySelector('.hint'));
+});
+gransEl.querySelectorAll('.gran').forEach(function(b){
+  b.addEventListener('click',function(){
+    gran=b.dataset.g;
+    gransEl.querySelectorAll('.gran').forEach(function(x){x.classList.toggle('on',x===b);});
+    drawMasks();
+  });
+});
+document.addEventListener('keydown',function(e){
+  if(e.key==='r'||e.key==='R'){autoCycle=false;select(cur);}
+});
+
+function clearTimers(){timers.forEach(clearTimeout);timers=[];}
+function later(fn,ms){timers.push(setTimeout(fn,ms));}
+
+function select(i){
+  clearTimers();
+  cur=i;revealed=[];html='';
+  var ex=EXAMPLES[i];
+  tabsEl.querySelectorAll('.tab').forEach(function(t,j){t.classList.toggle('on',j===i);});
+  gransEl.classList.toggle('hidden',!ex.spans[0].bbox);
+  doc.src=ex.image;
+  qtext.textContent=ex.question;
+  qb.classList.remove('show');ab.classList.remove('show');
+  atext.innerHTML='';legend.classList.remove('show');legend.innerHTML='';
+  /* clear old masks */
+  imgbox.querySelectorAll('.mask, svg.polys').forEach(function(n){n.remove();});
+  buildMaskEls(ex);
+  if(REDUCED){qb.classList.add('show');finishInstant(ex);return;}
+  later(function(){qb.classList.add('show');},250);
+  later(function(){ab.classList.add('show');stream(ex);},1150);
+}
+
+function buildMaskEls(ex){
+  if(ex.spans[0].bbox){
+    ex.spans.forEach(function(sp,k){
+      Object.keys(sp.bbox).forEach(function(g){
+        sp.bbox[g].forEach(function(r){
+          var d=document.createElement('div');
+          d.className='mask';d.dataset.k=k;d.dataset.g=g;
+          d.style.left=r.x+'%';d.style.top=r.y+'%';d.style.width=r.w+'%';d.style.height=r.h+'%';
+          d.style.borderColor=SPAN_COLORS[k];d.style.background=SPAN_FILLS[k];
+          imgbox.appendChild(d);
+        });
+      });
+    });
+  }else{
+    var svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+    svg.setAttribute('class','polys');svg.setAttribute('viewBox','0 0 100 100');
+    svg.setAttribute('preserveAspectRatio','none');
+    ex.spans.forEach(function(sp,k){
+      sp.masks.forEach(function(m){
+        var pg=document.createElementNS('http://www.w3.org/2000/svg','polygon');
+        pg.setAttribute('points',m.points.map(function(p){return p[0]+','+p[1];}).join(' '));
+        pg.setAttribute('fill',SPAN_FILLS[k]);pg.setAttribute('stroke',SPAN_COLORS[k]);
+        pg.setAttribute('stroke-width','.45');pg.setAttribute('vector-effect','non-scaling-stroke');
+        pg.dataset.k=k;
+        svg.appendChild(pg);
+      });
+    });
+    imgbox.appendChild(svg);
+  }
+}
+
+function drawMasks(){
+  imgbox.querySelectorAll('.mask').forEach(function(d){
+    d.classList.toggle('show',revealed.indexOf(+d.dataset.k)>-1 && d.dataset.g===gran);
+  });
+  imgbox.querySelectorAll('svg.polys polygon').forEach(function(pg){
+    pg.classList.toggle('show',revealed.indexOf(+pg.dataset.k)>-1);
+  });
+}
+
+function reveal(k,ex){
+  if(revealed.indexOf(k)<0)revealed.push(k);
+  drawMasks();
+  var lg=document.createElement('span');
+  lg.className='lg';
+  lg.innerHTML='<i style="background:'+SPAN_COLORS[k]+'"><\/i>'+ex.spans[k].text;
+  legend.appendChild(lg);legend.classList.add('show');
+}
+
+function chip(k){
+  return '<span class="gtok" style="color:'+SPAN_COLORS[k]+'">[GROUND]<\/span>';
+}
+
+/* stream the answer token list with a typewriter effect */
+function stream(ex){
+  var flat=[];   /* [{ch, openK|null, closing, groundK|null}] */
+  ex.tokens.forEach(function(tk){
+    if(tk.t==='text'){tk.c.split('').forEach(function(ch){flat.push({ch:ch});});}
+    else if(tk.t==='open'){flat.push({open:tk.k});}
+    else if(tk.t==='close'){flat.push({close:true});}
+    else if(tk.t==='ground'){flat.push({ground:tk.k});}
+  });
+  var i=0,openK=null;
+  function step(){
+    if(i>=flat.length){atext.innerHTML=html;return;}
+    var f=flat[i++];
+    if(f.open!==undefined){openK=f.open;html+='<span class="sp" style="color:'+SPAN_COLORS[openK]+'">';}
+    else if(f.close){html+='<\/span>';openK=null;}
+    else if(f.ground!==undefined){html+=chip(f.ground);reveal(f.ground,ex);}
+    else{html+=f.ch==='<'?'&lt;':(f.ch==='>'?'&gt;':f.ch);}
+    atext.innerHTML=html+'<span class="caret"><\/span>';
+    later(step, f.ground!==undefined?260:(f.ch===' '?24:14));
+  }
+  step();
+  /* auto-advance to the next example */
+  if(autoCycle){later(function(){if(autoCycle)select((cur+1)%EXAMPLES.length);}, 16000);}
+}
+
+function finishInstant(ex){
+  ab.classList.add('show');
+  var out='';
+  ex.tokens.forEach(function(tk){
+    if(tk.t==='text'){out+=tk.c.replace(/[<]/g,'&lt;').replace(/[>]/g,'&gt;');}
+    else if(tk.t==='open'){out+='<span class="sp" style="color:'+SPAN_COLORS[tk.k]+'">';}
+    else if(tk.t==='close'){out+='<\/span>';}
+    else if(tk.t==='ground'){out+=chip(tk.k);if(revealed.indexOf(tk.k)<0)revealed.push(tk.k);}
+  });
+  atext.innerHTML=out;
+  drawMasks();
+  EXAMPLES[cur].spans.forEach(function(sp,k){
+    var lg=document.createElement('span');lg.className='lg';
+    lg.innerHTML='<i style="background:'+SPAN_COLORS[k]+'"><\/i>'+sp.text;
+    legend.appendChild(lg);
+  });
+  legend.classList.add('show');
+}
+
+/* boot */
+if(REDUCED){select(0);}
+else{setTimeout(function(){select(0);},700);}
+</script>
+</body>
+</html>

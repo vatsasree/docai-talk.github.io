@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DoCoG — Interactive Architecture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f5f6f9; --card:#ffffff; --ink:#20222b; --muted:#7a7f8c;
+  --brand:#4F46E5;
+  --vlm:#d79b00; --vlm-bg:#fff8e8;
+  --gim:#7f00ff; --gim-bg:#f6efff;
+  --seg:#10739e; --seg-bg:#ecf6fb;
+  --out:#e0245e;
+  --wire:#a9aebc;
+  --tok-b:#2323e6; --tok-g:#19c37d; --tok-m:#d016d0;
+  --pent:#8fd4ea;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--paper);color:var(--ink);font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif}
+
+/* ── header / controls ─────────────────────────── */
+header{position:sticky;top:0;z-index:50;background:rgba(245,246,249,.92);backdrop-filter:blur(8px);
+  border-bottom:1px solid #e3e5ec;padding:10px 18px;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center}
+header h1{font-size:18px;font-weight:800;letter-spacing:.2px}
+header h1 span{color:var(--brand)}
+.controls{display:flex;gap:8px;align-items:center}
+button.ctl{font-family:'Inter';font-weight:700;font-size:13px;border:1.5px solid #d6d9e2;background:#fff;
+  color:var(--ink);border-radius:9px;padding:6px 14px;cursor:pointer;transition:all .15s}
+button.ctl:hover{border-color:var(--brand);color:var(--brand)}
+button.ctl.primary{background:var(--brand);border-color:var(--brand);color:#fff}
+button.ctl.primary:hover{filter:brightness(1.1)}
+select.ctl{font-family:'Inter';font-weight:700;font-size:13px;border:1.5px solid #d6d9e2;border-radius:9px;padding:6px 8px;background:#fff;cursor:pointer}
+#caption{flex:1 1 100%;font-size:15.5px;font-weight:700;color:var(--muted);min-height:22px;transition:color .3s}
+#caption.hot{color:var(--ink)}
+
+/* ── stage / scaling ───────────────────────────── */
+#viewport{width:100%;overflow:hidden;position:relative;cursor:grab;touch-action:none;background:var(--paper)}
+#stage{position:absolute;left:0;top:0;width:1500px;height:1256px;transform-origin:0 0;will-change:transform}
+
+/* panels & module boxes */
+.panel{position:absolute;background:var(--card);border:1.5px solid #e6e8ef;border-radius:16px;
+  box-shadow:0 2px 10px rgba(30,35,60,.05);opacity:0;transform:translateY(10px);transition:opacity .6s,transform .6s}
+.panel.show{opacity:1;transform:none}
+.module{position:absolute;border-radius:16px;border:2px solid;opacity:0;transform:translateY(10px);
+  transition:opacity .6s,transform .6s,box-shadow .5s}
+.module.show{opacity:1;transform:none}
+.module.lit{box-shadow:0 0 0 4px var(--glow,rgba(0,0,0,.08)),0 8px 24px rgba(30,35,60,.10)}
+.mtitle{position:absolute;top:-13px;left:18px;background:var(--card);padding:0 8px;font-weight:800;font-size:17px}
+
+.block{position:absolute;border-radius:9px;font-weight:700;font-size:14.5px;display:flex;align-items:center;
+  justify-content:center;gap:6px;border:1.5px solid;transition:box-shadow .3s,transform .3s}
+.block.lit{box-shadow:0 0 0 3px var(--glow,rgba(0,0,0,.1));transform:scale(1.03)}
+.emoji{font-size:14px;filter:saturate(1.1)}
+.badge{position:absolute;width:26px;height:26px;border-radius:50%;background:#20222b;color:#fff;font-weight:800;
+  font-size:13px;display:flex;align-items:center;justify-content:center;z-index:6;transform:scale(0);transition:transform .35s cubic-bezier(.34,1.56,.64,1)}
+.badge.pop{transform:scale(1)}
+.badge.sm{width:24px;height:24px;font-size:11px}
+
+/* token strips */
+.tokrow{position:absolute;display:flex;align-items:center;gap:5px;justify-content:center}
+.dot{width:5px;height:5px;border-radius:50%;background:#3a3d47;opacity:0;transition:opacity .3s}
+.sq{width:13px;height:13px;border-radius:3px;opacity:0;transform:scale(.3);transition:all .35s cubic-bezier(.34,1.56,.64,1)}
+.tokrow.show .dot,.tokrow.show .sq{opacity:1;transform:scale(1)}
+.sq.b{background:var(--tok-b)}.sq.g{background:var(--tok-g)}.sq.m{background:var(--tok-m)}
+.sq.grad1{background:linear-gradient(135deg,var(--tok-b),#0f9960)}
+.sq.grad2{background:linear-gradient(135deg,var(--tok-g),#8a2be2)}
+.sq.grad3{background:linear-gradient(135deg,var(--tok-m),#3b3bff)}
+.pentrow{position:absolute;display:flex;gap:26px;padding:5px 12px;border:1.8px dashed;border-radius:8px;opacity:0;transition:opacity .4s}
+.pentrow.show{opacity:1}
+.pent{width:20px;height:20px;background:var(--pent);clip-path:polygon(50% 0%,100% 38%,82% 100%,18% 100%,0% 38%);opacity:0;transform:scale(.3);transition:all .3s cubic-bezier(.34,1.56,.64,1);filter:drop-shadow(0 1px 1px rgba(0,80,110,.25))}
+.pentrow.show .pent{opacity:1;transform:scale(1)}
+
+/* GIM inner layers */
+.layer{position:absolute;left:24px;right:24px;height:34px;border-radius:8px;border:1.5px solid #d6d9e2;background:#f2f3f7;
+  font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .3s}
+.layer.attn-s{background:#dbe7ff;border-color:#9db8f0}
+.layer.attn-c{background:#dcf5e4;border-color:#94d8ab}
+.layer.lit{box-shadow:0 0 0 3px rgba(127,0,255,.18);transform:scale(1.02);border-color:var(--gim)}
+
+/* question card */
+#qcard{padding:14px 20px 14px 58px;font-size:16.5px;font-weight:600;line-height:1.45}
+#qcard .sym{position:absolute;left:18px;top:14px;font-size:22px;font-weight:800;font-style:italic;font-family:'JetBrains Mono'}
+#icard .sym{position:absolute;left:-38px;top:2px;font-size:22px;font-weight:800;font-style:italic;font-family:'JetBrains Mono'}
+
+/* model output */
+#mout{padding:44px 22px 18px 22px}
+#mout .mo-title{position:absolute;top:12px;left:52px;font-size:17.5px;font-weight:800;color:var(--out)}
+.sent{position:relative;font-size:14.5px;line-height:1.5;margin-bottom:12px;padding-left:40px;opacity:0;transform:translateX(-8px);transition:opacity .5s,transform .5s}
+.sent.show{opacity:1;transform:none}
+.sent .sl{position:absolute;left:0;top:1px;font-family:'JetBrains Mono';font-weight:600;font-size:13.5px;color:#555}
+.gnd{display:inline-block;font-weight:800;padding:0 5px;border-radius:5px;transform:scale(1);transition:transform .3s}
+.gnd.pulse{animation:gndpulse .7s ease}
+@keyframes gndpulse{0%{transform:scale(1)}40%{transform:scale(1.18)}100%{transform:scale(1)}}
+.g-lav{color:#8b5cf6;background:#f1e9ff}.g-blue{color:#2436d4;background:#e4e9ff}
+.g-org{color:#ea6a00;background:#ffedd9}.g-grn{color:#16a34a;background:#e2f7e9}
+.g-red{color:#e11d48;background:#ffe4ec}.g-yel{color:#a08000;background:#fff7cf}
+.g-dgrn{color:#0b6e3a;background:#dcf2e4}.g-pink{color:#e0637a;background:#ffe9ee}
+.g-pur{color:#8b21e8;background:#f2e4ff}.g-mag{color:#c000c0;background:#fce4fc}
+#sf{font-weight:700;border:1.8px solid transparent;border-radius:10px;padding:8px 10px 8px 40px;transition:border-color .5s,background .5s}
+#sf.final{border-color:var(--out);background:#fff5f8}
+
+/* wires + travellers */
+#wires{position:absolute;inset:0;pointer-events:none;z-index:4}
+.wire{fill:none;stroke:var(--wire);stroke-width:2.2;stroke-linecap:round;stroke-dasharray:var(--len);stroke-dashoffset:var(--len);transition:stroke-dashoffset .9s ease}
+.wire.draw{stroke-dashoffset:0}
+.wire.arrow{marker-end:url(#arr)}
+.traveller{position:absolute;z-index:8;pointer-events:none}
+.tv-dot{width:8px;height:8px;border-radius:50%;background:#565b68}
+.tv-sq{width:14px;height:14px;border-radius:3px}
+.tv-pent{width:16px;height:16px;clip-path:polygon(50% 0%,100% 38%,82% 100%,18% 100%,0% 38%);background:var(--pent)}
+.tv-pent.grey{background:#c7ccd8}
+
+/* fire / snow pulses */
+.pulse-ic{display:inline-block}
+.pulse-ic.go{animation:icpulse .8s ease 2}
+@keyframes icpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.35) rotate(-6deg)}}
+
+.wire.flow{stroke:#94a2e8;stroke-dasharray:5 9 !important;stroke-dashoffset:0;transition:none;animation:wflow 1.1s linear infinite}
+@keyframes wflow{to{stroke-dashoffset:-14}}
+#rail{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.rp{padding:3px 11px;border-radius:999px;background:#e3e5ec;color:#9aa0ae;font-size:12.5px;font-weight:800;transition:all .35s;white-space:nowrap}
+.rp.act{background:#20222b;color:#fff;transform:scale(1.07);box-shadow:0 2px 8px rgba(32,34,43,.25)}
+.rp.done{background:#d4daf5;color:#3a4a9e}
+.rsep{color:#c2c6d2;font-weight:800;font-size:12px}
+.panel.lit{box-shadow:0 0 0 4px rgba(32,34,43,.14),0 8px 24px rgba(30,35,60,.12)}
+@media (prefers-reduced-motion: reduce){
+  *{transition-duration:.01ms!important;animation-duration:.01ms!important}
+}
+footer{position:fixed;left:0;right:0;bottom:0;padding:6px 18px;font-size:13px;color:var(--muted);text-align:center;background:rgba(245,246,249,.85);backdrop-filter:blur(6px);pointer-events:none;z-index:40}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>DoCoG <span>· step-by-step grounding</span></h1>
+  <div class="controls">
+    <button class="ctl primary" id="btnPlay">▶ Play</button>
+    <button class="ctl" id="btnRestart">↺ Restart</button>
+    <select class="ctl" id="speed"><option value="1">1×</option><option value="1.5">1.5×</option><option value="2">2×</option><option value="0.7">0.7×</option></select>
+    <button class="ctl" id="zfit" title="Fit to screen">⛶ Fit</button>
+    <button class="ctl primary" id="zfollow" title="Camera follows the active module">🎥 Auto-zoom</button>
+  </div>
+  <div id="rail"></div>
+  <div id="caption">Press Play — the model will answer the question and ground every step in the document.</div>
+</header>
+
+<div id="viewport"><div id="stage">
+
+  <!-- ═════ INPUTS ═════ -->
+  <div class="panel" id="qcard" style="left:40px;top:14px;width:585px;height:96px">
+    <span class="sym">q :</span>
+    Does the combined weight of the top three stock holdings exceed the allocation to the IT sector?
+  </div>
+
+  <div class="panel" id="icard" style="left:660px;top:14px;width:800px;height:440px;background:#f0f1f5">
+    <span class="sym" style="left:14px;top:8px">I :</span>
+    <svg id="svgIn" viewBox="0 0 800 440" style="width:100%;height:100%"></svg>
+  </div>
+
+  <!-- ═════ VLM ═════ -->
+  <div class="module" id="boxVLM" style="left:60px;top:150px;width:565px;height:265px;border-color:var(--vlm);background:var(--vlm-bg);--glow:rgba(215,155,0,.22)">
+    <div class="mtitle" style="color:var(--vlm)">VLM</div>
+    <div class="badge" id="bd1" style="left:-13px;top:-13px">1</div>
+    <div class="block" id="blkTok" style="left:28px;top:26px;width:230px;height:44px;background:#e7edfb;border-color:#9db8f0;--glow:rgba(80,120,220,.25)">
+      Text Tokenizer <span class="emoji pulse-ic" id="sn1">❄️</span></div>
+    <div class="block" id="blkVE" style="left:305px;top:26px;width:230px;height:44px;background:#e3f2e6;border-color:#94d8ab;--glow:rgba(50,160,90,.25)">
+      Vision Encoder <span class="emoji pulse-ic" id="sn2">❄️</span></div>
+    <div class="block" id="blkDec" style="left:28px;top:100px;width:507px;height:130px;background:#fdeaea;border-color:#e8a2a2;flex-direction:column;gap:10px;--glow:rgba(220,80,80,.25)">
+      <div style="display:flex;align-items:center;gap:8px">LLM Decoder <span class="emoji pulse-ic" id="fi1">🔥</span></div>
+      <div class="tokrow" id="decToks" style="position:static">
+        <span class="dot"></span><span class="dot"></span><span class="sq b"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="sq g"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="sq m"></span><span class="dot"></span><span class="dot"></span>
+      </div>
+      <div style="font-size:11.5px;font-weight:700;color:#666;border:1.5px solid #cbb;border-top:none;padding:2px 60px;border-radius:0 0 10px 10px;background:#fff">LM Head</div>
+      <div class="badge sm" id="bd3" style="left:14px;top:96px">3</div>
+    </div>
+  </div>
+
+  <!-- ═════ GIM ═════ -->
+  <div class="module" id="boxGIM" style="left:60px;top:452px;width:565px;height:352px;border-color:var(--gim);background:var(--gim-bg);--glow:rgba(127,0,255,.20)">
+    <div class="mtitle" style="color:var(--gim)">GIM <span class="emoji pulse-ic">🔥</span></div>
+    <div class="badge" id="bd4" style="left:-13px;top:-13px">4</div>
+    <div style="position:absolute;right:16px;bottom:8px;font-weight:800;color:var(--gim);font-size:14px">× N</div>
+    <div class="tokrow" id="gtRow" style="left:0;right:0;top:16px">
+      <span class="sq b"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="sq g"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="sq m"></span>
+      <span style="font-family:'JetBrains Mono';font-weight:600;font-size:14px;margin-left:8px">G̃</span>
+    </div>
+    <div class="layer" id="ly1" style="top:52px">Norm</div>
+    <div class="layer attn-s" id="ly2" style="top:94px">Self-Attention</div>
+    <!-- refined GND tokens: OUTPUT of self-attention, fed into cross-attention -->
+    <div class="tokrow" id="saOut" style="left:24px;width:300px;top:138px;height:26px;border:1.5px dashed #9db8f0;border-radius:8px;background:#eef4ff;gap:5px;justify-content:center">
+      <span class="sq b" style="width:11px;height:11px"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="sq g" style="width:11px;height:11px"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="sq m" style="width:11px;height:11px"></span>
+    </div>
+    <div class="pentrow" id="gimPents" style="right:24px;top:138px;width:180px;border-color:#33c3e6;gap:0;padding:3px 10px;justify-content:space-around">
+      <span class="pent"></span><span class="pent"></span><span class="pent"></span><span class="pent"></span>
+    </div>
+    <div class="layer attn-c" id="ly3" style="top:176px">Cross-Attention</div>
+    <div class="layer" id="ly4" style="top:218px">Norm</div>
+    <div class="layer" id="ly5" style="top:260px">MLP</div>
+    <div class="tokrow" id="gRow" style="left:0;right:0;top:306px">
+      <span style="font-family:'JetBrains Mono';font-weight:600;font-size:14px;margin-right:6px">G {</span>
+      <span class="sq grad1"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="sq grad2"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="sq grad3"></span>
+      <span style="font-family:'JetBrains Mono';font-weight:600;font-size:14px;margin-left:6px">}</span>
+    </div>
+  </div>
+
+  <!-- ═════ SEGMENTER ═════ -->
+  <div class="module" id="boxSeg" style="left:660px;top:498px;width:800px;height:262px;border-color:var(--seg);background:var(--seg-bg);--glow:rgba(16,115,158,.20)">
+    <div class="mtitle" style="color:var(--seg);left:auto;right:20px;font-size:15px">Segmenter</div>
+    <div class="badge" id="bd5" style="right:118px;top:-13px;left:auto">5</div>
+    <div class="block" id="blkFenc" style="left:26px;top:26px;width:420px;height:42px;background:#d9f1f6;border-color:#7ec8dc;--glow:rgba(40,160,200,.25)">
+      <span style="font-family:'JetBrains Mono';font-size:12px">F<sub>enc</sub></span> Vision Encoder <span class="emoji pulse-ic" id="sn3">❄️</span></div>
+    <div class="badge sm" id="bd6" style="left:12px;top:84px">6</div>
+    <div class="pentrow" id="segPents1" style="left:26px;top:80px;width:420px;border-color:#33c3e6;padding:5px 0;justify-content:space-around">
+      <span class="pent"></span><span class="pent"></span><span class="pent"></span><span class="pent"></span><span class="pent"></span><span class="pent"></span>
+    </div>
+    <div class="pentrow" id="segPents2" style="left:26px;top:122px;width:420px;border-color:#8a8fa0;padding:5px 0;justify-content:space-around">
+      <span class="pent" style="background:#c7ccd8"></span><span class="pent" style="background:#c7ccd8"></span><span class="pent" style="background:#c7ccd8"></span><span class="pent" style="background:#c7ccd8"></span><span class="pent" style="background:#c7ccd8"></span><span class="pent" style="background:#c7ccd8"></span>
+    </div>
+    <div class="block" id="blkPE" style="left:26px;top:174px;width:420px;height:42px;background:#e6e4f5;border-color:#a9a3d8;--glow:rgba(110,100,200,.25)">
+      Prompt Encoder <span class="emoji pulse-ic" id="sn4">❄️</span></div>
+    <div class="badge sm" id="bd7" style="left:12px;top:232px">7</div>
+    <div class="tokrow" id="peRow" style="left:60px;top:236px;width:350px">
+      <span style="font-family:'JetBrains Mono';font-weight:600;font-size:13px;margin-right:4px">{</span>
+      <span class="sq grad1" style="width:11px;height:11px"></span><span class="dot"></span><span class="dot"></span><span class="sq grad2" style="width:11px;height:11px"></span><span class="dot"></span><span class="dot"></span><span class="sq grad3" style="width:11px;height:11px"></span>
+      <span style="font-family:'JetBrains Mono';font-weight:600;font-size:13px;margin-left:4px">}</span>
+    </div>
+    <div class="block" id="blkMD" style="left:486px;top:40px;width:288px;height:158px;background:linear-gradient(135deg,#fff2df,#ffe3b8);border-color:#e8b46a;font-size:16.5px;--glow:rgba(230,150,50,.3)">
+      Mask Decoder <span class="emoji pulse-ic" id="fi2">🔥</span></div>
+  </div>
+
+  <!-- ═════ MODEL OUTPUT ═════ -->
+  <div class="panel" id="mout" style="left:40px;top:832px;width:585px;height:414px">
+    <div class="badge" id="bd2" style="left:16px;top:12px">2</div>
+    <div class="mo-title">Model Output</div>
+    <div class="badge sm" id="bd2a" style="left:16px;top:48px;background:#666">2a</div>
+    <p class="sent" id="s1" style="margin-top:36px"><span class="sl">S₁ :</span> From the <span class="gnd g-lav" id="c-tsh">Top Stock Holdings [GND]</span> chart, the top three holdings are <span class="gnd g-blue" id="c-hdfc">HDFC Bank [GND]</span>, <span class="gnd g-org" id="c-rel">Reliance Industries [GND]</span>, <span class="gnd g-grn" id="c-icici">ICICI Bank [GND]</span>.</p>
+    <p class="sent" id="s2"><span class="sl">S₂ :</span> Their combined weight is <span class="gnd g-red" id="c-884">8.84% [GND]</span> (HDFC Bank) + <span class="gnd g-yel" id="c-603">6.03% [GND]</span> (Reliance Industries) + <span class="gnd g-dgrn" id="c-585">5.85% [GND]</span> (ICICI Bank) = 20.72%.</p>
+    <p class="sent" id="s3"><span class="sl">S₃ :</span> From the <span class="gnd g-pink" id="c-sa">Sector Allocation [GND]</span> chart, the <span class="gnd g-pur" id="c-it">IT sector [GND]</span> allocation is <span class="gnd g-mag" id="c-788">7.88% [GND]</span>.</p>
+    <p class="sent" id="s4"><span class="sl">S₄ :</span> Compare the totals: <b>20.72% &gt; 7.88%</b>.</p>
+    <p class="sent" id="sf"><span class="sl" style="left:10px">S_f :</span> <b>Yes</b>, the combined weight of the top three stock holdings (20.72%) exceeds the IT sector allocation (7.88%).
+      <span class="badge sm" id="bd2b" style="left:-30px;top:6px;background:#666">2b</span></p>
+  </div>
+
+  <!-- ═════ GROUNDED OUTPUT CHARTS ═════ -->
+  <div class="panel" id="ocard" style="left:660px;top:800px;width:800px;height:362px;background:#f0f1f5">
+    <div class="badge sm" id="bd2c" style="left:14px;top:12px;background:#666">2c</div>
+    <svg id="svgOut" viewBox="0 0 800 362" style="width:100%;height:100%"></svg>
+  </div>
+
+  <!-- wires -->
+  <svg id="wires" width="1500" height="1256">
+    <defs><marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#a9aebc"/></marker></defs>
+    <path class="wire arrow" id="w_q"   d="M 240,112 C 240,146 203,142 203,172"/>
+    <path class="wire arrow" id="w_i"   d="M 658,198 L 601,198"/>
+    <path class="wire arrow" id="w_t2d" d="M 203,222 L 203,246"/>
+    <path class="wire arrow" id="w_v2d" d="M 480,222 L 480,246"/>
+    <path class="wire arrow" id="w_d2g" d="M 342,382 L 342,448"/>
+    <path class="wire arrow" id="w_out" d="M 88,352 C 30,352 22,380 22,500 L 22,900 C 22,935 30,948 38,948"/>
+    <path class="wire arrow" id="w_i2f" d="M 1060,458 L 1060,494"/>
+    <path class="wire arrow" id="w_f2p" d="M 684,593 C 652,593 642,601 607,606"/>
+    <path class="wire arrow" id="w_g2p" d="M 352,780 C 352,842 470,764 706,748"/>
+    <path class="wire arrow" id="w_p1m" d="M 1108,593 L 1142,597"/>
+    <path class="wire arrow" id="w_p2m" d="M 1108,635 L 1142,631"/>
+    <path class="wire arrow" id="w_m2o" d="M 1290,698 L 1290,796"/>
+  </svg>
+
+</div>
+</div>
+
+<footer>DoCoG architecture · ❄️ frozen &nbsp;·&nbsp; 🔥 trainable &nbsp;·&nbsp; [GND] tokens ground each reasoning step to an evidence mask in the document.</footer>
+
+<script>
+/* ═══════════════ donut charts ═══════════════ */
+const NS='http://www.w3.org/2000/svg';
+function el(tag,attrs,parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e;}
+function pt(cx,cy,r,aDeg){const a=(aDeg-90)*Math.PI/180;return[cx+r*Math.cos(a),cy+r*Math.sin(a)];}
+function arcPath(cx,cy,r,a0,a1){const [x0,y0]=pt(cx,cy,r,a0),[x1,y1]=pt(cx,cy,r,a1);
+  return `M ${x0} ${y0} A ${r} ${r} 0 ${(a1-a0)>180?1:0} 1 ${x1} ${y1}`;}
+
+function donut(svg,cx,cy,r,th,segs,title,titleColor,labelDefs,grayscale){
+  const g=el('g',{},svg);let a=0;const segAngles=[];
+  segs.forEach((s,i)=>{
+    const sweep=s.v/100*360, pad=1.6;
+    const p=el('path',{d:arcPath(cx,cy,r,a+pad,a+sweep-pad),stroke:grayscale?s.gc:s.c,'stroke-width':th,fill:'none','stroke-linecap':'butt'},g);
+    p.dataset.seg=s.id||('seg'+i);
+    segAngles.push({id:s.id,mid:a+sweep/2,a0:a+pad,a1:a+sweep-pad});
+    a+=sweep;
+  });
+  // title
+  const t=el('text',{x:cx,y:cy-6,'text-anchor':'middle','font-family':'Inter','font-weight':'800','font-size':'21'},g);
+  title.split('\n').forEach((line,i)=>{el('tspan',{x:cx,dy:i? '22':'0'},t).textContent=line;});
+  t.setAttribute('fill',titleColor);
+  t.dataset.title=1;
+  // labels + leaders — exit radially from the ring, bend once, run horizontally
+  // to a side-anchored label. Horizontal run sits at the label's height so
+  // stacked labels get clean, parallel, non-crossing leaders.
+  labelDefs.forEach(L=>{
+    const sa=segAngles.find(s=>s.id===L.id);
+    const anchor=L.side==='left'?'end':'start';
+    const lx=L.x, ly=L.y;
+    if(sa && L.side){
+      const [px,py]=pt(cx,cy,r+th/2, sa.mid);          // leaves outer edge
+      const [ex,ey]=pt(cx,cy,r+th/2+14, sa.mid);       // short radial stub
+      const gap = L.side==='left'? lx+10 : lx-10;      // stop just before text
+      // stub -> vertical/diagonal to label height -> horizontal to label
+      el('polyline',{points:`${px},${py} ${ex},${ey} ${gap},${ly-5}`,
+        fill:'none',stroke:'#b3b8c4','stroke-width':1.3,'stroke-linejoin':'round','stroke-linecap':'round'},g);
+    } else if(sa){
+      const [px,py]=pt(cx,cy,r+th/2, sa.mid);
+      el('polyline',{points:`${px},${py} ${lx},${ly}`,fill:'none',stroke:'#b3b8c4','stroke-width':1.3},g);
+    }
+    const bg=el('rect',{x:lx-6,y:ly-17,rx:6,ry:6,width:10,height:24,fill:'transparent'},g);bg.dataset.pill=L.id;
+    const tx=el('text',{x:lx,y:ly,'text-anchor':anchor,'font-family':'Inter','font-weight':'800','font-size':'18',fill:L.dim?'#a3a8b5':'#20222b'},g);
+    tx.textContent=L.pct;tx.dataset.pilltext=L.id;
+    const nm=el('text',{x:lx,y:ly+17,'text-anchor':anchor,'font-family':'Inter','font-weight':'600','font-size':'12.5','fill':L.dim?'#b3b8c4':'#5c6270'},g);
+    nm.textContent=L.name;nm.dataset.name=L.id;
+    requestAnimationFrame(()=>{const bb=tx.getBBox();bg.setAttribute('x',bb.x-5);bg.setAttribute('y',bb.y-3);bg.setAttribute('width',bb.width+10);bg.setAttribute('height',bb.height+6);});
+  });
+  return {g,segAngles,cx,cy,r,th};
+}
+
+const sectorSegs=[
+  {id:'bank', v:24.02,c:'#521832',gc:'#3d3f46'},
+  {id:'auto', v:8.74, c:'#6b2d6e',gc:'#5a5d66'},
+  {id:'it',   v:7.88, c:'#4b3a8f',gc:'#74777f'},
+  {id:'fmcg', v:7.10, c:'#2b4f9e',gc:'#8b8e96'},
+  {id:'crude',v:6.03, c:'#2b9fd8',gc:'#a2a5ad'},
+  {id:'oth',  v:46.23,c:'#cfd1d8',gc:'#d4d6dc'},
+];
+const stockSegs=[
+  {id:'hdfc',v:8.84, c:'#4a1030',gc:'#3d3f46'},
+  {id:'rel', v:6.03, c:'#5b2e91',gc:'#5a5d66'},
+  {id:'icici',v:5.85,c:'#1f3f9e',gc:'#74777f'},
+  {id:'axis',v:3.90, c:'#2f6fd0',gc:'#8b8e96'},
+  {id:'sbi', v:3.78, c:'#35b1e8',gc:'#a2a5ad'},
+  {id:'oth', v:71.60,c:'#cfd1d8',gc:'#d4d6dc'},
+];
+const sectorLabels=[
+  {id:'bank', pct:'24.02%',name:'Bank',             side:'right', x:356, y:56},
+  {id:'auto', pct:'8.74%', name:'Automobile & Anc.',side:'right', x:356, y:130},
+  {id:'it',   pct:'7.88%', name:'IT',               side:'right', x:356, y:214},
+  {id:'fmcg', pct:'7.10%', name:'FMCG',             side:'right', x:356, y:300},
+  {id:'crude',pct:'6.03%', name:'Crude Oil',        side:'left',  x:74,  y:340},
+  {id:'oth',  pct:'46.23%',name:'Others',           side:'left', dim:1, x:74, y:250},
+];
+const stockLabels=[
+  {id:'hdfc',pct:'8.84%', name:'HDFC Bank',          side:'right', x:682, y:56},
+  {id:'rel', pct:'6.03%', name:'Reliance Industries',side:'right', x:682, y:130},
+  {id:'icici',pct:'5.85%',name:'ICICI Bank',         side:'right', x:682, y:214},
+  {id:'axis',pct:'3.90%', name:'Axis Bank',          side:'right', x:682, y:300},
+  {id:'sbi', pct:'3.78%', name:'SBI',                side:'right', x:682, y:374},
+  {id:'oth', pct:'71.60%',name:'Others',             side:'left', dim:1, x:428, y:250},
+];
+
+const svgIn=document.getElementById('svgIn');
+donut(svgIn,205,228,96,42,sectorSegs,'Sector\nAllocation','#1e4fa3',sectorLabels,false);
+donut(svgIn,556,228,96,42,stockSegs,'Top Stock\nHoldings','#1e4fa3',stockLabels,false);
+
+const svgOut=document.getElementById('svgOut');
+const dOutA=donut(svgOut,200,182,80,36,sectorSegs,'Sector\nAllocation','#3b3f4a',
+  sectorLabels.map(L=>({...L, x:L.side==='left'? 66 : 340, y:L.y*0.78+18})),true);
+const dOutB=donut(svgOut,556,182,80,36,stockSegs,'Top Stock\nHoldings','#3b3f4a',
+  stockLabels.map(L=>({...L, x:L.side==='left'? 436 : 672, y:L.y*0.78+18})),true);
+
+/* highlight helpers for output charts */
+function highlightSeg(d,id,color){
+  const sa=d.segAngles.find(s=>s.id===id);
+  const p=el('path',{d:arcPath(d.cx,d.cy,d.r,sa.a0,sa.a1),stroke:color,'stroke-width':d.th+6,fill:'none'},d.g);
+  p.style.opacity=0;p.style.transition='opacity .4s';
+  requestAnimationFrame(()=>p.style.opacity=1);
+  return p;
+}
+function highlightPill(d,id,bg,fg){
+  d.g.querySelectorAll(`[data-pill="${id}"]`).forEach(r=>{r.setAttribute('fill',bg);r.style.opacity=0;r.style.transition='opacity .35s';requestAnimationFrame(()=>r.style.opacity=1);});
+  d.g.querySelectorAll(`[data-pilltext="${id}"]`).forEach(t=>t.setAttribute('fill',fg));
+  d.g.querySelectorAll(`[data-name="${id}"]`).forEach(t=>t.setAttribute('fill',fg));
+}
+function highlightTitle(d,bg,fg){
+  const t=d.g.querySelector('[data-title]');const bb=t.getBBox();
+  const r=el('rect',{x:bb.x-10,y:bb.y-6,width:bb.width+20,height:bb.height+12,rx:12,fill:bg},d.g);
+  d.g.insertBefore(r,t);r.style.opacity=0;r.style.transition='opacity .4s';
+  requestAnimationFrame(()=>r.style.opacity=1);t.setAttribute('fill',fg);
+  return r;
+}
+
+/* ═══════════════ timeline engine ═══════════════ */
+const stage=document.getElementById('stage');
+const $=id=>document.getElementById(id);
+const RAIL=[['input','Input'],['vlm','VLM'],['gnd','[GND]'],['gim','GIM'],['seg','Segmenter'],['masks','Masks'],['answer','Answer']];
+const railWrap=$('rail');
+RAIL.forEach(([k,label],i)=>{
+  if(i){const s=document.createElement('span');s.className='rsep';s.textContent='›';railWrap.appendChild(s);}
+  const p=document.createElement('span');p.className='rp';p.id='rp_'+k;p.textContent=label;railWrap.appendChild(p);
+});
+function rail(key){
+  RAIL.forEach(([k])=>{const p=$('rp_'+k);
+    if(k===key){p.classList.add('act');p.classList.remove('done');}
+    else if(p.classList.contains('act')){p.classList.remove('act');p.classList.add('done');}});
+}
+function story(){}  /* narrator subtitles removed */
+function flow(...ids){ids.forEach(id=>wirePaths[id].classList.add('flow'));}
+
+const wirePaths={};document.querySelectorAll('.wire').forEach(w=>{
+  const len=w.getTotalLength();w.style.setProperty('--len',len);wirePaths[w.id]=w;});
+
+let dyn=[];      // dynamically created nodes to remove on reset
+let cleanups=[]; // fns to undo on reset
+
+function caption(txt){const c=$('caption');c.textContent=txt;c.classList.add('hot');}
+function badge(id){$(id).classList.add('pop');}
+function lit(id,on=true){$(id).classList.toggle('lit',on);}
+function show(id){$(id).classList.add('show');}
+function draw(id){wirePaths[id].classList.add('draw');}
+function pulse(id){const e=$(id);e.classList.remove('go');void e.offsetWidth;e.classList.add('go');}
+
+function traveller(pathId,cls,dur,delay=0,offY=0){
+  const path=wirePaths[pathId],len=path.getTotalLength();
+  const n=document.createElement('div');n.className='traveller '+cls;stage.appendChild(n);dyn.push(n);
+  n.style.opacity=0;
+  const t0=performance.now()+delay/engine.speed;
+  function step(now){
+    if(engine.paused){requestAnimationFrame(step);return;}
+    const p=Math.min(1,Math.max(0,(now-t0)/(dur/engine.speed)));
+    if(p<=0){n.style.opacity=0;}
+    else{
+      n.style.opacity= p>=1?0:1;
+      const pos=path.getPointAtLength(p*len);
+      n.style.left=(pos.x-7)+'px'; n.style.top=(pos.y-7+offY)+'px';
+    }
+    if(p<1 && !engine.stopped)requestAnimationFrame(step); else n.remove();
+  }
+  requestAnimationFrame(step);
+}
+function gndPulse(id){const e=$(id);e.classList.remove('pulse');void e.offsetWidth;e.classList.add('pulse');}
+
+/* the script — [seconds, fn] */
+const script=[
+[0.0, ()=>{caption('Inputs — a question q and a document image I.');show('qcard');show('icard');camGo('inputs');rail('input');}],
+[1.1, ()=>{draw('w_q');draw('w_i');}],
+[1.9, ()=>{caption('① The frozen VLM encoders tokenize q and encode I.');show('boxVLM');badge('bd1');lit('boxVLM');camGo('vlm');rail('vlm');}],
+[2.5, ()=>{lit('blkTok');lit('blkVE');pulse('sn1');pulse('sn2');
+  for(let i=0;i<4;i++){traveller('w_q','tv-dot',700,i*140);traveller('w_i','tv-dot',800,i*140);}}],
+[3.4, ()=>{draw('w_t2d');draw('w_v2d');
+  for(let i=0;i<3;i++){traveller('w_t2d','tv-dot',420,i*130);traveller('w_v2d','tv-dot',420,i*130);}}],
+[4.0, ()=>{rail('gnd');caption('③ [GND] tokens are emitted during step-wise decoding; their final-layer hidden states become grounding queries.');
+  lit('blkDec');badge('bd3');pulse('fi1');lit('blkTok',false);lit('blkVE',false);}],
+[4.6, ()=>{$('decToks').classList.add('show');}],
+[5.6, ()=>{caption('② Its LM head streams the answer text to the Model Output…');draw('w_out');show('mout');badge('bd2');badge('bd2a');badge('bd2b');
+  for(let i=0;i<3;i++)traveller('w_out','tv-dot',1600,i*260);}],
+[6.8, ()=>{rail('gim');caption('④ …while the [GND] hidden states are routed into the Grounding Interaction Module.');
+  show('boxGIM');draw('w_d2g');lit('boxVLM',false);lit('blkDec',false);camGo('gim');}],
+[7.3, ()=>{travellerSq('w_d2g','var(--tok-b)',600,0);travellerSq('w_d2g','var(--tok-g)',600,220);travellerSq('w_d2g','var(--tok-m)',600,440);}],
+[8.1, ()=>{badge('bd4');lit('boxGIM');$('gtRow').classList.add('show');}],
+[8.6, ()=>lit('ly1')],[8.95,()=>{lit('ly1',false);lit('ly2');}],
+[9.3, ()=>$('saOut').classList.add('show')],
+[9.5, ()=>{caption('⑥ Visual features from the segmenter flow in through cross-attention.');
+  show('boxSeg');draw('w_i2f');badge('bd6');lit('blkFenc');pulse('sn3');camGo('gimseg');
+  for(let i=0;i<3;i++)traveller('w_i2f','tv-dot',420,i*130);}],
+[10.2,()=>{$('segPents1').classList.add('show');$('segPents2').classList.add('show');}],
+[10.7,()=>{draw('w_f2p');for(let i=0;i<3;i++)traveller('w_f2p','tv-pent',650,i*200);}],
+[11.2,()=>{lit('ly2',false);lit('ly3');$('gimPents').classList.add('show');}],
+[11.9,()=>{lit('ly3',false);lit('ly4');}],[12.25,()=>{lit('ly4',false);lit('ly5');}],
+[12.7,()=>{lit('ly5',false);$('gRow').classList.add('show');caption('The GIM outputs grounding-aware prompt embeddings G (× N refinement blocks; N = 3 in the paper).');}],
+[13.5,()=>{rail('seg');caption('⑦ G is passed to the frozen prompt encoder of the segmenter.');
+  draw('w_g2p');badge('bd7');lit('blkPE');pulse('sn4');
+  travellerSq('w_g2p','var(--tok-b)',900,0);travellerSq('w_g2p','var(--tok-g)',900,260);travellerSq('w_g2p','var(--tok-m)',900,520);}],
+[14.6,()=>{$('peRow').classList.add('show');lit('boxGIM',false);}],
+[15.2,()=>{caption('⑤ Segmenter: its trainable mask decoder fuses prompts + visual features to predict evidence masks.');
+  badge('bd5');lit('boxSeg');lit('blkMD');pulse('fi2');draw('w_p1m');draw('w_p2m');camGo('seg');
+  for(let i=0;i<3;i++){traveller('w_p1m','tv-pent',350,i*140);traveller('w_p2m','tv-pent grey',350,i*140,0);}}],
+[16.4,()=>{rail('masks');draw('w_m2o');show('ocard');badge('bd2c');
+  for(let i=0;i<3;i++)traveller('w_m2o','tv-dot',500,i*150);}],
+[17.4,()=>{camGo('ground');caption('Every reasoning step is now grounded — watch each [GND] land as an evidence mask. (2c)');
+  lit('blkFenc',false);lit('blkPE',false);}],
+/* ── grounded reveal, synced ── */
+[18.0,()=>show('s1')],
+[18.4,()=>{gndPulse('c-tsh'); cleanups.push(rm(highlightTitle(dOutB,'#e6d5ff','#6d28d9')));}],
+[18.9,()=>{gndPulse('c-hdfc');cleanups.push(rm(highlightSeg(dOutB,'hdfc','#2563eb')));highlightPill(dOutB,'hdfc','#dbe4ff','#1d3fd4');}],
+[19.35,()=>{gndPulse('c-rel');cleanups.push(rm(highlightSeg(dOutB,'rel','#f97316')));highlightPill(dOutB,'rel','#ffe6d1','#d45500');}],
+[19.8,()=>{gndPulse('c-icici');cleanups.push(rm(highlightSeg(dOutB,'icici','#16a34a')));highlightPill(dOutB,'icici','#dcf5e4','#0b6e3a');}],
+[20.6,()=>show('s2')],
+[21.0,()=>{gndPulse('c-884');highlightPill(dOutB,'hdfc','#ffd4de','#d0103f');}],
+[21.4,()=>{gndPulse('c-603');highlightPill(dOutB,'rel','#fff0a8','#8a6d00');}],
+[21.8,()=>{gndPulse('c-585');highlightPill(dOutB,'icici','#bff0cf','#0a5f33');}],
+[22.7,()=>show('s3')],
+[23.1,()=>{gndPulse('c-sa'); cleanups.push(rm(highlightTitle(dOutA,'#ffd9de','#c2455c')));}],
+[23.55,()=>{gndPulse('c-it');cleanups.push(rm(highlightSeg(dOutA,'it','#9333ea')));}],
+[24.0,()=>{gndPulse('c-788');highlightPill(dOutA,'it','#fbd1fb','#a800a8');}],
+[24.9,()=>{show('s4');caption('S₄ — compare the grounded totals: 20.72% > 7.88%.');}],
+[26.0,()=>{rail('answer');show('sf');$('sf').classList.add('final');lit('boxSeg',false);lit('blkMD',false);
+  caption('✓ Final answer — every claim traceable to a mask in the document.');setTimeout(()=>camGo('overview'),1200);
+  $('btnPlay').textContent='▶ Play';engine.done=true;}],
+/* ── wires come alive after data passes ── */
+[2.2, ()=>flow('w_q','w_i')],
+[4.4, ()=>flow('w_t2d','w_v2d')],
+[6.6, ()=>flow('w_out')],
+[8.3, ()=>flow('w_d2g')],
+[10.5,()=>flow('w_i2f')],
+[11.7,()=>flow('w_f2p')],
+[14.7,()=>flow('w_g2p')],
+[16.3,()=>flow('w_p1m','w_p2m')],
+[17.5,()=>flow('w_m2o')],
+/* ── finale recap ripple ── */
+[26.5, ()=>lit('qcard')],   [27.0, ()=>lit('qcard',false)],
+[26.68,()=>lit('boxVLM')],  [27.18,()=>lit('boxVLM',false)],
+[26.86,()=>lit('boxGIM')],  [27.36,()=>lit('boxGIM',false)],
+[27.04,()=>lit('boxSeg')],  [27.54,()=>lit('boxSeg',false)],
+[27.22,()=>lit('mout')],    [27.72,()=>lit('mout',false)],
+[27.40,()=>lit('ocard')],   [27.90,()=>lit('ocard',false)],
+];
+script.sort((a,b)=>a[0]-b[0]);
+
+function rm(node){return ()=>node&&node.remove&&node.remove();}
+function dynColor(){/* no-op helper kept for clarity */}
+function travellerSq(pathId,color,dur,delay){
+  const path=wirePaths[pathId],len=path.getTotalLength();
+  const n=document.createElement('div');n.className='traveller tv-sq';n.style.background=color;
+  stage.appendChild(n);dyn.push(n);n.style.opacity=0;
+  const t0=performance.now()+delay/engine.speed;
+  function step(now){
+    if(engine.paused){requestAnimationFrame(step);return;}
+    const p=Math.min(1,Math.max(0,(now-t0)/(dur/engine.speed)));
+    if(p>0){n.style.opacity=p>=1?0:1;const pos=path.getPointAtLength(p*len);
+      n.style.left=(pos.x-7)+'px';n.style.top=(pos.y-7)+'px';}
+    if(p<1 && !engine.stopped)requestAnimationFrame(step);else n.remove();
+  }
+  requestAnimationFrame(step);
+}
+
+const engine={t:0,playing:false,paused:false,stopped:false,speed:1,idx:0,done:false,raf:null,last:0};
+function tick(now){
+  if(!engine.playing)return;
+  if(!engine.paused){
+    engine.t+=(now-engine.last)/1000*engine.speed;
+    while(engine.idx<script.length && script[engine.idx][0]<=engine.t){
+      try{script[engine.idx][1]();}catch(err){console.error('timeline event failed:',err);}
+      engine.idx++;
+    }
+  }
+  engine.last=now;
+  if(engine.idx<script.length){engine.raf=requestAnimationFrame(tick);}
+  else engine.playing=false;
+}
+function play(){
+  if(engine.done){restart();/*fallthrough to fresh play*/}
+  if(engine.playing){engine.paused=!engine.paused;$('btnPlay').textContent=engine.paused?'▶ Resume':'⏸ Pause';return;}
+  engine.playing=true;engine.paused=false;engine.stopped=false;engine.last=performance.now();
+  $('btnPlay').textContent='⏸ Pause';
+  engine.raf=requestAnimationFrame(tick);
+}
+function restart(){
+  cancelAnimationFrame(engine.raf);engine.stopped=true;
+  dyn.forEach(n=>n.remove());dyn=[];
+  cleanups.forEach(f=>f());cleanups=[];
+  document.querySelectorAll('.show,.lit,.pop,.draw,.hot,.on,.final,.pulse,.go,.flow,.act,.done,.in').forEach(e=>
+    e.classList.remove('show','lit','pop','draw','hot','on','final','pulse','go','flow','act','done','in'));
+  // reset output-chart recolors: rebuild output svg
+  svgOut.innerHTML='';
+  Object.assign(dOutA,donut(svgOut,200,182,80,36,sectorSegs,'Sector\nAllocation','#3b3f4a',
+    sectorLabels.map(L=>({...L, x:L.side==='left'? 66 : 340, y:L.y*0.78+18})),true));
+  Object.assign(dOutB,donut(svgOut,556,182,80,36,stockSegs,'Top Stock\nHoldings','#3b3f4a',
+    stockLabels.map(L=>({...L, x:L.side==='left'? 436 : 672, y:L.y*0.78+18})),true));
+  engine.t=0;engine.idx=0;engine.playing=false;engine.paused=false;engine.done=false;
+  if(follow)fitAll();
+  $('btnPlay').textContent='▶ Play';
+  $('caption').textContent='Press Play — the model will answer the question and ground every step in the document.';
+}
+$('btnPlay').onclick=play;
+$('btnRestart').onclick=()=>{restart();engine.stopped=false;play();};
+$('speed').onchange=e=>engine.speed=parseFloat(e.target.value);
+
+/* ═══════════════ camera system ═══════════════ */
+const vp=document.getElementById('viewport');
+const STAGE_W=1500, STAGE_H=1256;
+let camS=1, camX=0, camY=0, follow=true;
+
+function sizeViewport(){
+  const head=document.querySelector('header');
+  vp.style.height=Math.max(420, window.innerHeight-head.offsetHeight-10)+'px';
+}
+function setCam(x,y,s,animate=true){
+  camX=x;camY=y;camS=s;
+  stage.style.transition=animate?'transform 1.15s cubic-bezier(.22,.9,.28,1)':'none';
+  stage.style.transform=`translate(${x}px,${y}px) scale(${s})`;
+}
+function focusRect(r,animate=true,maxZoom=1.45){
+  const vw=vp.clientWidth, vh=vp.clientHeight, p=30;
+  const s=Math.min((vw-2*p)/r.w,(vh-2*p)/r.h,maxZoom);
+  setCam(vw/2-s*(r.x+r.w/2), vh/2-s*(r.y+r.h/2), s, animate);
+}
+function fitAll(animate=true){focusRect({x:0,y:0,w:STAGE_W,h:STAGE_H},animate,10);}
+const CAMS={
+  inputs:{x:30,y:0,w:1440,h:470},
+  vlm:{x:20,y:0,w:650,h:440},
+  gim:{x:30,y:415,w:640,h:420},
+  gimseg:{x:30,y:425,w:1460,h:395},
+  seg:{x:630,y:420,w:860,h:380},
+  ground:{x:20,y:780,w:1465,h:475},
+};
+function camGo(name){
+  if(!follow)return;
+  if(name==='overview'||!CAMS[name])fitAll(); else focusRect(CAMS[name]);
+}
+function manual(){ if(follow){follow=false;$('zfollow').classList.remove('primary');} }
+$('zfit').onclick=()=>{manual();fitAll();};
+$('zfollow').onclick=()=>{follow=!follow;$('zfollow').classList.toggle('primary',follow);if(follow)fitAll();};
+function zoomAt(mx,my,f){
+  const ns=Math.min(2.4,Math.max(0.15,camS*f));
+  const k=ns/camS;
+  setCam(mx-(mx-camX)*k, my-(my-camY)*k, ns, true);
+}
+vp.addEventListener('wheel',e=>{
+  e.preventDefault();manual();
+  const r=vp.getBoundingClientRect();
+  zoomAt(e.clientX-r.left, e.clientY-r.top, e.deltaY<0?1.12:0.9);
+},{passive:false});
+let drag=null;
+vp.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY,cx:camX,cy:camY};vp.setPointerCapture(e.pointerId);vp.style.cursor='grabbing';});
+vp.addEventListener('pointermove',e=>{if(!drag)return;
+  if(Math.abs(e.clientX-drag.x)+Math.abs(e.clientY-drag.y)>4)manual();
+  setCam(drag.cx+e.clientX-drag.x, drag.cy+e.clientY-drag.y, camS, false);});
+vp.addEventListener('pointerup',()=>{drag=null;vp.style.cursor='grab';});
+window.addEventListener('resize',()=>{sizeViewport();if(follow)fitAll(false);});
+window.addEventListener('keydown',e=>{
+  if(/select|input|textarea/i.test(e.target.tagName))return;
+  if(e.code==='Space'){e.preventDefault();play();}
+  else if(e.code==='KeyR'){$('btnRestart').click();}
+  else if(e.code==='KeyF'){manual();fitAll();}
+});
+sizeViewport();fitAll(false);
+
+/* reduced motion → jump to end */
+if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+  engine.speed=100;play();
+}else{
+  setTimeout(()=>{try{play();}catch(e){}},700);
+}
+</script>
+</body>
+</html>

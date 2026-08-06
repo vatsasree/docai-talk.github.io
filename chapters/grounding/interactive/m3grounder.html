@@ -1,0 +1,1557 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>M3Grounder — Animated Architecture Walkthrough</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" media="all" onerror="this.remove()">
+<style>
+:root{
+  --bg:#f6f7fb; --ink:#1f2937; --mut:#64748b; --line:#dbe1ea; --panel:#ffffff;
+  --accent:#2563eb; --railH:78px; --footH:52px; --capH:96px;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;overflow:hidden;background:var(--bg);
+  font-family:"Nunito",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  color:var(--ink);-webkit-font-smoothing:antialiased}
+#app{display:flex;flex-direction:column;height:100%;width:100%}
+
+/* ---------- header / journey rail ---------- */
+header{flex:0 0 var(--railH);display:flex;align-items:center;gap:18px;
+  padding:0 18px;background:var(--panel);border-bottom:1px solid var(--line);
+  box-shadow:0 1px 3px rgba(15,23,42,.05);z-index:5}
+#brand{display:flex;flex-direction:column;line-height:1.15;flex:0 0 auto}
+#brand b{font-size:19px;font-weight:800;letter-spacing:-.2px}
+#brand span{font-size:12.5px;color:var(--mut);font-weight:600}
+#rail{display:flex;align-items:center;gap:4px;flex:1 1 auto;min-width:0;overflow:hidden}
+.rs{display:flex;align-items:center;gap:7px;padding:6px 11px;border-radius:999px;
+  border:1px solid var(--line);background:#fbfcfe;white-space:nowrap;
+  font-size:13px;font-weight:700;color:#94a3b8;transition:all .45s ease;flex:0 1 auto;min-width:0}
+.rs i{width:9px;height:9px;border-radius:50%;background:#cbd5e1;flex:0 0 auto;transition:all .45s ease}
+.rs em{font-style:normal;overflow:hidden;text-overflow:ellipsis}
+.rs.done{color:#475569;background:#eef4ff;border-color:#c7d9fb}
+.rs.done i{background:#7ea6f5}
+.rs.now{color:#0b3ea8;background:#dbe8ff;border-color:#5f8ff0;box-shadow:0 0 0 3px rgba(95,143,240,.18)}
+.rs.now i{background:#2563eb;box-shadow:0 0 0 4px rgba(37,99,235,.22)}
+.rsep{color:#cbd5e1;font-size:13px;flex:0 0 auto}
+
+/* ---------- stage ---------- */
+#stagewrap{flex:1 1 auto;position:relative;overflow:hidden;background:
+  radial-gradient(1200px 600px at 50% 0%,#ffffff 0%,#f6f7fb 60%)}
+#stage{width:100%;height:100%;display:block;cursor:grab;touch-action:none}
+#stage.drag{cursor:grabbing}
+text{font-family:inherit}
+
+/* ---------- controls ---------- */
+#tools{position:absolute;right:14px;top:12px;display:flex;flex-direction:column;gap:7px;z-index:4}
+.tbtn{width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:#fffffff2;
+  color:#334155;font-size:16px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 1px 3px rgba(15,23,42,.08);transition:.15s}
+.tbtn:hover{background:#eef4ff;border-color:#9dbcf7}
+.tbtn.act{background:#2563eb;border-color:#2563eb;color:#fff}
+#follow{width:auto;padding:0 11px;font-size:12px;letter-spacing:.2px}
+
+/* ---------- caption ---------- */
+#cap{position:fixed;left:50%;transform:translateX(-50%);
+  bottom:calc(var(--footH) + 14px);width:min(880px,86vw);height:var(--capH);
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  padding:12px 26px;border-radius:14px;z-index:6;pointer-events:none;
+  background:rgba(17,24,39,.93);color:#f1f5f9;border:1px solid rgba(148,163,184,.35);
+  box-shadow:0 10px 34px rgba(15,23,42,.28);
+  font-size:17px;line-height:1.42;font-weight:600;
+  opacity:0;transition:opacity .45s ease}
+#cap.show{opacity:1}
+#capin{display:block;width:100%}
+#cap b{color:#93c5fd;font-weight:800}
+#cap .mg{color:#f0abfc;font-weight:800}
+
+/* ---------- footer ---------- */
+footer{flex:0 0 var(--footH);display:flex;align-items:center;gap:14px;padding:0 16px;
+  background:var(--panel);border-top:1px solid var(--line);z-index:5;overflow:hidden}
+#transport{display:flex;align-items:center;gap:7px;flex:0 0 auto}
+.pbtn{height:32px;padding:0 13px;border-radius:9px;border:1px solid var(--line);background:#fbfcfe;
+  color:#334155;font-size:13px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:6px;
+  font-family:inherit;transition:.15s}
+.pbtn:hover{background:#eef4ff;border-color:#9dbcf7}
+.pbtn.primary{background:#2563eb;border-color:#2563eb;color:#fff}
+.pbtn.primary:hover{background:#1d4ed8}
+#speeds{display:flex;gap:3px;background:#f1f5f9;border-radius:9px;padding:3px;border:1px solid var(--line)}
+.sp{border:0;background:transparent;font-family:inherit;font-size:12px;font-weight:800;color:#64748b;
+  padding:4px 9px;border-radius:6px;cursor:pointer}
+.sp.on{background:#fff;color:#1d4ed8;box-shadow:0 1px 2px rgba(15,23,42,.12)}
+#legend{display:flex;align-items:center;gap:13px;flex:1 1 auto;justify-content:flex-end;
+  font-size:11.5px;font-weight:700;color:var(--mut);overflow:hidden;white-space:nowrap}
+.lg{display:flex;align-items:center;gap:5px;flex:0 0 auto}
+#clock{font-variant-numeric:tabular-nums;font-size:12px;font-weight:800;color:#94a3b8;flex:0 0 auto}
+
+/* ---------- svg element states ---------- */
+.mod{opacity:0;transition:opacity .75s ease}
+.mod.on{opacity:1}
+.box{transition:filter .5s ease}
+.mod.active .glowable{filter:url(#glow)}
+.wire{fill:none;stroke:#94a3b8;stroke-width:2.4;opacity:0;transition:opacity .5s ease,stroke .5s ease}
+.wire.lit{opacity:.9;stroke:#475569}
+.wire.alive{opacity:1;stroke-dasharray:11 9;animation:flowdash 1.1s linear infinite}
+@keyframes flowdash{to{stroke-dashoffset:-20}}
+.ahead{fill:#94a3b8;opacity:0;transition:opacity .5s ease,fill .5s ease}
+.ahead.lit,.ahead.alive{opacity:1;fill:#475569}
+.hl{transform-box:fill-box;transform-origin:left center;transform:scaleX(0);
+  transition:transform .85s cubic-bezier(.22,.7,.3,1)}
+.hl.paint{transform:scaleX(1)}
+.run{opacity:0;transition:opacity .5s ease}
+.run.paint{opacity:1}
+.ripple{animation:rip 1s ease}
+@keyframes rip{0%{filter:none}35%{filter:url(#glow)}100%{filter:none}}
+.leader{fill:none;stroke-width:2;opacity:0;transition:opacity .6s ease}
+.leader.paint{opacity:.95}
+.leadlbl{opacity:0;transition:opacity .6s ease}
+.leadlbl.paint{opacity:1}
+/* text sitting under a dark mask flips to white when that mask paints */
+.wt{fill:#ffffff;transition:fill .5s ease}
+
+@media (prefers-reduced-motion: reduce){
+  .mod,.wire,.ahead,.hl,.run,#cap,.leader,.leadlbl,.wt{transition:none!important;animation:none!important}
+  .wire.alive{animation:none!important;stroke-dasharray:none!important}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div id="brand"><b>M<sup>3</sup>Grounder</b><span>Multi-span · Multi-granular grounded document VQA</span></div>
+    <div id="rail"></div>
+  </header>
+  <div id="stagewrap">
+    <svg id="stage" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div id="tools">
+      <button class="tbtn" id="zin"  title="Zoom in">+</button>
+      <button class="tbtn" id="zout" title="Zoom out">&minus;</button>
+      <button class="tbtn" id="fit"  title="Fit to screen (F)">⤢</button>
+      <button class="tbtn act" id="follow" title="Toggle auto-follow camera">AUTO</button>
+    </div>
+  </div>
+  <footer>
+    <div id="transport">
+      <button class="pbtn primary" id="play">▶ Play</button>
+      <button class="pbtn" id="restart">↻ Restart</button>
+      <div id="speeds">
+        <button class="sp" data-s="0.7">0.7×</button>
+        <button class="sp on" data-s="1">1×</button>
+        <button class="sp" data-s="1.5">1.5×</button>
+        <button class="sp" data-s="2">2×</button>
+      </div>
+      <span id="clock">0:00 / 0:00</span>
+    </div>
+    <div id="legend"></div>
+  </footer>
+</div>
+<div id="cap"><div id="capin"></div></div>
+<script>
+"use strict";
+/* ============================================================================
+   M3Grounder — animated architecture walkthrough
+   Geometry, colours and module structure are taken from the draw.io source of
+   truth (model-website.drawio.xml / model-website.png).
+   ========================================================================== */
+
+const SVGNS = "http://www.w3.org/2000/svg";
+const STAGE_W = 3040, STAGE_H = 1240;
+
+/* ---- palette: every value below is lifted from the draw.io fill/stroke ---- */
+const C = {
+  qFill:"#efe9fa", qStroke:"#6b5b95",
+  docFill:"#e8eef5", docStroke:"#475569",
+  vlmFill:"#d0cee2", vlmStroke:"#56517e",
+  visFill:"#dae8fc", visStroke:"#6c8ebf",
+  tokFill:"#fff2cc", tokStroke:"#d6b656",
+  decFill:"#f8cecc", decStroke:"#b85450",
+  headFill:"#c2cfdc", headStroke:"#23445d",
+  segFill:"#1ba1e2", segStroke:"#006eaf",
+  promptFill:"#fad7ac", promptStroke:"#b46504",
+  maskFill:"#d5e8d4", maskStroke:"#82b366",
+  pProj:"#e1d5e7", lProj:"#cce5ff", bProj:"#ffcce6",
+  g1:"#0000ff", g2:"#ff33ff",
+  ph1:"#000099", ln1:"#6666ff", bl1:"#ccccff",
+  ph2:"#990099", ln2:"#ff66ff", bl2:"#ff99ff",
+  badge:"#00b52d", ink:"#1f2937", mut:"#64748b", noteFill:"#f5f5f5", noteStroke:"#666666"
+};
+
+/* -------------------------------- helpers -------------------------------- */
+const stage = document.getElementById("stage");
+function el(n, a, parent){
+  const e = document.createElementNS(SVGNS, n);
+  if (a) for (const k in a) if (a[k] !== undefined && a[k] !== null) e.setAttribute(k, a[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+function T(p, x, y, str, o){
+  o = o || {};
+  const t = el("text", {
+    x:x, y:y, "font-size":o.fs || 16, "font-weight":o.fw || 600,
+    fill:o.fill || C.ink, "text-anchor":o.ta || "start",
+    "font-style":o.italic ? "italic" : null,
+    "letter-spacing":o.ls || null, "font-family":o.ff || null, opacity:o.op || null
+  }, p);
+  t.textContent = str;
+  return t;
+}
+const norm = (x,y)=>{const l=Math.hypot(x,y)||1;return [x/l,y/l];};
+
+/* block registry: id -> {x,y,w,h}; every arrow endpoint is derived from this */
+const B = {};
+function reg(id, x, y, w, h){ B[id] = {x,y,w,h,id}; return B[id]; }
+function cx(id){ return B[id].x + B[id].w/2; }
+function cy(id){ return B[id].y + B[id].h/2; }
+/** exact point on a block edge — arrows are computed from this, never eyeballed */
+function anchor(id, side, t){
+  const b = B[id]; if (!b) throw new Error("no block "+id);
+  t = (t === undefined) ? 0.5 : t;
+  switch(side){
+    case "l": return [b.x,        b.y + b.h*t];
+    case "r": return [b.x + b.w,  b.y + b.h*t];
+    case "t": return [b.x + b.w*t, b.y];
+    case "b": return [b.x + b.w*t, b.y + b.h];
+    case "c": return [b.x + b.w/2, b.y + b.h/2];
+  }
+  throw new Error("bad side "+side);
+}
+function bboxOf(ids, pad){
+  pad = pad || 0;
+  let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
+  ids.forEach(function(i){ const b=B[i]; if(!b) return;
+    x0=Math.min(x0,b.x); y0=Math.min(y0,b.y); x1=Math.max(x1,b.x+b.w); y1=Math.max(y1,b.y+b.h); });
+  return {x:x0-pad, y:y0-pad, w:(x1-x0)+2*pad, h:(y1-y0)+2*pad};
+}
+
+/* ------------------------- token (traveller) shapes ----------------------- */
+/* shape encodes the KIND of data; colour always encodes its ORIGIN block.    */
+const SHAPES = {
+  square:   r => `M ${-r} ${-r} H ${r} V ${r} H ${-r} Z`,
+  pentagon: r => poly(5, r, -90),
+  hexagon:  r => poly(6, r, -90),
+  triangle: r => poly(3, r*1.15, -90),
+  diamond:  r => `M 0 ${-r*1.25} L ${r*1.05} 0 L 0 ${r*1.25} L ${-r*1.05} 0 Z`,
+  circle:   r => `M ${-r} 0 a ${r} ${r} 0 1 0 ${2*r} 0 a ${r} ${r} 0 1 0 ${-2*r} 0 Z`,
+  star:     r => star(5, r*1.22, r*0.52, -90)
+};
+function poly(n, r, a0){
+  let d = "";
+  for (let i=0;i<n;i++){
+    const a = (a0 + i*360/n) * Math.PI/180;
+    d += (i?" L ":"M ") + (Math.cos(a)*r).toFixed(2) + " " + (Math.sin(a)*r).toFixed(2);
+  }
+  return d + " Z";
+}
+function star(n, R, r, a0){
+  let d = "";
+  for (let i=0;i<n*2;i++){
+    const rr = i%2 ? r : R, a = (a0 + i*180/n) * Math.PI/180;
+    d += (i?" L ":"M ") + (Math.cos(a)*rr).toFixed(2) + " " + (Math.sin(a)*rr).toFixed(2);
+  }
+  return d + " Z";
+}
+
+/* ------------------------------ wire builder ------------------------------ */
+/* orthogonal polyline with rounded joins; the arrow TIP is exactly pts[last] */
+function orthoPath(pts, r){
+  r = r === undefined ? 12 : r;
+  let d = "M " + pts[0][0] + " " + pts[0][1];
+  for (let i=1;i<pts.length-1;i++){
+    const p=pts[i-1], c=pts[i], n=pts[i+1];
+    const [ux,uy]=norm(p[0]-c[0], p[1]-c[1]);
+    const [vx,vy]=norm(n[0]-c[0], n[1]-c[1]);
+    const l1=Math.hypot(p[0]-c[0],p[1]-c[1]), l2=Math.hypot(n[0]-c[0],n[1]-c[1]);
+    const rr=Math.min(r, l1/2, l2/2);
+    d += ` L ${(c[0]+ux*rr).toFixed(2)} ${(c[1]+uy*rr).toFixed(2)}`
+      +  ` Q ${c[0]} ${c[1]} ${(c[0]+vx*rr).toFixed(2)} ${(c[1]+vy*rr).toFixed(2)}`;
+  }
+  const L = pts[pts.length-1];
+  return d + ` L ${L[0]} ${L[1]}`;
+}
+
+const WIRES = {};          /* id -> {el, head, path, len, target, side, t, tip} */
+let gWires, gHeads, gToks; /* layers, created in build() */
+
+function wire(id, pts, opts){
+  opts = opts || {};
+  const p = el("path", {d:orthoPath(pts, opts.r), class:"wire", "stroke-linecap":"round"}, gWires);
+  if (opts.dashed) p.style.strokeDasharray = "7 6";
+  const tip = pts[pts.length-1], prev = pts[pts.length-2];
+  const [dx,dy] = norm(tip[0]-prev[0], tip[1]-prev[1]);
+  const nx=-dy, ny=dx, hl=opts.head===0?0:13, hw=6.4;
+  let head = null;
+  if (hl){
+    head = el("path", {class:"ahead", d:
+      `M ${tip[0]} ${tip[1]} L ${tip[0]-dx*hl+nx*hw} ${tip[1]-dy*hl+ny*hw}`
+      + ` L ${tip[0]-dx*hl-nx*hw} ${tip[1]-dy*hl-ny*hw} Z`}, gHeads);
+  }
+  WIRES[id] = {el:p, head:head, path:p, len:p.getTotalLength(), tip:tip,
+               target:opts.target||null, side:opts.side||null, t:opts.t,
+               pts:pts, headLen:hl};
+  return WIRES[id];
+}
+/** convenience: wire that terminates exactly on a block edge */
+function wireTo(id, pts, targetId, side, t, opts){
+  opts = Object.assign({}, opts, {target:targetId, side:side, t:t});
+  const a = anchor(targetId, side, t);
+  pts = pts.concat([a]);
+  return wire(id, pts, opts);
+}
+function litWire(id, alive){
+  const w = WIRES[id]; if (!w) return;
+  w.el.classList.add(alive ? "alive" : "lit");
+  if (w.head) w.head.classList.add(alive ? "alive" : "lit");
+}
+</script>
+<script>
+/* ======================= inline-SVG recreation of the report ==============
+   Both the small "Document Image x" and the enlarged 6a / 6b evidence panels
+   are drawn by these functions, so the enlargements are guaranteed to match
+   the source document exactly (and stay crisp / animatable at any zoom).
+   ======================================================================== */
+
+const CBC_ROWS = [
+  ["HEMOGLOBIN","15","g/dl","13 - 17",0],
+  ["TOTAL LEUKOCYTE COUNT","5,100","cumm","4,800 - 10,800",0],
+  ["DIFFERENTIAL LEUCOCYTE COUNT","","","",0],
+  ["NEUTROPHILS","79","%","40 - 80",1],
+  ["LYMPHOCYTE","18","%","20 - 40",1],
+  ["EOSINOPHILS","1","%","1 - 6",1],
+  ["MONOCYTES","4","%","2 - 10",1],
+  ["BASOPHILS","1","%","< 2",1],
+  ["PLATELET COUNT","3.5","lakhs/cumm","1.5 - 4.1",0],
+  ["TOTAL RBC COUNT","5","million/cumm","4.5 - 5.5",0],
+  ["HEMATOCRIT VALUE, HCT","42","%","40 - 50",0],
+  ["MEAN CORPUSCULAR VOLUME, MCV","72.0","fL","83 - 101",0,"L"],
+  ["MEAN CELL HAEMOGLOBIN, MCH","30.0","Pg","27 - 32",0],
+  ["MEAN CELL HAEMOGLOBIN CON, MCHC","32.7","%","31.5-34.5",0]
+];
+const MCV_ROW = 11;   /* index of the MEAN CORPUSCULAR VOLUME row */
+
+const CAUSE_ROWS = [
+  ["RBC, Hb, or HCT","Dehydration, polycythemia, shock, chronic hypoxia","Anemia, thalassemia, and other hemoglobinopathies"],
+  ["MCV","Macrocytic anemia, liver disease","Microcytic anemia"],
+  ["WBC (Leucocytes)","Acute stress, infection, malignancies","Infection risk, weak immune system"],
+  ["Platelets","Risk of thrombosis","Risk of bleeding"]
+];
+const CAUSE_MCV_ROW = 1;
+
+/** like T() but records the cell the text must stay inside */
+function TC(p, x, y, str, o, x0, x1){
+  const t = T(p, x, y, str, o);
+  t.setAttribute("data-cell", x0 + "," + x1);
+  return t;
+}
+
+/** Complete-Blood-Count table. Returns geometry used by the highlight rects. */
+function drawCbc(p, o){
+  const {x, y, w, headerH, rowH, fs} = o;
+  const cw = [w*0.452, w*0.178, w*0.178, w*0.192];
+  const cxs = [x, x+cw[0], x+cw[0]+cw[1], x+cw[0]+cw[1]+cw[2]];
+  const h = headerH + rowH*CBC_ROWS.length;
+  const g = el("g", null, p);
+  el("rect", {x:x, y:y, width:w, height:headerH, fill:"#eaf0f8"}, g);
+  const hp = ["TEST","VALUE","UNIT","REFERENCE"];
+  hp.forEach((s,i)=>T(g, cxs[i]+fs*0.45, y+headerH*0.5+fs*0.36, s, {fs:fs*0.94, fw:800, fill:"#0f172a"}));
+  el("rect", {x:x, y:y, width:w, height:h, fill:"none", stroke:"#94a3b8", "stroke-width":Math.max(.6,fs*0.055)}, g);
+  el("line", {x1:x, y1:y+headerH, x2:x+w, y2:y+headerH, stroke:"#94a3b8", "stroke-width":Math.max(.6,fs*0.055)}, g);
+  const rows = [];
+  CBC_ROWS.forEach((r,i)=>{
+    const ry = y + headerH + i*rowH, bold = (i===MCV_ROW);
+    rows.push({y:ry, h:rowH, cy:ry+rowH/2});
+    const ty = ry + rowH*0.5 + fs*0.35;
+    TC(g, cxs[0] + fs*0.45 + (r[4] ? fs*2.6 : 0), ty, r[0], {fs:fs, fw:bold?800:600, fill:"#111827"}, cxs[0], cxs[1]);
+    if (r[5]) T(g, cxs[1]-fs*1.5, ty, r[5], {fs:fs, fw:800, fill:"#111827"});
+    if (r[1]) TC(g, cxs[1]+fs*0.45, ty, r[1], {fs:fs, fw:bold?800:600, fill:"#111827"}, cxs[1], cxs[2]);
+    if (r[2]) TC(g, cxs[2]+fs*0.45, ty, r[2], {fs:fs, fw:bold?800:600, fill:"#111827"}, cxs[2], cxs[3]);
+    if (r[3]) TC(g, cxs[3]+fs*0.45, ty, r[3], {fs:fs, fw:bold?800:600, fill:"#111827"}, cxs[3], x+w);
+  });
+  return {x, y, w, h, rows, cxs, cw, centre:[x+w/2, y+h/2]};
+}
+
+/** "Possible causes of abnormal parameters" table. */
+function drawCauses(p, o){
+  const {x, y, w, headerH, rowH, fs} = o;
+  const cw = [w*0.20, w*0.40, w*0.40];
+  const cxs = [x, x+cw[0], x+cw[0]+cw[1]];
+  const h = headerH + rowH*CAUSE_ROWS.length;
+  const g = el("g", null, p);
+  const sw = Math.max(.6, fs*0.05);
+  T(g, cxs[1]+fs*0.4, y+headerH*0.5+fs*0.36, "High", {fs:fs, fw:800, fill:"#0f172a"});
+  T(g, cxs[2]+fs*0.4, y+headerH*0.5+fs*0.36, "Low",  {fs:fs, fw:800, fill:"#0f172a"});
+  const rows = [];
+  CAUSE_ROWS.forEach((r,i)=>{
+    const ry = y + headerH + i*rowH, ty = ry + rowH*0.5 + fs*0.35;
+    rows.push({y:ry, h:rowH, cy:ry+rowH/2});
+    TC(g, cxs[0]+fs*0.35, ty, r[0], {fs:fs*0.96, fw:800, fill:"#111827"}, cxs[0], cxs[1]);
+    TC(g, cxs[1]+fs*0.4,  ty, r[1], {fs:fs, fw:600, fill:"#111827"}, cxs[1], cxs[2]);
+    TC(g, cxs[2]+fs*0.4,  ty, r[2], {fs:fs, fw:600, fill:"#111827"}, cxs[2], x+w);
+  });
+  for (let i=0;i<=CAUSE_ROWS.length+1;i++)
+    el("line", {x1:x, y1:y+ (i===0?0:headerH+(i-1)*rowH), x2:x+w,
+                y2:y+ (i===0?0:headerH+(i-1)*rowH), stroke:"#94a3b8",
+                "stroke-width":sw, "stroke-dasharray":fs*0.22+" "+fs*0.22}, g);
+  cxs.concat([x+w]).forEach(vx=>
+    el("line", {x1:vx, y1:y, x2:vx, y2:y+h, stroke:"#94a3b8", "stroke-width":sw,
+                "stroke-dasharray":fs*0.22+" "+fs*0.22}, g));
+  return {x, y, w, h, rows, cxs, cw, centre:[x+w/2, y+h/2]};
+}
+
+/* --------------- leader lines: radial exit → one bend → horizontal --------- */
+/* Side is decided from the REAL mid-angle of the source point about the table
+   centre, so a line never has to cut back across the table body.            */
+function leader(p, src, centre, opts){
+  const {label, colour, panel, L} = opts;
+  const [vx,vy] = [src[0]-centre[0], src[1]-centre[1]];
+  const [ux,uy] = norm(vx, vy);
+  const midAngle = Math.atan2(vy, vx) * 180/Math.PI;
+  const side = Math.cos(midAngle*Math.PI/180) >= 0 ? "right" : "left";
+  const len = L === undefined ? 54 : L;
+  const bend = [src[0]+ux*len, src[1]+uy*len];             /* radial exit     */
+  const anchorX = side === "right" ? panel.right : panel.left;
+  const hEnd    = side === "right" ? anchorX - 8 : anchorX + 8;
+  const g = el("g", null, p);
+  const path = el("path", {class:"leader", stroke:colour, "stroke-linecap":"round",
+    d:`M ${src[0]} ${src[1]} L ${bend[0].toFixed(2)} ${bend[1].toFixed(2)} L ${hEnd} ${bend[1].toFixed(2)}`}, g);
+  el("circle", {class:"leader", cx:src[0], cy:src[1], r:5, fill:colour, stroke:"none"}, g);
+  const t = T(g, anchorX, bend[1]+7, label,
+    {fs:21, fw:800, fill:colour, ta: side==="right" ? "start" : "end"});
+  t.setAttribute("class","leadlbl");
+  return {g, path, label:t, side, bend, src, midAngle,
+          segs:[[src, bend], [bend, [hEnd, bend[1]]]]};
+}
+</script>
+<script>
+/* ============================== build the stage ========================== */
+const defs = el("defs", null, stage);
+(function(){
+  const f = el("filter", {id:"glow", x:"-30%", y:"-30%", width:"160%", height:"160%"}, defs);
+  el("feDropShadow", {dx:0, dy:0, stdDeviation:9, "flood-color":"#2563eb", "flood-opacity":"0.85"}, f);
+  const s = el("filter", {id:"soft", x:"-12%", y:"-12%", width:"124%", height:"124%"}, defs);
+  el("feDropShadow", {dx:0, dy:2, stdDeviation:5, "flood-color":"#0f172a", "flood-opacity":"0.13"}, s);
+})();
+
+const world  = el("g", {id:"world"}, stage);
+const gBase  = el("g", {id:"base"},  world);   /* module bodies      */
+gWires       = el("g", {id:"wires"}, world);   /* connectors (below) */
+gHeads       = el("g", {id:"heads"}, world);
+const gTop   = el("g", {id:"top"},   world);   /* labels/badges above */
+gToks        = el("g", {id:"toks"},  world);   /* travelling tokens   */
+gWires.parentNode.insertBefore(gWires, gBase); /* wires under bodies  */
+
+const MODS = {};
+function mod(id){ const g = el("g", {class:"mod", "data-mod":id}, gBase); MODS[id] = g; return g; }
+function badge(p, x, y, txt, r){
+  r = r || 16;
+  const g = el("g", null, p);
+  el("circle", {cx:x, cy:y, r:r, fill:C.badge, stroke:"#ffffff", "stroke-width":2.5}, g);
+  T(g, x, y + r*0.36, txt, {fs:r*1.05, fw:800, fill:"#ffffff", ta:"middle"});
+  return g;
+}
+function statusIcon(p, x, y, frozen, size){
+  size = size || 22;
+  const t = T(p, x, y, frozen ? "❄️" : "🔥", {fs:size, ta:"middle"});
+  t.setAttribute("class","status");
+  return t;
+}
+function boxRect(p, id, o){
+  const b = B[id];
+  const r = el("rect", {x:b.x, y:b.y, width:b.w, height:b.h, rx:o.rx===undefined?14:o.rx,
+    fill:o.fill, stroke:o.stroke, "stroke-width":o.sw||2.2, opacity:o.op, class:"box glowable"}, p);
+  if (o.shadow) r.setAttribute("filter","url(#soft)");
+  return r;
+}
+
+/* ------------------------------ ① INPUT ---------------------------------- */
+const gIn = mod("input");
+reg("qcard", 30, 26, 560, 150);
+boxRect(gIn, "qcard", {fill:C.qFill, stroke:C.qStroke, rx:16, shadow:1});
+T(gIn, 56, 84, "🧑‍💻", {fs:38});
+T(gIn, 112, 76, "Question  q", {fs:29, fw:800, fill:"#3b3161"});
+T(gIn, 52, 116, "What can be inferred from the low values in this", {fs:19, fw:600, fill:"#332a52"});
+T(gIn, 52, 141, "blood report?", {fs:19, fw:600, fill:"#332a52"});
+T(gIn, 52, 167, "Provide the answer with grounding", {fs:19.5, fw:800, fill:"#241d3d"});
+
+reg("doc", 30, 200, 572, 762);
+boxRect(gIn, "doc", {fill:C.docFill, stroke:C.docStroke, rx:10, sw:2.6, shadow:1});
+el("rect", {x:40, y:210, width:552, height:742, fill:"#ffffff", stroke:"#cbd5e1"}, gIn);
+/* — page header — */
+T(gIn, 54, 240, "Mr. Saubhik Bhaumik", {fs:14, fw:800});
+[["Age / Sex","; 27YRS / M",256],["Referred by",": Self",270],["Reg. no.",": 1001",284]].forEach(r=>{
+  T(gIn, 54, r[2], r[0], {fs:9, fw:600, fill:"#475569"});
+  T(gIn, 118, r[2], r[1].replace(";",":"), {fs:9, fw:r[0]==="Reg. no."?800:600});
+});
+for (let i=0;i<34;i++)
+  el("rect", {x:252+i*2.4, y:222, width:(i%3?1:1.7), height:22, fill:"#111827"}, gIn);
+T(gIn, 346, 240, "1001", {fs:8, fw:700, fill:"#475569"});
+[["Registered  on","17/10/2024 04:55 PM",258],["Collected     on","17/10/2024",270],
+ ["Received      on","17/10/2024",282],["Reported on","17/10/2024 04:55 PM",294]].forEach(r=>{
+  T(gIn, 252, r[2], r[0], {fs:8, fw:600, fill:"#475569"});
+  T(gIn, 336, r[2], ":  "+r[1], {fs:8, fw:600, fill:"#334155"});
+});
+T(gIn, 496, 216, "Scan to download", {fs:5.5, fw:600, fill:"#64748b", ta:"middle"});
+for (let r=0;r<9;r++) for (let c=0;c<9;c++)
+  if ((r*7+c*11+((r*c)%5)) % 3 !== 1)
+    el("rect", {x:470+c*5.6, y:220+r*5.6, width:5.2, height:5.2, fill:"#111827"}, gIn);
+el("line", {x1:48, y1:302, x2:584, y2:302, stroke:"#334155", "stroke-width":1.4}, gIn);
+T(gIn, 316, 320, "HAEMATOLOGY", {fs:12, fw:800, ta:"middle"});
+T(gIn, 316, 336, "COMPLETE BLOOD COUNT (CBC)", {fs:10, fw:800, ta:"middle"});
+const docCbc = drawCbc(gIn, {x:48, y:346, w:536, headerH:18, rowH:19, fs:8});
+/* — clinical notes — */
+el("rect", {x:48, y:644, width:536, height:192, fill:"#eef4fb", stroke:"#dbe6f3"}, gIn);
+T(gIn, 56, 660, "Clinical Notes:", {fs:9, fw:800});
+["A complete blood count (CBC) is used to evaluate overall health and detect a wide range of disorders, including anemia,",
+ "infection, and leukemia. There have been some reports of WBC and platelet counts being lower in venous blood than in",
+ "capillary blood samples, although still within these reference ranges."]
+ .forEach((s,i)=>T(gIn, 56, 674+i*11, s, {fs:8, fw:600, fill:"#1f2937"}));
+T(gIn, 56, 716, "Possible causes of abnormal parameters:", {fs:9, fw:800});
+const docCauses = drawCauses(gIn, {x:56, y:724, w:520, headerH:15, rowH:15, fs:7.0});
+/* — page footer — */
+el("path", {d:"M62 852 q14 -16 26 -2 q10 12 22 -4 q9 -12 20 2", fill:"none", stroke:"#334155", "stroke-width":1.6}, gIn);
+el("path", {d:"M462 852 q16 -18 28 -2 q11 13 24 -5 q10 -13 22 3", fill:"none", stroke:"#334155", "stroke-width":1.6}, gIn);
+T(gIn, 60, 872, "Mr. Sachin Sharma", {fs:7.5, fw:800});
+T(gIn, 60, 881, "DMLT, Lab Incharge", {fs:7, fw:600, fill:"#475569"});
+T(gIn, 462, 872, "Dr. A. K. Asthana", {fs:7.5, fw:800});
+T(gIn, 462, 881, "MBBS, MD Pathologist", {fs:7, fw:600, fill:"#475569"});
+T(gIn, 316, 898, "NOT VALID FOR MEDICO LEGAL PURPOSE", {fs:8, fw:800, ta:"middle"});
+T(gIn, 316, 911, "Work timings: Monday to Sunday, 8 am to 8 pm", {fs:7.5, fw:600, fill:"#334155", ta:"middle"});
+T(gIn, 316, 924, "Please correlate clinically. Although the test results are checked thoroughly, in case of any unexpected test results which", {fs:6.6, fw:600, fill:"#475569", ta:"middle"});
+T(gIn, 316, 933, "could be due to machine error or typing error or any other reason please contact the lab immediately for a free evaluation.", {fs:6.6, fw:600, fill:"#475569", ta:"middle"});
+el("rect", {x:40, y:938, width:552, height:14, fill:"#1f4e79"}, gIn);
+T(gIn, 316, 996, "Document Image  x", {fs:26, fw:800, ta:"middle"});
+
+/* ------------------------------ ① VLM ------------------------------------ */
+const gVlm = mod("vlm");
+reg("vlm", 672, 40, 352, 792);
+boxRect(gVlm, "vlm", {fill:C.vlmFill, stroke:C.vlmStroke, rx:18, sw:2.4, op:.55, shadow:1});
+badge(gTop, 700, 68, "1");
+T(gVlm, 726, 78, "VLM", {fs:28, fw:800, fill:"#3f3a63"});
+
+reg("tokenizer", 692, 104, 56, 152);
+el("path", {d:"M692 104 L748 124 L748 236 L692 256 Z", fill:C.tokFill, stroke:C.tokStroke,
+  "stroke-width":2.2, class:"box glowable"}, gVlm);
+T(gVlm, 0, 0, "Tokenizer", {fs:15, fw:800, ta:"middle"})
+  .setAttribute("transform","translate(722,180) rotate(-90)");
+
+reg("txtToks", 788, 100, 26, 196);
+const TXT_Y = [100,134,168,202,236,270];
+TXT_Y.forEach((y,i)=>el("rect", {x:788, y:y, width:26, height:26, rx:3,
+  fill:C.tokFill, stroke:C.tokStroke, "stroke-width":1.8, class:"ttok"}, gVlm));
+
+reg("visEnc", 690, 470, 96, 250);
+boxRect(gVlm, "visEnc", {fill:C.visFill, stroke:C.visStroke, rx:12});
+statusIcon(gVlm, 712, 496, true, 20);
+["Vision","Encoder","+ Proj."].forEach((s,i)=>T(gVlm, 738, 578+i*23, s, {fs:17, fw:700, ta:"middle"}));
+
+reg("imgToks", 800, 470, 26, 196);
+const IMG_Y = [470,504,538,572,606,640];
+IMG_Y.forEach(y=>el("rect", {x:800, y:y, width:26, height:26, rx:3,
+  fill:C.visFill, stroke:C.visStroke, "stroke-width":1.8, class:"itok"}, gVlm));
+
+reg("decoder", 852, 58, 160, 756);
+boxRect(gVlm, "decoder", {fill:C.decFill, stroke:C.decStroke, rx:14});
+statusIcon(gVlm, 986, 84, false, 22);
+T(gVlm, 0, 0, "LM Decoder", {fs:17, fw:800, ta:"middle"})
+  .setAttribute("transform","translate(874,300) rotate(-90)");
+const DEC_WHITE = [92,128,164,236,272,344,380,452,488,560,596,668,704];
+DEC_WHITE.forEach(y=>el("rect", {x:908, y:y, width:28, height:28, rx:3,
+  fill:"#ffffff", stroke:"#c9b8b7", "stroke-width":1.6}, gVlm));
+[[196,216],[412,432],[628,648]].forEach(d=>{
+  for (let k=0;k<3;k++) el("circle", {cx:922, cy:d[0]+k*10, r:2.6, fill:"#7f1d1d"}, gVlm);
+});
+reg("g1", 908, 308, 28, 28);
+reg("g2", 908, 524, 28, 28);
+el("rect", {x:908, y:308, width:28, height:28, rx:3, fill:C.g1, stroke:"#00007a",
+  "stroke-width":1.6, id:"gsq1", class:"glowable"}, gVlm);
+el("rect", {x:908, y:524, width:28, height:28, rx:3, fill:C.g2, stroke:"#a3129e",
+  "stroke-width":1.6, id:"gsq2", class:"glowable"}, gVlm);
+
+/* ------------------------- ③ [GROUND] hidden states ---------------------- */
+const gHid = mod("hidden");
+reg("hidbox", 676, 734, 170, 86);
+boxRect(gHid, "hidbox", {fill:"none", stroke:C.decStroke, rx:12, sw:2.4});
+badge(gHid, 692, 748, "3", 15);
+T(gHid, 765, 782, "Hidden States of", {fs:14.5, fw:700, ta:"middle", fill:"#7f1d1d"});
+T(gHid, 765, 802, "[GROUND] Tokens", {fs:14.5, fw:800, ta:"middle", fill:"#7f1d1d"});
+</script>
+<script>
+/* ------------------------------ LM HEAD ---------------------------------- */
+const gHead = mod("lmhead");
+reg("lmhead", 1092, 150, 156, 64);
+boxRect(gHead, "lmhead", {fill:C.headFill, stroke:C.headStroke, rx:12, shadow:1});
+statusIcon(gHead, 1170, 138, false, 22);
+T(gHead, 1170, 190, "LM Head", {fs:20, fw:800, ta:"middle", fill:"#12283c"});
+
+/* --------------------------- ② ANSWER CARD ------------------------------- */
+const gAns = mod("answer");
+reg("answer", 1620, 30, 1260, 232);
+boxRect(gAns, "answer", {fill:"#ffffff", stroke:"#cbd5e1", rx:16, shadow:1});
+badge(gTop, 1652, 62, "2");
+T(gAns, 1684, 74, "📄", {fs:30});
+T(gAns, 1726, 74, "Answer w/ Interleaved Grounding Tokens  â", {fs:27, fw:800});
+const ANSWER_LINES = [
+  [{t:"The report shows a low ", c:C.ink, b:600},
+   {t:"MEAN CORPUSCULAR", c:"#0b16c8", b:800}],
+  [{t:"VOLUME, MCV of 72.0 fL ", c:"#0b16c8", b:800},
+   {t:"[GROUND]", c:"#0b16c8", b:800},
+   {t:" which", c:C.ink, b:600}],
+  [{t:"indicates ", c:C.ink, b:600},
+   {t:"Microcytic anemia", c:"#d612d6", b:800},
+   {t:" [GROUND]", c:"#d612d6", b:800}]
+];
+const answerRuns = [];
+ANSWER_LINES.forEach((line, li)=>{
+  const t = el("text", {x:1660, y:130+li*40, "font-size":25, "font-weight":600, fill:C.ink}, gAns);
+  line.forEach(run=>{
+    const s = el("tspan", {fill:run.c, "font-weight":run.b, class:"run"}, t);
+    s.textContent = run.t;
+    answerRuns.push(s);
+  });
+});
+
+/* ------------------- ④ granularity projection heads ---------------------- */
+const gP = [mod("p4a"), mod("p4b"), mod("p4c")];
+const PROJ = [
+  {id:"phraseProj", y:330, fill:C.pProj, name:"Phrase", badge:"4a",
+   embA:C.ph1, embB:C.ph2, lbl:["Phrase Level","Prompt Emb."], sup:"(p)"},
+  {id:"lineProj",   y:520, fill:C.lProj, name:"Line",   badge:"4b",
+   embA:C.ln1, embB:C.ln2, lbl:["Line Level","Prompt Emb."],   sup:"(l)"},
+  {id:"blockProj",  y:710, fill:C.bProj, name:"Block",  badge:"4c",
+   embA:C.bl1, embB:C.bl2, lbl:["Block Level","Prompt Emb."],  sup:"(b)"}
+];
+PROJ.forEach((P,i)=>{
+  const g = gP[i], y = P.y;
+  reg(P.id, 1160, y+22, 116, 40);          /* logical edge box = right face  */
+  el("path", {d:`M1160 ${y} L1276 ${y+22} L1276 ${y+62} L1160 ${y+84} Z`,
+    fill:P.fill, stroke:"#00000022", "stroke-width":1.5, class:"box glowable"}, g);
+  T(g, 1200, y+38, P.name, {fs:16.5, fw:800, ta:"middle"});
+  T(g, 1200, y+58, "Proj.",  {fs:16.5, fw:800, ta:"middle"});
+  statusIcon(g, 1218, y-6, false, 21);
+
+  /* prompt-embedding pair — one hexagon per answer span, each keeping the
+     colour used for that span everywhere else in the figure               */
+  const yc = y + 42;
+  reg("embA"+i, 1332, yc-16, 32, 32);
+  reg("embB"+i, 1378, yc-16, 32, 32);
+  el("path", {d:SHAPES.hexagon(16), fill:P.embA, stroke:"#00000030", "stroke-width":1.4,
+    transform:`translate(1348,${yc})`, id:"embA"+i, class:"glowable"}, g);
+  el("path", {d:SHAPES.hexagon(16), fill:P.embB, stroke:"#00000030", "stroke-width":1.4,
+    transform:`translate(1394,${yc})`, id:"embB"+i, class:"glowable"}, g);
+  badge(g, 1371, yc-40, P.badge, 15);
+  /* curly brace + h_k label */
+  el("path", {d:`M1330 ${yc+24} q0 6 8 6 h20 q8 0 8 6 q0 -6 8 -6 h20 q8 0 8 -6`,
+    fill:"none", stroke:"#334155", "stroke-width":1.6}, g);
+  const hk = el("text", {x:1371, y:yc+54, "font-size":19, "font-weight":700,
+    "text-anchor":"middle", fill:"#111827", "font-style":"italic"}, g);
+  hk.textContent = "h";
+  const sup = el("tspan", {dy:-8, "font-size":13, "font-style":"normal"}, hk); sup.textContent = P.sup;
+  const sub = el("tspan", {dy:8, "font-size":13, "font-style":"normal"}, hk); sub.textContent = "k";
+  P.lbl.forEach((s,k)=>T(g, 1424, yc-8+k*22, s, {fs:16.5, fw:700, fill:"#334155"}));
+});
+
+/* ---- h̃₁ / h̃₂ : hidden states leaving the decoder, coloured per span ---- */
+const gHt = mod("htilde");
+[["ht1", 1078, 430, C.g1, "1"], ["ht2", 1078, 646, C.g2, "2"]].forEach(d=>{
+  reg(d[0], d[1]-16, d[2]-20, 32, 40);
+  el("path", {d:SHAPES.diamond(16), fill:d[3], stroke:"#00000040", "stroke-width":1.5,
+    transform:`translate(${d[1]},${d[2]})`, id:d[0], class:"glowable"}, gHt);
+  const t = el("text", {x:d[1], y:d[2]-30, "font-size":22, "font-weight":700,
+    "text-anchor":"middle", fill:"#111827", "font-style":"italic"}, gHt);
+  t.textContent = "h̃";
+  const s = el("tspan", {dy:6, "font-size":15, "font-style":"normal"}, t); s.textContent = d[4];
+});
+
+/* ------------------------ ⑤ SEGMENTATION MODULE -------------------------- */
+const gSeg = mod("seg");
+reg("seg", 660, 866, 650, 330);
+boxRect(gSeg, "seg", {fill:C.segFill, stroke:C.segStroke, rx:18, sw:2.4, op:.24, shadow:1});
+badge(gTop, 686, 898, "5");
+T(gSeg, 716, 907, "SEGMENTATION MODULE", {fs:23, fw:800, fill:"#075a8c"});
+
+reg("segVis", 684, 934, 280, 92);
+boxRect(gSeg, "segVis", {fill:C.visFill, stroke:C.visStroke, rx:12});
+statusIcon(gSeg, 704, 958, true, 20);
+T(gSeg, 836, 974, "Vision Encoder", {fs:19, fw:700, ta:"middle"});
+const fe = el("text", {x:836, y:1002, "font-size":19, "font-weight":800, "text-anchor":"middle",
+  fill:"#111827", "font-style":"italic"}, gSeg); fe.textContent = "F";
+el("tspan", {dy:6, "font-size":13, "font-style":"normal"}, fe).textContent = "enc";
+
+reg("segPrompt", 988, 934, 302, 92);
+boxRect(gSeg, "segPrompt", {fill:C.promptFill, stroke:C.promptStroke, rx:12});
+statusIcon(gSeg, 1008, 958, true, 20);
+T(gSeg, 1150, 988, "Prompt Encoder", {fs:20, fw:700, ta:"middle"});
+
+reg("segMask", 684, 1064, 606, 92);
+boxRect(gSeg, "segMask", {fill:C.maskFill, stroke:C.maskStroke, rx:12});
+statusIcon(gSeg, 704, 1088, false, 21);
+T(gSeg, 990, 1102, "Mask Decoder", {fs:20, fw:700, ta:"middle"});
+const fd = el("text", {x:990, y:1132, "font-size":19, "font-weight":800, "text-anchor":"middle",
+  fill:"#111827", "font-style":"italic"}, gSeg); fd.textContent = "F";
+el("tspan", {dy:6, "font-size":13, "font-style":"normal"}, fd).textContent = "dec";
+
+/* --------------------------- outputs note box ---------------------------- */
+const gNote = mod("note");
+reg("note", 1330, 1058, 250, 124);
+boxRect(gNote, "note", {fill:C.noteFill, stroke:C.noteStroke, rx:8, sw:1.8});
+reg("chipBlue", 1348, 1082, 20, 20);
+reg("chipMag",  1348, 1114, 20, 20);
+el("rect", {x:1348, y:1082, width:20, height:20, rx:3, fill:C.g1, stroke:"#00007a",
+  "stroke-width":1.4, id:"chipBlue"}, gNote);
+el("rect", {x:1348, y:1114, width:20, height:20, rx:3, fill:C.g2, stroke:"#a3129e",
+  "stroke-width":1.4, id:"chipMag"}, gNote);
+["Outputs Three Hierarchical","Masks for each [GROUND]","Token"]
+  .forEach((s,i)=>T(gNote, 1380, 1097+i*19, s, {fs:14, fw:700, fill:"#334155"}));
+</script>
+<script>
+/* =================== ⑥a / ⑥b hierarchical mask evidence ================== */
+const LEADERS = [];   /* recorded for the geometric audit */
+
+function evidencePanel(o){
+  const g = mod(o.mod);
+  reg(o.panelId, o.px, o.py, o.pw, o.ph);
+  boxRect(g, o.panelId, {fill:"#ffffff", stroke:"#cbd5e1", rx:16, shadow:1});
+  badge(g, o.px+34, o.py+34, o.badge, 16);
+  T(g, o.px+62, o.py+42, o.title, {fs:21, fw:800, fill:"#334155"});
+
+  /* highlights sit UNDER the table text so the numbers stay readable */
+  const hg = el("g", null, g);
+  const table = o.draw(g, hg);
+  const panelEdges = {left:o.px + (o.mLeft||100), right:o.px + o.pw - (o.mRight||150)};
+
+  o.marks.forEach(m=>{
+    const r = el("rect", {x:m.r[0], y:m.r[1], width:m.r[2], height:m.r[3],
+      rx:m.rx===undefined?4:m.rx, fill:m.colour, opacity:m.op, class:"hl",
+      "data-mark":o.mod+":"+m.key}, hg);
+    m.el = r;
+    if (m.dark){   /* texts this mask will sit on top of — they flip to white */
+      m.texts = [].slice.call(g.querySelectorAll("text"))
+        .filter(function(t){
+          if (t.classList.contains("leadlbl")) return false;
+          const bb = t.getBBox(), mx = bb.x+bb.width/2, my = bb.y+bb.height/2;
+          return mx > m.r[0] && mx < m.r[0]+m.r[2] && my > m.r[1] && my < m.r[1]+m.r[3];
+        });
+    }
+    const ld = leader(g, m.src, table.centre,
+      {label:m.key, colour:m.line, panel:panelEdges});
+    m.leader = ld;
+    LEADERS.push({panel:o.mod, key:m.key, ld:ld, table:table, marks:o.marks});
+  });
+  return {g, table, marks:o.marks};
+}
+
+/* ---------------------------- ⑥a  CBC table ------------------------------ */
+const OUT_A = (function(){
+  const tx = 1790, ty = 352, tw = 1000, headerH = 28, rowH = 25;
+  let table;
+  const marks = [];
+  const rowY = ty + headerH + MCV_ROW*rowH;
+  const cw0 = tw*0.452, cw1 = tw*0.178, cw2 = tw*0.178;
+  const p = evidencePanel({
+    mod:"out6a", panelId:"out6a", px:1620, py:286, pw:1400, ph:490,
+    badge:"6a", title:"Evidence for span 1 — “MEAN CORPUSCULAR VOLUME, MCV of 72.0 fL”",
+    draw:(g,hg)=>{ table = drawCbc(g, {x:tx, y:ty, w:tw, headerH, rowH, fs:17}); return table; },
+    marks:[
+      {key:"Block",  colour:C.bl1, line:"#6b6bd6", op:.55, r:[tx, ty, tw, headerH+rowH*CBC_ROWS.length],
+       src:[tx+tw, ty]},
+      {key:"Line",   colour:C.ln1, line:"#4747e0", op:.55, r:[tx, rowY, tw, rowH],
+       src:[tx+tw, rowY+rowH/2]},
+      {key:"Phrase", colour:C.ph1, line:"#000099", op:.82, dark:1, r:[tx, rowY, cw0+cw1+cw2, rowH],
+       src:[tx, rowY+rowH/2]}
+    ]
+  });
+  return p;
+})();
+
+/* ------------------------- ⑥b  causes-of-abnormal table ------------------ */
+const OUT_B = (function(){
+  const tx = 1790, ty = 856, tw = 1000, headerH = 32, rowH = 34;
+  let table;
+  const rowY = ty + headerH + CAUSE_MCV_ROW*rowH;
+  const cw0 = tw*0.20, cw1 = tw*0.40, cw2 = tw*0.40;
+  const p = evidencePanel({
+    mod:"out6b", panelId:"out6b", px:1620, py:812, pw:1400, ph:268,
+    badge:"6b", title:"Evidence for span 2 — “Microcytic anemia”",
+    draw:(g,hg)=>{ table = drawCauses(g, {x:tx, y:ty, w:tw, headerH, rowH, fs:15}); return table; },
+    marks:[
+      {key:"Block",  colour:C.bl2, line:"#d46bd4", op:.5,  r:[tx, ty, tw, headerH+rowH*CAUSE_ROWS.length],
+       src:[tx+tw, ty]},
+      {key:"Line",   colour:C.ln2, line:"#e034e0", op:.5,  r:[tx, rowY, tw, rowH],
+       src:[tx, rowY+rowH/2]},
+      {key:"Phrase", colour:C.ph2, line:"#990099", op:.78, dark:1, r:[tx+cw0+cw1, rowY, cw2, rowH],
+       src:[tx+tw, rowY+rowH/2]}
+    ]
+  });
+  return p;
+})();
+
+/* final caption under the two evidence panels */
+const gFinal = mod("final");
+T(gFinal, 2276, 1146, "🔍", {fs:34, ta:"middle"});
+T(gFinal, 2320, 1136, "Final Multi-Span & Multi-Granular Masks  M̂", {fs:25, fw:800});
+T(gFinal, 2320, 1166, "(Overlaid on Image)", {fs:22, fw:700, fill:C.mut});
+</script>
+<script>
+/* ============================ connectors =================================
+   Every arrow terminates on anchor(targetBlock, side, t) — a point computed
+   from the target's registered rect, so no head ever floats near its block.
+   ======================================================================== */
+wireTo("q>tok",      [[590,101],[640,101],[640,180]],            "tokenizer","l",0.5);
+wireTo("tok>txt",    [[748,180],[768,180],[768,198]],            "txtToks","l",0.5);
+wireTo("txt>dec",    [[814,198]],                                "decoder","l",(198-58)/756);
+wireTo("doc>vis",    [[602,560],[646,560],[646,595]],            "visEnc","l",0.5);
+wireTo("vis>img",    [[786,568]],                                "imgToks","l",0.5);
+wireTo("img>dec",    [[826,568]],                                "decoder","l",(568-58)/756);
+wireTo("dec>head",   [[1012,130],[1052,130],[1052,182]],         "lmhead","l",0.5);
+wireTo("head>ans",   [[1248,182]],                               "answer","l",(182-30)/232);
+wireTo("g1>ht1",     [[936,322],[1048,322],[1048,430]],          "ht1","l",0.5);
+wireTo("g2>ht2",     [[936,538],[1048,538],[1048,646]],          "ht2","l",0.5);
+/* hidden-state pointers (label → the two [GROUND] tokens): no travellers */
+wireTo("hid>g1",     [[846,777],[892,777],[892,322]],            "g1","l",0.5,{dashed:1,head:0});
+wireTo("hid>g2",     [[846,795],[898,795],[898,538]],            "g2","l",0.5,{dashed:1,head:0});
+/* fan-out: each [GROUND] hidden state hits all three granularity heads */
+["phraseProj","lineProj","blockProj"].forEach((p,i)=>{
+  wireTo("ht1>"+p, [[1094,430]], p, "l", 0.5, {dashed:1, r:0});
+  wireTo("ht2>"+p, [[1094,646]], p, "l", 0.5, {dashed:1, r:0});
+  wireTo(p+">emb", [[1276, PROJ[i].y+42]], "embA"+i, "l", 0.5);
+});
+/* prompt embeddings → prompt encoder (nested corridors: no wire crosses another) */
+wireTo("emb0>pe", [[1410,372],[1410,452],[1568,452],[1568,996]], "segPrompt","r",(996-934)/92,{dashed:1});
+wireTo("emb1>pe", [[1410,562],[1410,642],[1552,642],[1552,974]], "segPrompt","r",(974-934)/92,{dashed:1});
+wireTo("emb2>pe", [[1410,752],[1410,832],[1536,832],[1536,952]], "segPrompt","r",(952-934)/92,{dashed:1});
+/* segmentation internals */
+wireTo("doc>senc", [[602,880],[640,880],[640,980]],  "segVis","l",0.5);
+wireTo("senc>md",  [[824,1026]],                     "segMask","t",(824-684)/606);
+wireTo("pe>md",    [[1139,1026]],                    "segMask","t",(1139-684)/606);
+wireTo("md>note",  [[1290,1120]],                    "note","l",0.5);
+/* masks out — each traveller leaves its own coloured chip inside the note box */
+wireTo("note>6a",  [[1368,1092],[1592,1092],[1592,520]], "out6a","l",(520-286)/490);
+wireTo("note>6b",  [[1368,1124],[1604,1124],[1604,940]], "out6b","l",(940-812)/268);
+
+/* ========================= travelling tokens ============================= */
+/* A traveller's fill is ALWAYS its origin block's fill; its shape is always
+   the shape assigned to that KIND of data.                                 */
+const travellers = [];
+function flow(wireId, o){
+  const w = WIRES[wireId]; if (!w) return;
+  const n = o.n === undefined ? 3 : o.n;
+  for (let i=0;i<n;i++){
+    const p = el("path", {d:SHAPES[o.shape](o.r||10), fill:o.colour,
+      stroke:o.stroke||"#33415580", "stroke-width":1.6,
+      class:"tok", "data-origin":o.origin, "data-shape":o.shape, "data-wire":wireId}, gToks);
+    p.style.filter = "drop-shadow(0 1px 2px rgba(15,23,42,.35))";
+    travellers.push({el:p, w:w, t0:clock + (o.delay||0) + i*(o.stagger||0.20),
+      dur:(o.dur||1.5), done:false});
+  }
+}
+function stepTravellers(){
+  for (let i=travellers.length-1;i>=0;i--){
+    const tr = travellers[i];
+    const u = (clock - tr.t0) / tr.dur;
+    if (u < 0){ tr.el.style.opacity = 0; continue; }
+    if (u >= 1){ tr.el.remove(); travellers.splice(i,1); continue; }
+    const L = Math.max(0, tr.w.len - tr.w.headLen - 2);
+    const pt = tr.w.path.getPointAtLength(u*L);
+    tr.el.setAttribute("transform", `translate(${pt.x.toFixed(2)},${pt.y.toFixed(2)})`);
+    tr.el.style.opacity = u < .08 ? (u/.08) : (u > .9 ? (1-u)/.1 : 1);
+  }
+}
+
+/* ============================== camera =================================== */
+let cam = {x:0, y:0, k:1}, camFrom = null, camTo = null, camT0 = 0, camDur = 1.1;
+let autoFollow = true, viewport = {w:800, h:600};
+const easeIO = t => t<.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2;
+
+function measureViewport(){
+  const r = stage.getBoundingClientRect();
+  viewport = {w:r.width, h:r.height, top:r.top, left:r.left, bottom:r.bottom};
+  const cr = document.getElementById("cap").getBoundingClientRect();
+  /* reserve the caption band so a scene's focus can never sit under the text */
+  viewport.safeBottom = Math.max(0, r.bottom - cr.top) + 18;
+}
+function solveFit(rect){
+  const padX = 26, padTop = 22;
+  const availW = viewport.w - padX*2;
+  const availH = viewport.h - padTop - viewport.safeBottom;
+  const k = Math.min(availW / rect.w, availH / rect.h);
+  const ccx = padX + availW/2, ccy = padTop + availH/2;
+  return {k:k, x:ccx - (rect.x + rect.w/2)*k, y:ccy - (rect.y + rect.h/2)*k};
+}
+function applyCam(){
+  world.setAttribute("transform",
+    `translate(${cam.x.toFixed(2)},${cam.y.toFixed(2)}) scale(${cam.k.toFixed(5)})`);
+}
+function moveCam(rect, instant){
+  const to = solveFit(rect);
+  if (instant || REDUCED){ cam = to; camTo = null; applyCam(); return; }
+  camFrom = {x:cam.x, y:cam.y, k:cam.k}; camTo = to; camT0 = performance.now();
+}
+function stepCam(now){
+  if (!camTo) return;
+  const u = Math.min(1, (now - camT0) / (camDur*1000 / speed));
+  const e = easeIO(u);
+  cam.x = camFrom.x + (camTo.x-camFrom.x)*e;
+  cam.y = camFrom.y + (camTo.y-camFrom.y)*e;
+  cam.k = camFrom.k + (camTo.k-camFrom.k)*e;
+  applyCam();
+  if (u >= 1) camTo = null;
+}
+const FULL = {x:0, y:0, w:STAGE_W, h:STAGE_H};
+function fitAll(instant){ moveCam(FULL, instant); }
+</script>
+<script>
+/* ============================== timeline ================================= */
+const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const SETTLE  = 1.1;                       /* camera settles before narration */
+let clock = 0, speed = 1, playing = false, lastNow = 0;
+
+const RAIL = ["Input","VLM","[GROUND]","Projections","Segmentation","Masks"];
+const railEls = [];
+(function buildRail(){
+  const r = document.getElementById("rail");
+  RAIL.forEach((s,i)=>{
+    if (i) { const sep = document.createElement("span"); sep.className="rsep"; sep.textContent="›"; r.appendChild(sep); }
+    const d = document.createElement("div");
+    d.className = "rs"; d.innerHTML = '<i><\/i><em>'+s+'<\/em>';
+    r.appendChild(d); railEls.push(d);
+  });
+})();
+function setRail(idx){
+  railEls.forEach((e,i)=>{
+    e.classList.toggle("done", i < idx);
+    e.classList.toggle("now",  i === idx);
+  });
+}
+function show(id){ if (MODS[id]) MODS[id].classList.add("on"); }
+function active(ids){
+  Object.keys(MODS).forEach(k=>MODS[k].classList.remove("active"));
+  ids.forEach(i=>{ if (MODS[i]) MODS[i].classList.add("active"); });
+}
+const capEl = document.getElementById("cap");
+const capIn = document.getElementById("capin");
+function say(html){ capIn.innerHTML = html; capEl.classList.add("show"); }
+
+function paint(sel, cls){ document.querySelectorAll(sel).forEach(e=>e.classList.add(cls||"paint")); }
+function paintMark(panel, key){
+  const m = (panel==="out6a"?OUT_A:OUT_B).marks.filter(x=>x.key===key)[0];
+  if (!m) return;
+  m.el.classList.add("paint");
+  (m.texts || []).forEach(t=>t.classList.add("wt"));
+  m.leader.path.classList.add("paint");
+  m.leader.g.querySelectorAll(".leader").forEach(e=>e.classList.add("paint"));
+  m.leader.label.classList.add("paint");
+}
+
+/* --- token specs: shape = kind of data, colour = the block it came FROM --- */
+const TOK = {
+  qText:   {shape:"square",   colour:C.qFill,      stroke:C.qStroke,     origin:"qcard"},
+  txtTok:  {shape:"square",   colour:C.tokFill,    stroke:C.tokStroke,   origin:"tokenizer"},
+  docPix:  {shape:"pentagon", colour:C.docFill,    stroke:C.docStroke,   origin:"doc"},
+  visFeat: {shape:"pentagon", colour:C.visFill,    stroke:C.visStroke,   origin:"visEnc"},
+  txtIn:   {shape:"square",   colour:C.tokFill,    stroke:C.tokStroke,   origin:"txtToks"},
+  imgIn:   {shape:"pentagon", colour:C.visFill,    stroke:C.visStroke,   origin:"imgToks"},
+  decOut:  {shape:"square",   colour:C.decFill,    stroke:C.decStroke,   origin:"decoder"},
+  headOut: {shape:"square",   colour:C.headFill,   stroke:C.headStroke,  origin:"lmhead"},
+  h1:      {shape:"diamond",  colour:C.g1,         stroke:"#00007a",     origin:"g1"},
+  h2:      {shape:"diamond",  colour:C.g2,         stroke:"#a3129e",     origin:"g2"},
+  ht1:     {shape:"diamond",  colour:C.g1,         stroke:"#00007a",     origin:"ht1"},
+  ht2:     {shape:"diamond",  colour:C.g2,         stroke:"#a3129e",     origin:"ht2"},
+  dense:   {shape:"triangle", colour:C.visFill,    stroke:C.visStroke,   origin:"segVis"},
+  prompt:  {shape:"circle",   colour:C.promptFill, stroke:C.promptStroke,origin:"segPrompt"},
+  mask:    {shape:"star",     colour:C.maskFill,   stroke:C.maskStroke,  origin:"segMask"},
+  maskA:   {shape:"star",     colour:C.g1,         stroke:"#00007a",     origin:"chipBlue"},
+  maskB:   {shape:"star",     colour:C.g2,         stroke:"#a3129e",     origin:"chipMag"}
+};
+function go(wireId, tok, o){
+  o = Object.assign({}, TOK[tok], o||{});
+  flow(wireId, o);
+  litWire(wireId, false);
+  setTimeout(()=>{ try{ litWire(wireId, true); }catch(e){} }, 900/speed);
+}
+const embTok = i => [
+  {shape:"hexagon", colour:PROJ[i].embA, stroke:"#00000060", origin:"embA"+i},
+  {shape:"hexagon", colour:PROJ[i].embB, stroke:"#00000060", origin:"embB"+i}
+];
+
+/* ------------------------------- scenes ---------------------------------- */
+const SCENES = [
+  { id:"input", rail:0, dur:5.6, focus:()=>bboxOf(["qcard","doc"],60),
+    cue(){ show("input"); active(["input"]); },
+    caption: "A document image <b>x<\/b> and a question <b>q<\/b> enter the system. Every grounded span in the answer "+
+             "points back at the pixels supporting it.",
+    text(){ say(this.caption); } },
+
+  { id:"tok", rail:1, dur:5.4, focus:()=>bboxOf(["tokenizer","txtToks","vlm"],40),
+    cue(){ show("vlm"); active(["vlm"]); },
+    caption: "The <b>Tokenizer<\/b> turns the question into text tokens — the yellow squares. "+
+                "Square markers mean text throughout this walkthrough.",
+    text(){ say(this.caption);
+            go("q>tok","qText",{n:3}); go("tok>txt","txtTok",{n:4,delay:0.6}); } },
+
+  { id:"vis", rail:1, dur:5.4, focus:()=>bboxOf(["visEnc","imgToks","doc"],50),
+    cue(){ active(["vlm","input"]); },
+    caption: "A <b>frozen ❄️ Vision Encoder + Proj.<\/b> reads the page and emits visual features — pentagons — "+
+             "which enter the decoder alongside the text.",
+    text(){ say(this.caption);
+            go("doc>vis","docPix",{n:3}); go("vis>img","visFeat",{n:4,delay:0.7}); } },
+
+  { id:"dec", rail:1, dur:5.6, focus:()=>bboxOf(["decoder"],55),
+    cue(){ active(["vlm"]); },
+    caption: "The <b>trainable 🔥 LM Decoder<\/b> consumes both streams and autoregressively writes the answer, "+
+                "emitting a <b>[GROUND]<\/b> token wherever a span needs visual evidence.",
+    text(){ say(this.caption);
+            go("txt>dec","txtIn",{n:4}); go("img>dec","imgIn",{n:4,delay:0.35}); } },
+
+  { id:"ans", rail:1, dur:7.0, focus:()=>bboxOf(["lmhead","answer","decoder"],40),
+    cue(){ show("lmhead"); show("answer"); active(["lmhead","answer"]); setRail(1); },
+    caption: "The <b>LM Head 🔥<\/b> decodes those states into the visible answer, with two "+
+                "<b>[GROUND]<\/b> tokens interleaved — one after each span that needs evidence.",
+    text(){ say(this.caption);
+            go("dec>head","decOut",{n:4}); go("head>ans","headOut",{n:4,delay:0.6});
+            answerRuns.forEach((r,i)=>setTimeout(()=>{try{r.classList.add("paint");}catch(e){}}, (900+i*320)/speed)); } },
+
+  { id:"hid", rail:2, dur:5.8, focus:()=>bboxOf(["hidbox","g1","g2","ht1","ht2"],55),
+    cue(){ show("hidden"); show("htilde"); active(["hidden","htilde"]); },
+    caption: "Grounding reads the <b>hidden states of the [GROUND] tokens<\/b>: <b>h̃₁<\/b> for the MCV reading, "+
+             '<span class="mg">h̃₂<\/span> for “Microcytic anemia”.',
+    text(){ say(this.caption);
+            go("g1>ht1","h1",{n:2}); go("g2>ht2","h2",{n:2,delay:0.3});
+            litWire("hid>g1"); litWire("hid>g2"); } },
+
+  { id:"p4a", rail:3, dur:5.6, focus:()=>bboxOf(["phraseProj","embA0","embB0","ht1"],60),
+    cue(){ show("p4a"); active(["p4a"]); },
+    caption: "Head <b>4a — Phrase Proj. 🔥<\/b> maps every [GROUND] state to a <b>phrase-level<\/b> "+
+                "prompt embedding. Hexagons are prompt embeddings; one per span.",
+    text(){ say(this.caption);
+            go("ht1>phraseProj","ht1",{n:2}); go("ht2>phraseProj","ht2",{n:2,delay:0.25});
+            go("phraseProj>emb","ht1",{n:1,delay:0.9,colour:C.pProj,stroke:"#8d76a5",shape:"hexagon",origin:"phraseProj"}); } },
+
+  { id:"p4b", rail:3, dur:5.0, focus:()=>bboxOf(["lineProj","embA1","embB1","ht2"],60),
+    cue(){ show("p4b"); active(["p4b"]); },
+    caption: "Head <b>4b — Line Proj. 🔥<\/b> produces the <b>line-level<\/b> embeddings from exactly the "+
+                "same two hidden states. The heads are parallel, not sequential.",
+    text(){ say(this.caption);
+            go("ht1>lineProj","ht1",{n:2}); go("ht2>lineProj","ht2",{n:2,delay:0.25});
+            go("lineProj>emb","ht1",{n:1,delay:0.9,colour:C.lProj,stroke:"#6f9cc9",shape:"hexagon",origin:"lineProj"}); } },
+
+  { id:"p4c", rail:3, dur:5.0, focus:()=>bboxOf(["blockProj","embA2","embB2"],60),
+    cue(){ show("p4c"); active(["p4c"]); },
+    caption: "Head <b>4c — Block Proj. 🔥<\/b> gives the coarsest <b>block-level<\/b> embeddings. "+
+                "Three heads × two spans = six prompt embeddings in flight.",
+    text(){ say(this.caption);
+            go("ht1>blockProj","ht1",{n:2}); go("ht2>blockProj","ht2",{n:2,delay:0.25});
+            go("blockProj>emb","ht1",{n:1,delay:0.9,colour:C.bProj,stroke:"#d494b6",shape:"hexagon",origin:"blockProj"}); } },
+
+  { id:"senc", rail:4, dur:5.8, focus:()=>bboxOf(["seg","doc"],45),
+    cue(){ show("seg"); active(["seg"]); },
+    caption: "The <b>Segmentation Module<\/b> begins with a <b>frozen ❄️ F<sub>enc<\/sub><\/b>. Its dense embedding — "+
+             "the triangles — is computed <b>once<\/b> and reused by every span.",
+    text(){ say(this.caption);
+            go("doc>senc","docPix",{n:3}); go("senc>md","dense",{n:4,delay:0.7}); } },
+
+  { id:"pe", rail:4, dur:6.2, focus:()=>bboxOf(["segPrompt","embA0","embA2","segMask"],45),
+    cue(){ active(["seg","p4a","p4b","p4c"]); },
+    caption: "All six hexagons reach the <b>frozen ❄️ Prompt Encoder<\/b>, which encodes them into prompts for the Mask Decoder — "+
+             "orange circles, coloured for the block they left.",
+    text(){ say(this.caption);
+            [0,1,2].forEach(i=>{
+              embTok(i).forEach((t,k)=>flow("emb"+i+">pe", Object.assign({n:1, delay:0.15*i+0.3*k, dur:2.0}, t)));
+              litWire("emb"+i+">pe", false);
+              setTimeout(()=>{try{litWire("emb"+i+">pe", true);}catch(e){}}, 1400/speed);
+            });
+            go("pe>md","prompt",{n:4,delay:1.9}); } },
+
+  { id:"md", rail:4, dur:5.2, focus:()=>bboxOf(["segMask","note"],45),
+    cue(){ show("note"); active(["seg","note"]); },
+    caption: "The <b>trainable 🔥 Mask Decoder<\/b> combines the dense image embedding with each prompt "+
+                "embedding, emitting <b>three hierarchical masks per [GROUND] token<\/b>.",
+    text(){ say(this.caption);
+            go("md>note","mask",{n:4}); } },
+
+  { id:"o6a", rail:5, dur:7.6, focus:()=>bboxOf(["out6a"],40),
+    cue(){ show("out6a"); active(["out6a"]); },
+    caption: "<b>Span 1<\/b> lands on the CBC table: <b>block<\/b> = the whole table, <b>line<\/b> = the MCV row, "+
+             "<b>phrase<\/b> = the reading itself.",
+    text(){ say(this.caption);
+            go("note>6a","maskA",{n:4});
+            [["Block",900],["Line",1900],["Phrase",2900]].forEach(s=>
+              setTimeout(()=>{try{paintMark("out6a", s[0]);}catch(e){}}, s[1]/speed)); } },
+
+  { id:"o6b", rail:5, dur:7.2, focus:()=>bboxOf(["out6b"],40),
+    cue(){ show("out6b"); show("final"); active(["out6b"]); },
+    caption: '<span class="mg">Span 2<\/span> resolves independently in the clinical-notes table, tracing '+
+             "“Microcytic anemia” to the exact cell that justifies it.",
+    text(){ say(this.caption);
+            go("note>6b","maskB",{n:4});
+            [["Block",900],["Line",1900],["Phrase",2900]].forEach(s=>
+              setTimeout(()=>{try{paintMark("out6b", s[0]);}catch(e){}}, s[1]/speed)); } },
+
+  { id:"end", rail:5, dur:6.4, focus:()=>FULL,
+    cue(){ Object.keys(MODS).forEach(show); active([]); },
+    caption: "One pass: question and page in, grounded answer out — every span mapped to phrase-, line- and "+
+             "block-level evidence from one shared image encoding.",
+    text(){ say(this.caption);
+            RIPPLE.forEach((id,i)=>setTimeout(()=>{ try{
+              const g = MODS[id]; if(!g) return;
+              g.classList.remove("ripple"); void g.getBBox(); g.classList.add("ripple");
+            }catch(e){} }, i*95/speed)); } }
+];
+const RIPPLE = ["input","vlm","lmhead","answer","hidden","htilde","p4a","p4b","p4c","seg","note","out6a","out6b","final"];
+
+/* Scene length is DERIVED from its caption so the text always finishes
+   before the camera leaves: dur = settle + reading time + tail dwell.      */
+const READ_WPS = 3.2, TAIL = 0.8;
+SCENES.forEach(sc=>{
+  const words = String(sc.caption||"").replace(/<[^>]+>/g," ").split(/\s+/).filter(Boolean).length;
+  sc.words = words;
+  sc.read  = Math.max(2.6, words / READ_WPS);
+  sc.dur   = Math.max(sc.dur, SETTLE + sc.read + TAIL);
+});
+
+/* build the sorted [time, action] event list */
+const EVENTS = [];
+(function(){
+  let t = 0;
+  SCENES.forEach(sc=>{
+    sc.tCue = t; sc.tText = t + SETTLE;
+    EVENTS.push({t:t,          kind:"cue",  id:sc.id, fn:()=>{ if (autoFollow) moveCam(sc.focus()); setRail(sc.rail); sc.cue(); }});
+    EVENTS.push({t:t + SETTLE, kind:"text", id:sc.id, fn:()=>sc.text()});
+    t += sc.dur;
+  });
+  EVENTS.sort((a,b)=>a.t-b.t);
+})();
+const TOTAL = SCENES.reduce((s,x)=>s+x.dur, 0);
+let cursor = 0;
+</script>
+<script>
+/* =============================== run loop ================================ */
+function fireUpTo(t){
+  while (cursor < EVENTS.length && EVENTS[cursor].t <= t){
+    const ev = EVENTS[cursor++];
+    try { ev.fn(); }                      /* one bad event can never freeze it */
+    catch (err){ console.warn("[timeline]", ev.kind, ev.id, err && err.message); }
+  }
+}
+function fmt(s){ s = Math.max(0, s); return Math.floor(s/60)+":"+String(Math.floor(s%60)).padStart(2,"0"); }
+const clockEl = document.getElementById("clock");
+
+function frame(now){
+  const dt = lastNow ? Math.min(0.05, (now - lastNow)/1000) : 0;
+  lastNow = now;
+  if (playing){
+    clock += dt * speed;
+    if (clock >= TOTAL){ clock = TOTAL; playing = false; syncPlay(); }
+    fireUpTo(clock);
+  }
+  stepCam(now);
+  stepTravellers();
+  clockEl.textContent = fmt(clock) + " / " + fmt(TOTAL);
+  requestAnimationFrame(frame);
+}
+
+/* ------------------------------ controls --------------------------------- */
+const playBtn = document.getElementById("play");
+function syncPlay(){ playBtn.textContent = playing ? "❚❚ Pause" : "▶ Play"; }
+function play(){ if (clock >= TOTAL) restart(); playing = true; syncPlay(); }
+function pause(){ playing = false; syncPlay(); }
+function toggle(){ playing ? pause() : play(); }
+
+function resetAll(){
+  playing = false; clock = 0; cursor = 0;
+  travellers.splice(0).forEach(t=>t.el.remove());
+  Object.keys(MODS).forEach(k=>MODS[k].classList.remove("on","active","ripple"));
+  Object.keys(WIRES).forEach(k=>{
+    WIRES[k].el.classList.remove("lit","alive");
+    if (WIRES[k].head) WIRES[k].head.classList.remove("lit","alive");
+  });
+  document.querySelectorAll(".hl,.run,.leader,.leadlbl").forEach(e=>e.classList.remove("paint"));
+  capEl.classList.remove("show"); capIn.innerHTML = "";
+  setRail(-1);
+  autoFollow = true; document.getElementById("follow").classList.add("act");
+  syncPlay();
+}
+function restart(){ resetAll(); fitAll(true); clock = 0; playing = true; syncPlay(); }
+
+playBtn.onclick = toggle;
+document.getElementById("restart").onclick = restart;
+document.querySelectorAll(".sp").forEach(b=>b.onclick = ()=>{
+  document.querySelectorAll(".sp").forEach(x=>x.classList.remove("on"));
+  b.classList.add("on"); speed = parseFloat(b.dataset.s);
+});
+function zoomBy(f){
+  manual();
+  const c = {x:viewport.w/2, y:(viewport.h - viewport.safeBottom)/2};
+  const k2 = Math.max(0.12, Math.min(4, cam.k*f));
+  cam.x = c.x - (c.x - cam.x)*(k2/cam.k); cam.y = c.y - (c.y - cam.y)*(k2/cam.k);
+  cam.k = k2; camTo = null; applyCam();
+}
+document.getElementById("zin").onclick  = ()=>zoomBy(1.25);
+document.getElementById("zout").onclick = ()=>zoomBy(1/1.25);
+document.getElementById("fit").onclick  = ()=>{ manual(); fitAll(false); };
+const followBtn = document.getElementById("follow");
+followBtn.onclick = ()=>{
+  autoFollow = !autoFollow;
+  followBtn.classList.toggle("act", autoFollow);
+  followBtn.textContent = autoFollow ? "AUTO" : "FREE";
+};
+/** any manual interaction hands the camera to the user */
+function manual(){
+  if (!autoFollow) return;
+  autoFollow = false; followBtn.classList.remove("act"); followBtn.textContent = "FREE";
+}
+/* wheel zoom at the cursor + drag to pan */
+stage.addEventListener("wheel", e=>{
+  e.preventDefault(); manual();
+  const r = stage.getBoundingClientRect();
+  const mx = e.clientX - r.left, my = e.clientY - r.top;
+  const f = Math.exp(-e.deltaY * 0.0016);
+  const k2 = Math.max(0.12, Math.min(4, cam.k*f));
+  cam.x = mx - (mx - cam.x)*(k2/cam.k); cam.y = my - (my - cam.y)*(k2/cam.k);
+  cam.k = k2; camTo = null; applyCam();
+}, {passive:false});
+
+let drag = null;
+stage.addEventListener("pointerdown", e=>{
+  drag = {x:e.clientX, y:e.clientY, cx:cam.x, cy:cam.y};
+  stage.setPointerCapture(e.pointerId); stage.classList.add("drag");
+});
+stage.addEventListener("pointermove", e=>{
+  if (!drag) return;
+  if (Math.abs(e.clientX-drag.x) + Math.abs(e.clientY-drag.y) > 3) manual();
+  cam.x = drag.cx + (e.clientX-drag.x); cam.y = drag.cy + (e.clientY-drag.y);
+  camTo = null; applyCam();
+});
+["pointerup","pointercancel"].forEach(t=>stage.addEventListener(t, ()=>{
+  drag = null; stage.classList.remove("drag");
+}));
+
+addEventListener("keydown", e=>{
+  if (e.target.tagName === "INPUT") return;
+  if (e.code === "Space"){ e.preventDefault(); toggle(); }
+  else if (e.key === "r" || e.key === "R") restart();
+  else if (e.key === "f" || e.key === "F"){ manual(); fitAll(false); }
+});
+addEventListener("resize", ()=>{ measureViewport(); if (autoFollow && !camTo) fitAll(true); });
+
+/* ------------------------------- legend ---------------------------------- */
+(function legend(){
+  const items = [
+    ["square",  C.tokFill,    "text token"],
+    ["pentagon",C.visFill,    "visual feature"],
+    ["diamond", C.g1,         "[GROUND] state"],
+    ["hexagon", C.ph1,        "prompt emb."],
+    ["triangle",C.visFill,    "dense img emb."],
+    ["circle",  C.promptFill, "encoded prompt"],
+    ["star",    C.maskFill,   "mask"]
+  ];
+  const host = document.getElementById("legend");
+  host.innerHTML = "";
+  const note = document.createElement("span");
+  note.className = "lg"; note.innerHTML = "❄️ frozen &nbsp; 🔥 trainable";
+  host.appendChild(note);
+  items.forEach(it=>{
+    const d = document.createElement("span"); d.className = "lg";
+    d.innerHTML = '<svg width="18" height="18" viewBox="-11 -11 22 22"><path d="'
+      + SHAPES[it[0]](8) + '" fill="' + it[1] + '" stroke="#475569" stroke-width="1.4"/><\/svg><span>'
+      + it[2] + "<\/span>";
+    host.appendChild(d);
+  });
+})();
+
+/* --------------------------------- boot ---------------------------------- */
+measureViewport();
+resetAll();
+fitAll(true);
+requestAnimationFrame(frame);
+
+if (REDUCED){
+  /* jump straight to the finished state */
+  clock = TOTAL; fireUpTo(TOTAL); playing = false; syncPlay();
+  Object.keys(MODS).forEach(show);
+  Object.keys(WIRES).forEach(k=>litWire(k, true));
+  document.querySelectorAll(".hl,.run,.leader,.leadlbl").forEach(e=>e.classList.add("paint"));
+  setRail(RAIL.length-1); fitAll(true);
+} else if (!/[?&]noauto/.test(location.search)) {
+  setTimeout(()=>{ try{ play(); }catch(e){} }, 700);
+}
+</script>
+<script>
+/* ===================== measurement / self-audit surface ==================
+   Exposed so the diagram can be checked with numbers (bounding boxes,
+   computed colours, class state) instead of eyeballed screenshots.
+   ======================================================================= */
+window.__m3 = (function(){
+  const errors = [];
+  addEventListener("error", e=>errors.push(String(e.message)));
+
+  const rectOf = a => ({x:a[0], y:a[1], w:a[2], h:a[3]});
+  function segIntersectsRect(p, q, r){
+    /* Liang–Barsky */
+    let t0 = 0, t1 = 1;
+    const dx = q[0]-p[0], dy = q[1]-p[1];
+    const P = [-dx, dx, -dy, dy];
+    const Q = [p[0]-r.x, r.x+r.w-p[0], p[1]-r.y, r.y+r.h-p[1]];
+    for (let i=0;i<4;i++){
+      if (P[i] === 0){ if (Q[i] < 0) return false; }
+      else {
+        const t = Q[i]/P[i];
+        if (P[i] < 0){ if (t > t1) return false; if (t > t0) t0 = t; }
+        else          { if (t < t0) return false; if (t < t1) t1 = t; }
+      }
+    }
+    return t1 > t0 + 1e-9;
+  }
+  function segCross(a, b){
+    const d = (p,q,r)=> (q[0]-p[0])*(r[1]-p[1]) - (q[1]-p[1])*(r[0]-p[0]);
+    const s = x => x > 1e-9 ? 1 : x < -1e-9 ? -1 : 0;
+    const d1=s(d(a[0],a[1],b[0])), d2=s(d(a[0],a[1],b[1]));
+    const d3=s(d(b[0],b[1],a[0])), d4=s(d(b[0],b[1],a[1]));
+    return d1!==d2 && d3!==d4;
+  }
+  const fillOf = id => {
+    const e = document.getElementById(id);
+    return e ? getComputedStyle(e).fill : null;
+  };
+  const toRGB = hex => {
+    const d = document.createElement("div");
+    d.style.color = hex; document.body.appendChild(d);
+    const v = getComputedStyle(d).color; d.remove(); return v;
+  };
+
+  return {
+    errors, SCENES, WIRES, B, TOK, LEADERS, PROJ,
+    total:()=>TOTAL, clock:()=>clock, cam:()=>({...cam}), viewport:()=>({...viewport}),
+    setSpeed:s=>{speed = s;},
+    seek(t){ /* deterministic: replay every event up to t with no animation */
+      resetAll(); clock = t; fireUpTo(t); stepTravellers(); return t;
+    },
+    play, pause, restart, fitAll,
+    snap(sceneId){ const sc = SCENES.filter(s=>s.id===sceneId)[0];
+                   if (!sc) return false; moveCam(sc.focus(), true); return true; },
+    sceneTimes(){ return SCENES.map(s=>({id:s.id, cue:+s.tCue.toFixed(2), text:+s.tText.toFixed(2),
+                   dur:+s.dur.toFixed(2), gap:+(s.tText-s.tCue).toFixed(3)})); },
+    /* --- 1. arrow heads land exactly on their target block edge --------- */
+    auditArrows(){
+      const bad = [];
+      Object.keys(WIRES).forEach(k=>{
+        const w = WIRES[k]; if (!w.target) return;
+        const a = anchor(w.target, w.side, w.t);
+        const p = w.path.getPointAtLength(w.len);
+        const d = Math.hypot(p.x-a[0], p.y-a[1]);
+        const b = B[w.target];
+        const onEdge = Math.min(
+          Math.abs(a[0]-b.x), Math.abs(a[0]-(b.x+b.w)),
+          Math.abs(a[1]-b.y), Math.abs(a[1]-(b.y+b.h))) < 0.01;
+        const inside = a[0] >= b.x-0.01 && a[0] <= b.x+b.w+0.01 &&
+                       a[1] >= b.y-0.01 && a[1] <= b.y+b.h+0.01;
+        if (d > 0.6 || !onEdge || !inside) bad.push({wire:k, gap:+d.toFixed(3), onEdge, inside});
+      });
+      return {count:Object.keys(WIRES).length, bad};
+    },
+    /* --- 2. no wire crosses a module body it does not belong to -------- */
+    auditWireCrossings(){
+      const boxes = ["qcard","doc","vlm","seg","answer","out6a","out6b","note","lmhead"];
+      const inside = (a,b)=> a.x >= b.x-0.5 && a.y >= b.y-0.5 &&
+                             a.x+a.w <= b.x+b.w+0.5 && a.y+a.h <= b.y+b.h+0.5;
+      const ptIn = (p,b)=> p[0] >= b.x-0.5 && p[0] <= b.x+b.w+0.5 &&
+                           p[1] >= b.y-0.5 && p[1] <= b.y+b.h+0.5;
+      const bad = [];
+      Object.keys(WIRES).forEach(k=>{
+        const w = WIRES[k];
+        boxes.forEach(bid=>{
+          const b = B[bid];
+          /* legitimate: the wire ends on this box, ends on a block nested in
+             it, or originates inside it                                     */
+          if (w.target === bid) return;
+          if (w.target && B[w.target] && inside(B[w.target], b)) return;
+          if (ptIn(w.pts[0], b)) return;
+          for (let i=0;i<w.pts.length-1;i++)
+            if (segIntersectsRect(w.pts[i], w.pts[i+1], b)) bad.push({wire:k, seg:i, box:bid});
+        });
+      });
+      return {checked:Object.keys(WIRES).length*boxes.length, bad};
+    },
+    /* --- 3. leader lines: side from real mid-angle, no chart crossings --- */
+    auditLeaders(){
+      const out = [];
+      LEADERS.forEach(L=>{
+        const others = L.marks.filter(m=>m.key !== L.key)
+          .map(m=>rectOf(m.r)).filter(r=>!(r.w > L.table.w*0.98 && r.h > L.table.h*0.98));
+        const crosses = [];
+        L.ld.segs.forEach((s,si)=>{
+          others.forEach((r,ri)=>{ if (segIntersectsRect(s[0], s[1], r)) crosses.push({seg:si, other:ri}); });
+          /* the horizontal run must stay outside the table body entirely */
+          if (si === 1 && segIntersectsRect(s[0], s[1],
+              {x:L.table.x+0.5, y:L.table.y+0.5, w:L.table.w-1, h:L.table.h-1}))
+            crosses.push({seg:si, other:"table"});
+        });
+        const lb = L.ld.label.getBBox();
+        const pb = B[L.panel];
+        out.push({panel:L.panel, key:L.key, side:L.ld.side,
+          midAngle:+L.ld.midAngle.toFixed(1), crosses,
+          labelFits: lb.x >= pb.x && lb.x+lb.width <= pb.x+pb.w &&
+                     lb.y >= pb.y && lb.y+lb.height <= pb.y+pb.h,
+          label:{x:+lb.x.toFixed(1), r:+(lb.x+lb.width).toFixed(1)}});
+      });
+      /* leader lines must not cross each other within a panel */
+      const pairs = [];
+      ["out6a","out6b"].forEach(p=>{
+        const ls = LEADERS.filter(l=>l.panel===p);
+        for (let i=0;i<ls.length;i++) for (let j=i+1;j<ls.length;j++)
+          ls[i].ld.segs.forEach(a=>ls[j].ld.segs.forEach(b=>{
+            if (segCross(a,b)) pairs.push([p, ls[i].key, ls[j].key]);
+          }));
+      });
+      return {leaders:out, selfCrossings:pairs};
+    },
+    /* --- 4. every traveller's colour == its origin block's colour -------- */
+    auditTokenColours(){
+      const bad = [], seen = [];
+      document.querySelectorAll(".tok").forEach(t=>{
+        const origin = t.dataset.origin;
+        const oc = fillOf(origin) || (B[origin] ? null : null);
+        const tc = getComputedStyle(t).fill;
+        seen.push({wire:t.dataset.wire, shape:t.dataset.shape, origin, tokFill:tc, originFill:oc});
+        if (oc && oc !== tc) bad.push({wire:t.dataset.wire, origin, tokFill:tc, originFill:oc});
+      });
+      return {live:seen.length, bad, seen};
+    },
+    /* static check of the declared token table against the palette */
+    auditTokenSpec(){
+      const bad = [];
+      Object.keys(TOK).forEach(k=>{
+        const s = TOK[k], want = toRGB(s.colour), got = fillOf(s.origin);
+        if (got && got !== want) bad.push({tok:k, origin:s.origin, want, got});
+      });
+      return {bad};
+    },
+    /* --- 5. caption geometry & scene pacing ----------------------------- */
+    auditCaption(){
+      const c = document.getElementById("cap").getBoundingClientRect();
+      const vw = innerWidth, vh = innerHeight;
+      return {rect:{l:+c.left.toFixed(1), r:+c.right.toFixed(1), t:+c.top.toFixed(1), b:+c.bottom.toFixed(1)},
+        vw, vh, clipped: c.left < 0 || c.top < 0 || c.right > vw + .5 || c.bottom > vh + .5,
+        text:document.getElementById("cap").textContent.trim().slice(0,60),
+        lines: Math.round(document.getElementById("capin").getBoundingClientRect().height / 24)};
+    },
+    /** the caption's rendered text must fit inside its card */
+    auditCaptionFit(){
+      const card = document.getElementById("cap").getBoundingClientRect();
+      const inner = document.getElementById("capin");
+      const ib = inner.getBoundingClientRect();
+      return {cardH:+card.height.toFixed(1), innerH:+ib.height.toFixed(1),
+              scrollH:inner.scrollHeight, clientH:inner.clientHeight,
+              overflows: inner.scrollHeight > inner.clientHeight + 1 ||
+                         ib.height > card.height - 20};
+    },
+    /** does the caption cover what the camera is focused on? */
+    auditFocusOverlap(sceneId){
+      const sc = SCENES.filter(s=>s.id===sceneId)[0]; if (!sc) return null;
+      const f = sc.focus();
+      const s = stage.getBoundingClientRect();
+      const scr = {l:s.left + cam.x + f.x*cam.k, t:s.top + cam.y + f.y*cam.k,
+                   r:s.left + cam.x + (f.x+f.w)*cam.k, b:s.top + cam.y + (f.y+f.h)*cam.k};
+      const c = document.getElementById("cap").getBoundingClientRect();
+      const overlap = !(scr.r < c.left || scr.l > c.right || scr.b < c.top || scr.t > c.bottom);
+      return {scene:sceneId, focusScreen:{l:+scr.l.toFixed(1), t:+scr.t.toFixed(1),
+              r:+scr.r.toFixed(1), b:+scr.b.toFixed(1)}, capTop:+c.top.toFixed(1), overlap,
+              onScreen: scr.l > -1 && scr.t > -1 && scr.r < innerWidth+1 && scr.b < innerHeight+1};
+    },
+    auditPacing(){
+      const rows = SCENES.map(sc=>{
+        const words = String(sc.caption||"").replace(/<[^>]+>/g," ").split(/\s+/).filter(Boolean).length;
+        const read = Math.max(2.0, words/3.2);
+        return {id:sc.id, dur:sc.dur, settle:SETTLE, dwellAfterText:+(sc.dur-SETTLE).toFixed(2),
+          words, read:+read.toFixed(2), ok:(sc.dur - SETTLE) >= read,
+          cueBeforeText: sc.tText - sc.tCue >= SETTLE - 1e-9};
+      });
+      return {rows, allOk: rows.every(r=>r.ok && r.cueBeforeText)};
+    },
+    /* --- 6. fit / overflow ---------------------------------------------- */
+    auditFit(){
+      const de = document.documentElement;
+      const s = stage.getBoundingClientRect();
+      const corners = [[0,0],[STAGE_W,0],[0,STAGE_H],[STAGE_W,STAGE_H]].map(p=>
+        [s.left + cam.x + p[0]*cam.k, s.top + cam.y + p[1]*cam.k]);
+      return {
+        pageScrollX: de.scrollWidth - de.clientWidth,
+        pageScrollY: de.scrollHeight - de.clientHeight,
+        stageFitsX: corners.every(c=>c[0] >= s.left-1 && c[0] <= s.right+1),
+        stageFitsY: corners.every(c=>c[1] >= s.top-1 && c[1] <= s.bottom+1),
+        k:+cam.k.toFixed(4)
+      };
+    },
+    /* --- 7. no module bodies overlap ------------------------------------ */
+    auditOverlaps(){
+      const ids = ["qcard","doc","vlm","seg","answer","out6a","out6b","note","lmhead"];
+      const bad = [];
+      for (let i=0;i<ids.length;i++) for (let j=i+1;j<ids.length;j++){
+        const a = B[ids[i]], b = B[ids[j]];
+        if (a.x < b.x+b.w && b.x < a.x+a.w && a.y < b.y+b.h && b.y < a.y+a.h)
+          bad.push([ids[i], ids[j]]);
+      }
+      return {bad};
+    },
+    /* --- 8. finale state ------------------------------------------------ */
+    auditFinale(){
+      const wires = Object.keys(WIRES);
+      const noFlow = ["hid>g1","hid>g2"];
+      const dead = wires.filter(k=>!noFlow.includes(k) && !WIRES[k].el.classList.contains("alive"));
+      const rail = [...document.querySelectorAll(".rs")].map(e=>e.className);
+      return {
+        wires: wires.length, notAlive: dead,
+        modsOn: Object.keys(MODS).filter(k=>MODS[k].classList.contains("on")).length,
+        modsTotal: Object.keys(MODS).length,
+        railDone: rail.filter(c=>/done|now/.test(c)).length, railTotal: rail.length,
+        marksPainted: [...document.querySelectorAll(".hl")].filter(e=>e.classList.contains("paint")).length,
+        marksTotal: document.querySelectorAll(".hl").length,
+        runsPainted: [...document.querySelectorAll(".run")].filter(e=>e.classList.contains("paint")).length,
+        runsTotal: document.querySelectorAll(".run").length
+      };
+    },
+    /* --- 9c. text under a dark mask must be light once that mask paints - */
+    auditMaskContrast(){
+      const rows = [];
+      [OUT_A, OUT_B].forEach(P=>P.marks.filter(m=>m.dark).forEach(m=>{
+        (m.texts||[]).forEach(t=>rows.push({
+          text:t.textContent.slice(0,34), painted:m.el.classList.contains("paint"),
+          fill:getComputedStyle(t).fill, white:getComputedStyle(t).fill === "rgb(255, 255, 255)"}));
+      }));
+      return {covered:rows.length, bad:rows.filter(r=>r.painted && !r.white), rows};
+    },
+    /* --- 9b. no table cell text spills into the neighbouring column ----- */
+    auditCellFit(){
+      const bad = [];
+      document.querySelectorAll("text[data-cell]").forEach(t=>{
+        const [x0,x1] = t.getAttribute("data-cell").split(",").map(Number);
+        const bb = t.getBBox();
+        if (bb.x < x0 - 1 || bb.x + bb.width > x1 - 2)
+          bad.push({text:t.textContent.slice(0,44), fs:+getComputedStyle(t).fontSize.replace("px",""),
+                    x:+bb.x.toFixed(1), right:+(bb.x+bb.width).toFixed(1),
+                    cell:[x0,+x1.toFixed(1)], over:+(bb.x+bb.width-(x1-2)).toFixed(1)});
+      });
+      return {checked:document.querySelectorAll("text[data-cell]").length, bad};
+    },
+    /* --- 9. text must not overflow its container ------------------------ */
+    auditTextFit(){
+      const bad = [];
+      const pairs = [["out6a","#out6a"],["out6b","#out6b"],["answer","#answer"],["note","#note"]];
+      document.querySelectorAll("text").forEach(t=>{
+        const bb = t.getBBox();
+        ["answer","note","out6a","out6b","qcard"].forEach(id=>{
+          const b = B[id];
+          const cxm = bb.x + bb.width/2, cym = bb.y + bb.height/2;
+          const inside = cxm > b.x && cxm < b.x+b.w && cym > b.y && cym < b.y+b.h;
+          if (inside && (bb.x < b.x-1 || bb.x+bb.width > b.x+b.w+1 ||
+                         bb.y < b.y-1 || bb.y+bb.height > b.y+b.h+1))
+            bad.push({box:id, text:t.textContent.slice(0,42),
+                      x:+bb.x.toFixed(1), r:+(bb.x+bb.width).toFixed(1)});
+        });
+      });
+      return {bad};
+    }
+  };
+})();
+</script>
+</body>
+</html>
