@@ -263,3 +263,5 @@
 .carostate{flex:0 0 auto;text-align:center;font-family:ui-monospace,Menlo,monospace;
   font-size:1.45vh;letter-spacing:.06em;color:var(--faint);margin-top:.4vh}
 .carostate.on{color:var(--accent)}
+.carohint{flex:0 0 auto;text-align:center;font-size:1.5vh;color:var(--muted);margin-top:.5vh}
+.carohint kbd{font-size:1.4vh;padding:.1vh .6vh}
