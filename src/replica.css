@@ -247,3 +247,19 @@
 #caroZoom img{max-width:96vw;max-height:94vh;object-fit:contain;border-radius:8px;
   box-shadow:0 12px 60px rgba(0,0,0,.6);background:#fff}
 #caroZoom .z-cap{position:fixed;left:0;right:0;bottom:1.6vh;text-align:center;color:#cbd8e8;font-size:1.9vh}
+
+/* ---- project-page QR codes on the closing slide ----
+   Each tile hides itself if its PNG is missing, so the row stays tidy while
+   the codes are still being generated. */
+.qrrow{display:flex;gap:2.2vw;justify-content:center;align-items:flex-start;margin-top:2.4vh}
+.qrcard{display:flex;flex-direction:column;align-items:center;gap:.9vh;width:13vw}
+.qrcard img{width:9.6vw;height:9.6vw;object-fit:contain;background:#fff;padding:.7vh;
+  border:1px solid var(--line);border-radius:10px;box-shadow:0 2px 10px rgba(10,30,60,.08)}
+.qrcard .nm{font-size:1.95vh;font-weight:700;color:var(--qc,var(--blue));line-height:1.15}
+.qrcard .url{font-family:ui-monospace,Menlo,monospace;font-size:1.4vh;color:var(--faint);
+  word-break:break-all;line-height:1.25}
+
+/* play / pause read-out for the sample carousel */
+.carostate{flex:0 0 auto;text-align:center;font-family:ui-monospace,Menlo,monospace;
+  font-size:1.45vh;letter-spacing:.06em;color:var(--faint);margin-top:.4vh}
+.carostate.on{color:var(--accent)}

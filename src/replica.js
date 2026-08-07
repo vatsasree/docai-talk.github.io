@@ -335,10 +335,13 @@
   (function carousel(){
     const stage = document.getElementById('caroStage');
     if(!stage) return;
-    const tabs = document.getElementById('caroTabs');
-    const cap  = document.getElementById('caroCap');
-    const dots = document.getElementById('caroDots');
-    let cur = 0, timer = null, paused = false;
+    const slide = document.getElementById('vfdrSlide');
+    const tabs  = document.getElementById('caroTabs');
+    const cap   = document.getElementById('caroCap');
+    const dots  = document.getElementById('caroDots');
+    const state = document.getElementById('caroState');
+    const LAST  = flat.length - 1;
+    let cur = 0, timer = null, userPaused = false, hoverPaused = false;
 
     VFDR.forEach(([g, items], gi) => {
       const b = document.createElement('button');
@@ -362,10 +365,11 @@
       f.el = el;
     });
 
-    // three visible: the page itself, and a sliver of the one before and after
-    const SLOT = [{dx:-0.62, sc:0.70, op:0.38, z:2},
-                  {dx: 0,    sc:1.00, op:1,    z:5},
-                  {dx: 0.62, sc:0.70, op:0.38, z:2}];
+    // three pages side by side, all fully legible — the neighbours are only
+    // slightly smaller, not faded, so the audience can read all three
+    const SLOT = [{dx:-0.55, sc:0.80, op:1, z:2},
+                  {dx: 0,    sc:1.00, op:1, z:5},
+                  {dx: 0.55, sc:0.80, op:1, z:2}];
     function layout(){
       const H = stage.clientHeight, W = stage.clientWidth;
       if(!H) return;
@@ -391,25 +395,63 @@
       [...tabs.children].forEach((t, gi) => t.classList.toggle('on', gi === f.gi));
       [...dots.children].forEach((d, i) => d.classList.toggle('on', i === cur));
     }
-    function go(i){ cur = (i + flat.length) % flat.length; layout(); restart(); }
-    function restart(){ clearInterval(timer); if(!paused) timer = setInterval(() => go(cur + 1), 2600); }
+
+    // The set does not wrap. It plays from the first page to the last and stops
+    // there; the speaker is walking a collection, not spinning a wheel.
+    const running = () => !userPaused && !hoverPaused && cur < LAST;
+    function paint(){
+      if(!state) return;
+      state.textContent = cur >= LAST ? '● end of set'
+                        : running()   ? '▶ playing'
+                                      : '❚❚ paused';
+      state.className = 'carostate' + (running() ? ' on' : '');
+    }
+    function restart(){
+      clearInterval(timer); timer = null;
+      if(running()) timer = setInterval(() => step(1), 2600);
+      paint();
+    }
+    function step(d){
+      const n = Math.min(LAST, Math.max(0, cur + d));
+      if(n === cur){ restart(); return; }      // already at an end — stay put
+      cur = n; layout(); restart();
+    }
+    function go(i){ cur = Math.min(LAST, Math.max(0, i)); layout(); restart(); }
 
     function zoom(f){
       let z = document.getElementById('caroZoom');
       if(!z){
         z = document.createElement('div'); z.id = 'caroZoom';
         z.innerHTML = '<img><div class="z-cap"></div>';
-        z.addEventListener('click', () => { z.classList.remove('on'); paused = false; restart(); });
+        z.addEventListener('click', () => { z.classList.remove('on'); hoverPaused = false; restart(); });
         document.body.appendChild(z);
       }
       z.querySelector('img').src = f.src;
       z.querySelector('.z-cap').textContent = f.title + ' — ' + f.detail + '  ·  click to close';
       z.classList.add('on');
-      paused = true; clearInterval(timer);
+      hoverPaused = true; clearInterval(timer); timer = null; paint();
     }
 
-    stage.addEventListener('mouseenter', () => { paused = true; clearInterval(timer); });
-    stage.addEventListener('mouseleave', () => { paused = false; restart(); });
+    // Shift+← / Shift+→ walk the set and pause it; P toggles play/pause. Plain
+    // arrows are left to the deck, so moving on is the same key as everywhere
+    // else in the talk.
+    addEventListener('keydown', e => {
+      if(e.metaKey || e.ctrlKey || e.altKey) return;
+      if(document.querySelector('.slide.on') !== slide) return;
+      if(e.shiftKey && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')){
+        e.preventDefault(); e.stopImmediatePropagation();
+        userPaused = true;
+        step(e.key === 'ArrowRight' ? 1 : -1);
+      } else if(e.key === 'p' || e.key === 'P'){
+        e.preventDefault(); e.stopImmediatePropagation();
+        userPaused = !userPaused;
+        if(!userPaused && cur >= LAST){ cur = 0; layout(); }   // replay from the top
+        restart();
+      }
+    }, true);
+
+    stage.addEventListener('mouseenter', () => { hoverPaused = true; restart(); });
+    stage.addEventListener('mouseleave', () => { hoverPaused = false; restart(); });
     addEventListener('resize', layout);
     // only run while the slide is on screen
     window.__vfdrSync = on => {

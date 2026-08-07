@@ -374,6 +374,22 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
 #caroZoom img{max-width:96vw;max-height:94vh;object-fit:contain;border-radius:8px;
   box-shadow:0 12px 60px rgba(0,0,0,.6);background:#fff}
 #caroZoom .z-cap{position:fixed;left:0;right:0;bottom:1.6vh;text-align:center;color:#cbd8e8;font-size:1.9vh}
+
+/* ---- project-page QR codes on the closing slide ----
+   Each tile hides itself if its PNG is missing, so the row stays tidy while
+   the codes are still being generated. */
+.qrrow{display:flex;gap:2.2vw;justify-content:center;align-items:flex-start;margin-top:2.4vh}
+.qrcard{display:flex;flex-direction:column;align-items:center;gap:.9vh;width:13vw}
+.qrcard img{width:9.6vw;height:9.6vw;object-fit:contain;background:#fff;padding:.7vh;
+  border:1px solid var(--line);border-radius:10px;box-shadow:0 2px 10px rgba(10,30,60,.08)}
+.qrcard .nm{font-size:1.95vh;font-weight:700;color:var(--qc,var(--blue));line-height:1.15}
+.qrcard .url{font-family:ui-monospace,Menlo,monospace;font-size:1.4vh;color:var(--faint);
+  word-break:break-all;line-height:1.25}
+
+/* play / pause read-out for the sample carousel */
+.carostate{flex:0 0 auto;text-align:center;font-family:ui-monospace,Menlo,monospace;
+  font-size:1.45vh;letter-spacing:.06em;color:var(--faint);margin-top:.4vh}
+.carostate.on{color:var(--accent)}
 </style>
 </head>
 <body>
@@ -664,7 +680,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
 <!-- ====== 14 · VFDR-BENCH (sample carousel) ====== -->
 <section class="slide" id="vfdrSlide" style="--accent:var(--replica)">
   <div class="kicker">REPLICA · What is actually in the benchmark &nbsp;·&nbsp;
-    <span class="tiny" style="color:var(--faint)">plays automatically — click a group, or click the page to enlarge</span></div>
+    <span class="tiny" style="color:var(--faint)">plays automatically · <kbd>P</kbd> pause · <kbd>⇧←</kbd> <kbd>⇧→</kbd> step · click a page to enlarge</span></div>
   <h2>VFDR-Bench — <span class="k">5,000 documents</span>, annotated in FID-HTML</h2>
   <div class="statrow" style="margin:.6vh 0 .8vh">
     <div class="stat"><div class="v">5,000</div><div class="l">documents</div></div>
@@ -677,6 +693,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
     <div class="carostage" id="caroStage"></div>
     <div class="carocap" id="caroCap"></div>
     <div class="carodots" id="caroDots"></div>
+    <div class="carostate on" id="caroState">▶ playing</div>
   </div>
   <div class="footer"><span class="act">REPLICA</span><span>Evaluation · the benchmark</span></div>
 </section>
@@ -2331,13 +2348,13 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
     <text x="820" y="294" text-anchor="middle" font-size="24" font-weight="800" fill="#0E7C61">DocLayout-VL</text>
     <text x="820" y="314" text-anchor="middle" font-size="16" fill="#8a97a5">the page as a tree</text>
 
-    <text x="452" y="108" text-anchor="middle" font-size="21" font-weight="800" fill="#B7791F">generates the training data</text>
-    <text x="452" y="134" text-anchor="middle" font-size="16" fill="#5b6b7a">millions of pages, labelled by construction</text>
-    <path d="M345 178 C 460 178, 545 152, 658 148" fill="none" stroke="#B7791F" stroke-width="4" marker-end="url(#aG2)"/>
+    <text x="452" y="86" text-anchor="middle" font-size="21" font-weight="800" fill="#B7791F">generates the training data</text>
+    <text x="452" y="110" text-anchor="middle" font-size="15" fill="#5b6b7a">millions of pages, labelled by construction</text>
+    <path d="M345 180 C 470 180, 550 156, 658 150" fill="none" stroke="#B7791F" stroke-width="4" marker-end="url(#aG2)"/>
 
     <path d="M658 292 C 545 288, 460 264, 345 262" fill="none" stroke="#05539C" stroke-width="4" marker-end="url(#aB2)"/>
     <text x="452" y="322" text-anchor="middle" font-size="21" font-weight="800" fill="#05539C">sharpen every stage</text>
-    <text x="452" y="348" text-anchor="middle" font-size="16" fill="#5b6b7a">better segmentation, reading order and grounding</text>
+    <text x="452" y="350" text-anchor="middle" font-size="15" fill="#5b6b7a">better segmentation, reading order and grounding</text>
   </svg>
   </div>
   <div class="callout" style="margin-top:1vh">Neither half stands alone. <b>Representation makes the supervision; the supervision makes the models; the models make the representation better.</b></div>
@@ -2346,7 +2363,12 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
 <!-- ====== 47 · THANKS ====== -->
 <section class="slide hero" style="--accent:var(--blue)">
   <h1 style="font-size:5.4vh">Thank you — <span class="k">questions?</span></h1>
-  <p class="sub" style="margin-top:1.8vh">replica-agents.github.io · m3grounder.github.io<br>docog-eccv.github.io · doclayoutvl.github.io</p>
+  <div class="qrrow">
+    <figure class="qrcard" style="--qc:var(--replica)"><img src="qr/replica.png" alt="REPLICA project page QR" onerror="this.closest('.qrcard').style.display='none'"><figcaption class="nm">REPLICA</figcaption><span class="url">replica-agents.github.io</span></figure>
+    <figure class="qrcard" style="--qc:var(--m3)"><img src="qr/m3grounder.png" alt="M3Grounder project page QR" onerror="this.closest('.qrcard').style.display='none'"><figcaption class="nm">M3Grounder</figcaption><span class="url">m3grounder.github.io</span></figure>
+    <figure class="qrcard" style="--qc:var(--docog)"><img src="qr/docog.png" alt="DoCoG project page QR" onerror="this.closest('.qrcard').style.display='none'"><figcaption class="nm">DoCoG</figcaption><span class="url">docog-eccv.github.io</span></figure>
+    <figure class="qrcard" style="--qc:var(--dlvl)"><img src="qr/doclayoutvl.png" alt="DocLayout-VL project page QR" onerror="this.closest('.qrcard').style.display='none'"><figcaption class="nm">DocLayout-VL</figcaption><span class="url">doclayoutvl.github.io</span></figure>
+  </div>
   <div class="logos"><span><img src="grounding/assets/logo_bharatgen.png" alt="BharatGen"></span><span><img src="grounding/assets/logo_iiith.jpg" alt="IIIT Hyderabad"></span></div>
   <p class="sub" style="font-size:1.85vh;margin-top:2.6vh">REPLICA (ICDAR 2026, Oral) · M3Grounder (CVPR 2026) · DoCoG (ECCV 2026, Oral) · DocLayout-VL (ECCV 2026)<br>BharatGen · IIIT Hyderabad</p>
 </section>
@@ -2757,10 +2779,13 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   (function carousel(){
     const stage = document.getElementById('caroStage');
     if(!stage) return;
-    const tabs = document.getElementById('caroTabs');
-    const cap  = document.getElementById('caroCap');
-    const dots = document.getElementById('caroDots');
-    let cur = 0, timer = null, paused = false;
+    const slide = document.getElementById('vfdrSlide');
+    const tabs  = document.getElementById('caroTabs');
+    const cap   = document.getElementById('caroCap');
+    const dots  = document.getElementById('caroDots');
+    const state = document.getElementById('caroState');
+    const LAST  = flat.length - 1;
+    let cur = 0, timer = null, userPaused = false, hoverPaused = false;
 
     VFDR.forEach(([g, items], gi) => {
       const b = document.createElement('button');
@@ -2784,10 +2809,11 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
       f.el = el;
     });
 
-    // three visible: the page itself, and a sliver of the one before and after
-    const SLOT = [{dx:-0.62, sc:0.70, op:0.38, z:2},
-                  {dx: 0,    sc:1.00, op:1,    z:5},
-                  {dx: 0.62, sc:0.70, op:0.38, z:2}];
+    // three pages side by side, all fully legible — the neighbours are only
+    // slightly smaller, not faded, so the audience can read all three
+    const SLOT = [{dx:-0.55, sc:0.80, op:1, z:2},
+                  {dx: 0,    sc:1.00, op:1, z:5},
+                  {dx: 0.55, sc:0.80, op:1, z:2}];
     function layout(){
       const H = stage.clientHeight, W = stage.clientWidth;
       if(!H) return;
@@ -2813,25 +2839,63 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
       [...tabs.children].forEach((t, gi) => t.classList.toggle('on', gi === f.gi));
       [...dots.children].forEach((d, i) => d.classList.toggle('on', i === cur));
     }
-    function go(i){ cur = (i + flat.length) % flat.length; layout(); restart(); }
-    function restart(){ clearInterval(timer); if(!paused) timer = setInterval(() => go(cur + 1), 2600); }
+
+    // The set does not wrap. It plays from the first page to the last and stops
+    // there; the speaker is walking a collection, not spinning a wheel.
+    const running = () => !userPaused && !hoverPaused && cur < LAST;
+    function paint(){
+      if(!state) return;
+      state.textContent = cur >= LAST ? '● end of set'
+                        : running()   ? '▶ playing'
+                                      : '❚❚ paused';
+      state.className = 'carostate' + (running() ? ' on' : '');
+    }
+    function restart(){
+      clearInterval(timer); timer = null;
+      if(running()) timer = setInterval(() => step(1), 2600);
+      paint();
+    }
+    function step(d){
+      const n = Math.min(LAST, Math.max(0, cur + d));
+      if(n === cur){ restart(); return; }      // already at an end — stay put
+      cur = n; layout(); restart();
+    }
+    function go(i){ cur = Math.min(LAST, Math.max(0, i)); layout(); restart(); }
 
     function zoom(f){
       let z = document.getElementById('caroZoom');
       if(!z){
         z = document.createElement('div'); z.id = 'caroZoom';
         z.innerHTML = '<img><div class="z-cap"></div>';
-        z.addEventListener('click', () => { z.classList.remove('on'); paused = false; restart(); });
+        z.addEventListener('click', () => { z.classList.remove('on'); hoverPaused = false; restart(); });
         document.body.appendChild(z);
       }
       z.querySelector('img').src = f.src;
       z.querySelector('.z-cap').textContent = f.title + ' — ' + f.detail + '  ·  click to close';
       z.classList.add('on');
-      paused = true; clearInterval(timer);
+      hoverPaused = true; clearInterval(timer); timer = null; paint();
     }
 
-    stage.addEventListener('mouseenter', () => { paused = true; clearInterval(timer); });
-    stage.addEventListener('mouseleave', () => { paused = false; restart(); });
+    // Shift+← / Shift+→ walk the set and pause it; P toggles play/pause. Plain
+    // arrows are left to the deck, so moving on is the same key as everywhere
+    // else in the talk.
+    addEventListener('keydown', e => {
+      if(e.metaKey || e.ctrlKey || e.altKey) return;
+      if(document.querySelector('.slide.on') !== slide) return;
+      if(e.shiftKey && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')){
+        e.preventDefault(); e.stopImmediatePropagation();
+        userPaused = true;
+        step(e.key === 'ArrowRight' ? 1 : -1);
+      } else if(e.key === 'p' || e.key === 'P'){
+        e.preventDefault(); e.stopImmediatePropagation();
+        userPaused = !userPaused;
+        if(!userPaused && cur >= LAST){ cur = 0; layout(); }   // replay from the top
+        restart();
+      }
+    }, true);
+
+    stage.addEventListener('mouseenter', () => { hoverPaused = true; restart(); });
+    stage.addEventListener('mouseleave', () => { hoverPaused = false; restart(); });
     addEventListener('resize', layout);
     // only run while the slide is on screen
     window.__vfdrSync = on => {
