@@ -283,6 +283,142 @@
   // measure every pair up front, so switching documents never shows a wrong size
   QUAL.forEach(q => measureDoc('replica/static/images/qual/' + q.img + '_corrected.html'));
 
+  /* ---------- VFDR-Bench sample carousel ----------
+     Thirty real pages from the benchmark, grouped by document type. The centre
+     page is shown as large as the slide allows; the two either side sit behind
+     it so the audience still reads it as a collection. It advances on its own
+     so the speaker never has to drive it. */
+  const VFDR = [
+    ['Newspapers & periodicals', [
+      [3,'National daily','English · dense multi-column'],
+      [22,'Letters page','English · editorial columns'],
+      [18,'Feature spread','English · dark art-directed layout'],
+      [28,'Illustrated weekly','Chinese · full-bleed photography'],
+      [8,'Photo essay','Chinese · image-led with captions'] ]],
+    ['Government & official records', [
+      [1,'Birth certificate','Hindi + English · seals, QR, barcode'],
+      [11,'University tender notice','English · letterhead, stamp, signature'],
+      [19,'Ministry memorandum','English · degraded carbon scan'],
+      [9,'Regulatory report','English · statutory tables'],
+      [15,'Application form','Japanese · boxed fields and flowchart'] ]],
+    ['Textbooks & examination papers', [
+      [4,'Primary worksheet','English · colour blocks, exercises'],
+      [13,'Chemistry paper','Chinese · formulae and diagrams'],
+      [16,'Medical examination','Hebrew · right-to-left script'],
+      [17,'Clinical MCQs','English · numbered option lists'],
+      [23,'School textbook','Hindi · highlighted passages'] ]],
+    ['Business, finance & marketing', [
+      [10,'Financial statement','English · wide dense spreadsheet'],
+      [14,'Scanned invoice','English · handwriting and rubber stamps'],
+      [24,'Corporate feature','Chinese · article plus full-page advert'],
+      [29,'Industry report','English · pull-quotes and infographics'],
+      [30,'Card benefits leaflet','Spanish · brand colour, bulleted offers'] ]],
+    ['Indic & archival material', [
+      [5,'Community bulletin','Kannada · decorative border, photo'],
+      [20,'Archival record','Gujarati · aged paper'],
+      [21,'Manuscript page','Tamil · aged paper, tight leading'],
+      [25,'Health circular','Bengali · illustration with body text'],
+      [27,'Isa Upanishad','Sanskrit + English · verse and commentary'] ]],
+    ['Magazines & lifestyle', [
+      [2,'Skills-mission feature','English · infographic panels'],
+      [6,'Culture magazine','Malayalam · reversed-out dark page'],
+      [7,'Food feature','English · illustrated dishes, tinted ground'],
+      [12,'Wellness column','Chinese · pastel panels, sidebars'],
+      [26,'Assembly manual','Danish · technical line drawings'] ]]
+  ];
+  const EXT = {16:'png'};                       // one sample came out of the PDF as PNG
+  const flat = [];
+  VFDR.forEach(([g, items], gi) => items.forEach(([n, t, d]) =>
+    flat.push({gi, group:g, n, title:t, detail:d,
+               src:'replica/static/images/vfdr/s' + String(n).padStart(2,'0') + '.' + (EXT[n] || 'jpeg')})));
+
+  (function carousel(){
+    const stage = document.getElementById('caroStage');
+    if(!stage) return;
+    const tabs = document.getElementById('caroTabs');
+    const cap  = document.getElementById('caroCap');
+    const dots = document.getElementById('caroDots');
+    let cur = 0, timer = null, paused = false;
+
+    VFDR.forEach(([g, items], gi) => {
+      const b = document.createElement('button');
+      b.className = 'carotab';
+      b.innerHTML = g + '<span class="n">' + items.length + '</span>';
+      b.addEventListener('click', e => { e.stopPropagation(); go(flat.findIndex(f => f.gi === gi)); });
+      tabs.appendChild(b);
+    });
+    flat.forEach((f, i) => {
+      const d = document.createElement('span');
+      d.className = 'carodot';
+      d.addEventListener('click', e => { e.stopPropagation(); go(i); });
+      dots.appendChild(d);
+      const el = document.createElement('div');
+      el.className = 'caroitem off';
+      // not lazy: off-stage items never enter the viewport, so a lazy image
+      // would still be blank at the moment it slides into the centre
+      el.innerHTML = '<img src="' + f.src + '" alt="' + f.title + ' — ' + f.detail + '">';
+      el.addEventListener('click', e => { if(i === cur){ e.stopPropagation(); zoom(f); } });
+      stage.appendChild(el);
+      f.el = el;
+    });
+
+    // three visible: the page itself, and a sliver of the one before and after
+    const SLOT = [{dx:-0.62, sc:0.70, op:0.38, z:2},
+                  {dx: 0,    sc:1.00, op:1,    z:5},
+                  {dx: 0.62, sc:0.70, op:0.38, z:2}];
+    function layout(){
+      const H = stage.clientHeight, W = stage.clientWidth;
+      if(!H) return;
+      flat.forEach((f, i) => {
+        const rel = i - cur;
+        const el = f.el;
+        // clear the inline opacity too — a class cannot override an inline style,
+        // so an item leaving the stage would otherwise stay on screen
+        if(Math.abs(rel) > 1){ el.classList.add('off'); el.style.opacity = '0'; return; }
+        el.classList.remove('off');
+        const s = SLOT[rel + 1];
+        const im = el.querySelector('img');
+        const ar = (im.naturalWidth && im.naturalHeight) ? im.naturalWidth / im.naturalHeight : 0.72;
+        const h = H * 0.98, w = h * ar;
+        el.style.height = h + 'px'; el.style.width = w + 'px';
+        el.style.zIndex = s.z; el.style.opacity = s.op;
+        el.classList.toggle('mid', rel === 0);
+        el.style.transform = 'translate(-50%,-50%) translateX(' + (s.dx * W * 0.5) + 'px) scale(' + s.sc + ')';
+      });
+      const f = flat[cur];
+      cap.innerHTML = '<span class="t">' + f.title + '</span><span class="d">' + f.detail +
+                      '</span><span class="ix">' + (cur + 1) + ' / ' + flat.length + '</span>';
+      [...tabs.children].forEach((t, gi) => t.classList.toggle('on', gi === f.gi));
+      [...dots.children].forEach((d, i) => d.classList.toggle('on', i === cur));
+    }
+    function go(i){ cur = (i + flat.length) % flat.length; layout(); restart(); }
+    function restart(){ clearInterval(timer); if(!paused) timer = setInterval(() => go(cur + 1), 2600); }
+
+    function zoom(f){
+      let z = document.getElementById('caroZoom');
+      if(!z){
+        z = document.createElement('div'); z.id = 'caroZoom';
+        z.innerHTML = '<img><div class="z-cap"></div>';
+        z.addEventListener('click', () => { z.classList.remove('on'); paused = false; restart(); });
+        document.body.appendChild(z);
+      }
+      z.querySelector('img').src = f.src;
+      z.querySelector('.z-cap').textContent = f.title + ' — ' + f.detail + '  ·  click to close';
+      z.classList.add('on');
+      paused = true; clearInterval(timer);
+    }
+
+    stage.addEventListener('mouseenter', () => { paused = true; clearInterval(timer); });
+    stage.addEventListener('mouseleave', () => { paused = false; restart(); });
+    addEventListener('resize', layout);
+    // only run while the slide is on screen
+    window.__vfdrSync = on => {
+      if(on){ layout(); restart(); } else { clearInterval(timer); timer = null; }
+    };
+    // each page has its own aspect; re-lay out as they arrive
+    flat.forEach(f => f.el.querySelector('img').addEventListener('load', layout));
+  })();
+
   /* ---------- live figures: preload, fit, and keyboard control ----------
      Three separate complaints, one place:
        · transitions into a demo felt jerky — the iframe only started loading
@@ -411,6 +547,7 @@
     else if(s.id === 'resSlide') renderResults(n);
     else if(s.id === 'qualSlide') renderQual(n);
     else if(s.dataset.embednav === 'nav') driveNav(s, n);
+    if(window.__vfdrSync) window.__vfdrSync(s.id === 'vfdrSlide');
     preloadNeighbours();
     fitFigures();
   }

@@ -280,20 +280,23 @@
   <div class="footer"><span class="act">REPLICA</span><span>Approach · demo</span></div>
 </section>
 
-<!-- ====== 14 · VFDR-BENCH ====== -->
-<section class="slide" style="--accent:var(--replica)">
-  <div class="kicker">REPLICA · What is actually in the benchmark</div>
-  <h2>VFDR-Bench — <span class="k">5,000 documents, annotated in FID-HTML</span></h2>
-  <div class="statrow" style="margin:.8vh 0 1vh">
+<!-- ====== 14 · VFDR-BENCH (sample carousel) ====== -->
+<section class="slide" id="vfdrSlide" style="--accent:var(--replica)">
+  <div class="kicker">REPLICA · What is actually in the benchmark &nbsp;·&nbsp;
+    <span class="tiny" style="color:var(--faint)">plays automatically — click a group, or click the page to enlarge</span></div>
+  <h2>VFDR-Bench — <span class="k">5,000 documents</span>, annotated in FID-HTML</h2>
+  <div class="statrow" style="margin:.6vh 0 .8vh">
     <div class="stat"><div class="v">5,000</div><div class="l">documents</div></div>
-    <div class="stat"><div class="v">15+</div><div class="l">languages</div></div>
-    <div class="stat"><div class="v">20+</div><div class="l">document categories</div></div>
+    <div class="stat"><div class="v">22</div><div class="l">languages</div></div>
+    <div class="stat"><div class="v">17</div><div class="l">domains</div></div>
     <div class="stat"><div class="v">100%</div><div class="l">expert human annotated</div></div>
   </div>
-  <figure class="fig framed" style="flex:1;min-height:0">
-    <img src="replica/static/images/Benchset-Samples-web.jpg" alt="VFDR-Bench sample documents" style="max-height:calc(100% - 6vh);min-height:0">
-    <figcaption>Newspapers, magazines, government forms, receipts, scientific papers, historical archives — single and multi-column, scanned and born-digital.</figcaption>
-  </figure>
+  <div class="carowrap">
+    <div class="carotabs" id="caroTabs"></div>
+    <div class="carostage" id="caroStage"></div>
+    <div class="carocap" id="caroCap"></div>
+    <div class="carodots" id="caroDots"></div>
+  </div>
   <div class="footer"><span class="act">REPLICA</span><span>Evaluation · the benchmark</span></div>
 </section>
 
@@ -372,7 +375,7 @@
   <h2>Everyone passes text. <span class="k">The field collapses on position.</span></h2>
   <div class="rwrap"><table class="rtab" id="resTable"></table></div>
   <div class="rnote">
-    <div class="rlegend" id="resLegend"><span>weakest</span><i style="background:#fdeceb"></i><i style="background:#fdf3e7"></i><i style="background:#f3f7f2"></i><i style="background:#e9f5ec"></i><span>strongest</span></div>
+    <div class="rlegend" id="resLegend"><span>weakest</span><i style="background:#fdeceb"></i><i style="background:#fdf1dd"></i><i style="background:#eef5ef"></i><i style="background:#dcefe1"></i><span>strongest</span></div>
     <div class="rline frag" data-ax="TE"><span class="t">Text extraction</span><span class="d">Strong baselines sit at <b style="color:var(--ink)">0.65–0.68</b> WRR. Largely solved — which is why the field feels finished.</span></div>
     <div class="rline frag" data-ax="LS"><span class="t">Logical structure</span><span class="d">Tree edit distance is passable for the better systems, but nothing about it says <i>where</i> anything is.</span></div>
     <div class="rline bad frag" data-ax="PS"><span class="t">Physical structure</span><span class="d">Total collapse: best baseline LPS <b>0.22</b>, best GPS <b>0.43</b>, most under 0.30. Nothing lands where it belongs.</span></div>

@@ -265,19 +265,24 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
 .rtab tr.ours td.m{color:var(--replica)}
 /* axis focus: everything not in the live axis group recedes */
 .rtab.focus td.q,.rtab.focus th.q{opacity:.22}
-.rtab td.lit,.rtab th.lit{background:#fff8ea}
-.rtab th.gh.lit{color:var(--replica);background:#fff3d9}
+/* …but never the comparison row: it is pinned above the scrolled rows, so
+   dimming it would let them show through it */
+.rtab.focus tr.ours td.q{opacity:1}
+/* the axis under discussion — blue, the "look here" colour, so it can never be
+   read as a value the way an amber or green tint would be */
+.rtab td.lit,.rtab th.lit{background:#eaf1f8}
+.rtab th.gh.lit{color:var(--m3);background:#dfe9f4}
 .rtab td.mark{outline:.25vh solid var(--bad);outline-offset:-.25vh;border-radius:.5vh;color:var(--bad);font-weight:800}
 .rtab td.good{outline:.25vh solid var(--replica);outline-offset:-.25vh;border-radius:.5vh}
 .rnote{flex:0 0 auto;margin-top:1vh;display:flex;flex-direction:column;gap:.6vh}
 .rline{display:flex;gap:.8vw;align-items:baseline;background:#fff;border:1px solid var(--line);
   border-left:5px solid var(--accent);border-radius:0 10px 10px 0;padding:.85vh 1.2vh}
-.rline.bad{border-left-color:var(--bad)}
-.rline.win{border-left-color:var(--replica)}
+.rline.bad{border-left-color:#a02c1f}
+.rline.win{border-left-color:#14663a}
 .rline .t{font-size:1.95vh;font-weight:700;color:var(--ink);white-space:nowrap}
 .rline .d{font-size:1.85vh;color:var(--muted);line-height:1.35}
-.rline .d b{color:var(--bad)}
-.rline.win .d b{color:var(--replica)}
+.rline .d b{color:#a02c1f}
+.rline.win .d b{color:#14663a}
 
 /* ---- qualitative pair ---- */
 .qual{display:grid;grid-template-columns:1fr 1fr;gap:1.4vw;flex:1;min-height:0}
@@ -307,20 +312,68 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
 .teamfoot{text-align:center;font-size:1.8vh;color:var(--muted);padding-bottom:1vh}
 .teamfoot .tiny{color:var(--faint)}
 
-/* ---- results table: final read-out ----
-   Once every axis has been walked, a single flat table gives the audience
-   nothing to look at while the speaker talks. Grade the cells instead: weak
-   numbers recede in red, strong ones in green, and REPLICA's row stays gold. */
-.rtab.graded td.g0{background:#fdeceb;color:#9b2c20}
-.rtab.graded td.g1{background:#fdf3e7;color:#96601a}
-.rtab.graded td.g2{background:#f3f7f2;color:#4a6551}
-.rtab.graded td.g3{background:#e9f5ec;color:#1c6b3a;font-weight:700}
-.rtab.graded tr.ours td{background:#fdf1d8;color:var(--replica)}
-.rtab.graded tr.ours td.m{background:#fdf1d8}
+/* ---- results table: colour semantics ----
+   One meaning per colour, so the table reads without explanation:
+     red → amber → green   how good the number is (the only value scale)
+     blue                  where the speaker is pointing right now
+   REPLICA is not given a colour of its own — it sits on the same scale as
+   everyone else, which is the point: it is the greenest row because it is the
+   best row, not because we painted it differently. It is set apart by weight
+   and a rule, not by hue. */
+.rtab.graded td.g0{background:#fdeceb;color:#a02c1f}
+.rtab.graded td.g1{background:#fdf1dd;color:#8a5a12}
+.rtab.graded td.g2{background:#eef5ef;color:#4a6551}
+.rtab.graded td.g3{background:#dcefe1;color:#14663a;font-weight:700}
+.rtab.graded tr.ours td{font-weight:800}
+.rtab.graded tr.ours td.m{background:#fff;color:var(--ink);
+  box-shadow:inset .4vh 0 0 var(--replica)}
+/* attention, not value — never one of the scale colours */
+.rtab td.mark{outline:.25vh solid var(--m3);outline-offset:-.25vh;border-radius:.5vh;font-weight:800}
+.rtab td.good{outline:.25vh solid #14663a;outline-offset:-.25vh;border-radius:.5vh}
 .rlegend{display:flex;align-items:center;gap:.5vw;font-size:1.55vh;color:var(--muted);
   margin-left:auto;opacity:0;transition:opacity .3s}
 .rlegend.on{opacity:1}
-.rlegend i{display:inline-block;width:2.2vh;height:1.4vh;border-radius:3px}
+.rlegend i{display:inline-block;width:2.2vh;height:1.4vh;border-radius:3px;border:1px solid #0001}
+
+/* ---- VFDR-Bench sample carousel ----
+   Thirty samples shown one at a time instead of as a wall of thumbnails: the
+   centre sample is as large as the slide allows, its neighbours sit behind it
+   so the set still reads as a set, and it plays by itself while the speaker
+   talks. Click the centre sample to inspect it full-slide. */
+.carowrap{display:flex;flex-direction:column;flex:1;min-height:0;gap:1vh}
+.carotabs{display:flex;gap:.5vw;justify-content:center;flex-wrap:wrap;flex:0 0 auto}
+.carotab{border:1.5px solid var(--line);background:#fff;border-radius:999px;
+  padding:.5vh 1.3vh;font-size:1.6vh;font-weight:600;color:var(--muted);cursor:pointer;
+  transition:.2s;white-space:nowrap}
+.carotab:hover{border-color:var(--accent);color:var(--accent)}
+.carotab.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.carotab .n{opacity:.65;font-size:1.35vh;margin-left:.5vh}
+
+.carostage{position:relative;flex:1;min-height:0;display:flex;align-items:center;justify-content:center;
+  overflow:hidden}
+.caroitem{position:absolute;top:50%;left:50%;transition:transform .55s cubic-bezier(.22,.7,.3,1),opacity .55s;
+  transform-origin:center center;background:#fff;border:1px solid var(--line);border-radius:6px;
+  box-shadow:0 6px 26px rgba(10,30,60,.16);overflow:hidden;will-change:transform,opacity}
+.caroitem img{display:block;height:100%;width:auto;max-width:none}
+.caroitem.mid{z-index:5;box-shadow:0 10px 40px rgba(10,30,60,.26);cursor:zoom-in;border-color:var(--accent)}
+.caroitem.off{opacity:0;pointer-events:none}
+
+.carocap{flex:0 0 auto;display:flex;align-items:baseline;justify-content:center;gap:.8vw;min-height:4.2vh}
+.carocap .t{font-size:2.1vh;font-weight:700;color:var(--ink)}
+.carocap .d{font-size:1.8vh;color:var(--muted)}
+.carocap .ix{font-family:ui-monospace,Menlo,monospace;font-size:1.6vh;color:var(--faint)}
+
+.carodots{display:flex;gap:.45vw;justify-content:center;flex:0 0 auto}
+.carodot{width:1vh;height:1vh;border-radius:50%;background:var(--line);cursor:pointer;transition:.2s}
+.carodot.on{background:var(--accent);transform:scale(1.35)}
+
+/* click-to-inspect overlay */
+#caroZoom{position:fixed;inset:0;z-index:80;background:#0b1220f2;display:none;
+  align-items:center;justify-content:center;padding:3vh;cursor:zoom-out}
+#caroZoom.on{display:flex}
+#caroZoom img{max-width:96vw;max-height:94vh;object-fit:contain;border-radius:8px;
+  box-shadow:0 12px 60px rgba(0,0,0,.6);background:#fff}
+#caroZoom .z-cap{position:fixed;left:0;right:0;bottom:1.6vh;text-align:center;color:#cbd8e8;font-size:1.9vh}
 </style>
 </head>
 <body>
@@ -608,20 +661,23 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   <div class="footer"><span class="act">REPLICA</span><span>Approach · demo</span></div>
 </section>
 
-<!-- ====== 14 · VFDR-BENCH ====== -->
-<section class="slide" style="--accent:var(--replica)">
-  <div class="kicker">REPLICA · What is actually in the benchmark</div>
-  <h2>VFDR-Bench — <span class="k">5,000 documents, annotated in FID-HTML</span></h2>
-  <div class="statrow" style="margin:.8vh 0 1vh">
+<!-- ====== 14 · VFDR-BENCH (sample carousel) ====== -->
+<section class="slide" id="vfdrSlide" style="--accent:var(--replica)">
+  <div class="kicker">REPLICA · What is actually in the benchmark &nbsp;·&nbsp;
+    <span class="tiny" style="color:var(--faint)">plays automatically — click a group, or click the page to enlarge</span></div>
+  <h2>VFDR-Bench — <span class="k">5,000 documents</span>, annotated in FID-HTML</h2>
+  <div class="statrow" style="margin:.6vh 0 .8vh">
     <div class="stat"><div class="v">5,000</div><div class="l">documents</div></div>
-    <div class="stat"><div class="v">15+</div><div class="l">languages</div></div>
-    <div class="stat"><div class="v">20+</div><div class="l">document categories</div></div>
+    <div class="stat"><div class="v">22</div><div class="l">languages</div></div>
+    <div class="stat"><div class="v">17</div><div class="l">domains</div></div>
     <div class="stat"><div class="v">100%</div><div class="l">expert human annotated</div></div>
   </div>
-  <figure class="fig framed" style="flex:1;min-height:0">
-    <img src="replica/static/images/Benchset-Samples-web.jpg" alt="VFDR-Bench sample documents" style="max-height:calc(100% - 6vh);min-height:0">
-    <figcaption>Newspapers, magazines, government forms, receipts, scientific papers, historical archives — single and multi-column, scanned and born-digital.</figcaption>
-  </figure>
+  <div class="carowrap">
+    <div class="carotabs" id="caroTabs"></div>
+    <div class="carostage" id="caroStage"></div>
+    <div class="carocap" id="caroCap"></div>
+    <div class="carodots" id="caroDots"></div>
+  </div>
   <div class="footer"><span class="act">REPLICA</span><span>Evaluation · the benchmark</span></div>
 </section>
 
@@ -700,7 +756,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   <h2>Everyone passes text. <span class="k">The field collapses on position.</span></h2>
   <div class="rwrap"><table class="rtab" id="resTable"></table></div>
   <div class="rnote">
-    <div class="rlegend" id="resLegend"><span>weakest</span><i style="background:#fdeceb"></i><i style="background:#fdf3e7"></i><i style="background:#f3f7f2"></i><i style="background:#e9f5ec"></i><span>strongest</span></div>
+    <div class="rlegend" id="resLegend"><span>weakest</span><i style="background:#fdeceb"></i><i style="background:#fdf1dd"></i><i style="background:#eef5ef"></i><i style="background:#dcefe1"></i><span>strongest</span></div>
     <div class="rline frag" data-ax="TE"><span class="t">Text extraction</span><span class="d">Strong baselines sit at <b style="color:var(--ink)">0.65–0.68</b> WRR. Largely solved — which is why the field feels finished.</span></div>
     <div class="rline frag" data-ax="LS"><span class="t">Logical structure</span><span class="d">Tree edit distance is passable for the better systems, but nothing about it says <i>where</i> anything is.</span></div>
     <div class="rline bad frag" data-ax="PS"><span class="t">Physical structure</span><span class="d">Total collapse: best baseline LPS <b>0.22</b>, best GPS <b>0.43</b>, most under 0.30. Nothing lands where it belongs.</span></div>
@@ -2649,6 +2705,142 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   // measure every pair up front, so switching documents never shows a wrong size
   QUAL.forEach(q => measureDoc('replica/static/images/qual/' + q.img + '_corrected.html'));
 
+  /* ---------- VFDR-Bench sample carousel ----------
+     Thirty real pages from the benchmark, grouped by document type. The centre
+     page is shown as large as the slide allows; the two either side sit behind
+     it so the audience still reads it as a collection. It advances on its own
+     so the speaker never has to drive it. */
+  const VFDR = [
+    ['Newspapers & periodicals', [
+      [3,'National daily','English · dense multi-column'],
+      [22,'Letters page','English · editorial columns'],
+      [18,'Feature spread','English · dark art-directed layout'],
+      [28,'Illustrated weekly','Chinese · full-bleed photography'],
+      [8,'Photo essay','Chinese · image-led with captions'] ]],
+    ['Government & official records', [
+      [1,'Birth certificate','Hindi + English · seals, QR, barcode'],
+      [11,'University tender notice','English · letterhead, stamp, signature'],
+      [19,'Ministry memorandum','English · degraded carbon scan'],
+      [9,'Regulatory report','English · statutory tables'],
+      [15,'Application form','Japanese · boxed fields and flowchart'] ]],
+    ['Textbooks & examination papers', [
+      [4,'Primary worksheet','English · colour blocks, exercises'],
+      [13,'Chemistry paper','Chinese · formulae and diagrams'],
+      [16,'Medical examination','Hebrew · right-to-left script'],
+      [17,'Clinical MCQs','English · numbered option lists'],
+      [23,'School textbook','Hindi · highlighted passages'] ]],
+    ['Business, finance & marketing', [
+      [10,'Financial statement','English · wide dense spreadsheet'],
+      [14,'Scanned invoice','English · handwriting and rubber stamps'],
+      [24,'Corporate feature','Chinese · article plus full-page advert'],
+      [29,'Industry report','English · pull-quotes and infographics'],
+      [30,'Card benefits leaflet','Spanish · brand colour, bulleted offers'] ]],
+    ['Indic & archival material', [
+      [5,'Community bulletin','Kannada · decorative border, photo'],
+      [20,'Archival record','Gujarati · aged paper'],
+      [21,'Manuscript page','Tamil · aged paper, tight leading'],
+      [25,'Health circular','Bengali · illustration with body text'],
+      [27,'Isa Upanishad','Sanskrit + English · verse and commentary'] ]],
+    ['Magazines & lifestyle', [
+      [2,'Skills-mission feature','English · infographic panels'],
+      [6,'Culture magazine','Malayalam · reversed-out dark page'],
+      [7,'Food feature','English · illustrated dishes, tinted ground'],
+      [12,'Wellness column','Chinese · pastel panels, sidebars'],
+      [26,'Assembly manual','Danish · technical line drawings'] ]]
+  ];
+  const EXT = {16:'png'};                       // one sample came out of the PDF as PNG
+  const flat = [];
+  VFDR.forEach(([g, items], gi) => items.forEach(([n, t, d]) =>
+    flat.push({gi, group:g, n, title:t, detail:d,
+               src:'replica/static/images/vfdr/s' + String(n).padStart(2,'0') + '.' + (EXT[n] || 'jpeg')})));
+
+  (function carousel(){
+    const stage = document.getElementById('caroStage');
+    if(!stage) return;
+    const tabs = document.getElementById('caroTabs');
+    const cap  = document.getElementById('caroCap');
+    const dots = document.getElementById('caroDots');
+    let cur = 0, timer = null, paused = false;
+
+    VFDR.forEach(([g, items], gi) => {
+      const b = document.createElement('button');
+      b.className = 'carotab';
+      b.innerHTML = g + '<span class="n">' + items.length + '</span>';
+      b.addEventListener('click', e => { e.stopPropagation(); go(flat.findIndex(f => f.gi === gi)); });
+      tabs.appendChild(b);
+    });
+    flat.forEach((f, i) => {
+      const d = document.createElement('span');
+      d.className = 'carodot';
+      d.addEventListener('click', e => { e.stopPropagation(); go(i); });
+      dots.appendChild(d);
+      const el = document.createElement('div');
+      el.className = 'caroitem off';
+      // not lazy: off-stage items never enter the viewport, so a lazy image
+      // would still be blank at the moment it slides into the centre
+      el.innerHTML = '<img src="' + f.src + '" alt="' + f.title + ' — ' + f.detail + '">';
+      el.addEventListener('click', e => { if(i === cur){ e.stopPropagation(); zoom(f); } });
+      stage.appendChild(el);
+      f.el = el;
+    });
+
+    // three visible: the page itself, and a sliver of the one before and after
+    const SLOT = [{dx:-0.62, sc:0.70, op:0.38, z:2},
+                  {dx: 0,    sc:1.00, op:1,    z:5},
+                  {dx: 0.62, sc:0.70, op:0.38, z:2}];
+    function layout(){
+      const H = stage.clientHeight, W = stage.clientWidth;
+      if(!H) return;
+      flat.forEach((f, i) => {
+        const rel = i - cur;
+        const el = f.el;
+        // clear the inline opacity too — a class cannot override an inline style,
+        // so an item leaving the stage would otherwise stay on screen
+        if(Math.abs(rel) > 1){ el.classList.add('off'); el.style.opacity = '0'; return; }
+        el.classList.remove('off');
+        const s = SLOT[rel + 1];
+        const im = el.querySelector('img');
+        const ar = (im.naturalWidth && im.naturalHeight) ? im.naturalWidth / im.naturalHeight : 0.72;
+        const h = H * 0.98, w = h * ar;
+        el.style.height = h + 'px'; el.style.width = w + 'px';
+        el.style.zIndex = s.z; el.style.opacity = s.op;
+        el.classList.toggle('mid', rel === 0);
+        el.style.transform = 'translate(-50%,-50%) translateX(' + (s.dx * W * 0.5) + 'px) scale(' + s.sc + ')';
+      });
+      const f = flat[cur];
+      cap.innerHTML = '<span class="t">' + f.title + '</span><span class="d">' + f.detail +
+                      '</span><span class="ix">' + (cur + 1) + ' / ' + flat.length + '</span>';
+      [...tabs.children].forEach((t, gi) => t.classList.toggle('on', gi === f.gi));
+      [...dots.children].forEach((d, i) => d.classList.toggle('on', i === cur));
+    }
+    function go(i){ cur = (i + flat.length) % flat.length; layout(); restart(); }
+    function restart(){ clearInterval(timer); if(!paused) timer = setInterval(() => go(cur + 1), 2600); }
+
+    function zoom(f){
+      let z = document.getElementById('caroZoom');
+      if(!z){
+        z = document.createElement('div'); z.id = 'caroZoom';
+        z.innerHTML = '<img><div class="z-cap"></div>';
+        z.addEventListener('click', () => { z.classList.remove('on'); paused = false; restart(); });
+        document.body.appendChild(z);
+      }
+      z.querySelector('img').src = f.src;
+      z.querySelector('.z-cap').textContent = f.title + ' — ' + f.detail + '  ·  click to close';
+      z.classList.add('on');
+      paused = true; clearInterval(timer);
+    }
+
+    stage.addEventListener('mouseenter', () => { paused = true; clearInterval(timer); });
+    stage.addEventListener('mouseleave', () => { paused = false; restart(); });
+    addEventListener('resize', layout);
+    // only run while the slide is on screen
+    window.__vfdrSync = on => {
+      if(on){ layout(); restart(); } else { clearInterval(timer); timer = null; }
+    };
+    // each page has its own aspect; re-lay out as they arrive
+    flat.forEach(f => f.el.querySelector('img').addEventListener('load', layout));
+  })();
+
   /* ---------- live figures: preload, fit, and keyboard control ----------
      Three separate complaints, one place:
        · transitions into a demo felt jerky — the iframe only started loading
@@ -2777,6 +2969,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
     else if(s.id === 'resSlide') renderResults(n);
     else if(s.id === 'qualSlide') renderQual(n);
     else if(s.dataset.embednav === 'nav') driveNav(s, n);
+    if(window.__vfdrSync) window.__vfdrSync(s.id === 'vfdrSlide');
     preloadNeighbours();
     fitFigures();
   }

@@ -138,19 +138,24 @@
 .rtab tr.ours td.m{color:var(--replica)}
 /* axis focus: everything not in the live axis group recedes */
 .rtab.focus td.q,.rtab.focus th.q{opacity:.22}
-.rtab td.lit,.rtab th.lit{background:#fff8ea}
-.rtab th.gh.lit{color:var(--replica);background:#fff3d9}
+/* …but never the comparison row: it is pinned above the scrolled rows, so
+   dimming it would let them show through it */
+.rtab.focus tr.ours td.q{opacity:1}
+/* the axis under discussion — blue, the "look here" colour, so it can never be
+   read as a value the way an amber or green tint would be */
+.rtab td.lit,.rtab th.lit{background:#eaf1f8}
+.rtab th.gh.lit{color:var(--m3);background:#dfe9f4}
 .rtab td.mark{outline:.25vh solid var(--bad);outline-offset:-.25vh;border-radius:.5vh;color:var(--bad);font-weight:800}
 .rtab td.good{outline:.25vh solid var(--replica);outline-offset:-.25vh;border-radius:.5vh}
 .rnote{flex:0 0 auto;margin-top:1vh;display:flex;flex-direction:column;gap:.6vh}
 .rline{display:flex;gap:.8vw;align-items:baseline;background:#fff;border:1px solid var(--line);
   border-left:5px solid var(--accent);border-radius:0 10px 10px 0;padding:.85vh 1.2vh}
-.rline.bad{border-left-color:var(--bad)}
-.rline.win{border-left-color:var(--replica)}
+.rline.bad{border-left-color:#a02c1f}
+.rline.win{border-left-color:#14663a}
 .rline .t{font-size:1.95vh;font-weight:700;color:var(--ink);white-space:nowrap}
 .rline .d{font-size:1.85vh;color:var(--muted);line-height:1.35}
-.rline .d b{color:var(--bad)}
-.rline.win .d b{color:var(--replica)}
+.rline .d b{color:#a02c1f}
+.rline.win .d b{color:#14663a}
 
 /* ---- qualitative pair ---- */
 .qual{display:grid;grid-template-columns:1fr 1fr;gap:1.4vw;flex:1;min-height:0}
@@ -180,17 +185,65 @@
 .teamfoot{text-align:center;font-size:1.8vh;color:var(--muted);padding-bottom:1vh}
 .teamfoot .tiny{color:var(--faint)}
 
-/* ---- results table: final read-out ----
-   Once every axis has been walked, a single flat table gives the audience
-   nothing to look at while the speaker talks. Grade the cells instead: weak
-   numbers recede in red, strong ones in green, and REPLICA's row stays gold. */
-.rtab.graded td.g0{background:#fdeceb;color:#9b2c20}
-.rtab.graded td.g1{background:#fdf3e7;color:#96601a}
-.rtab.graded td.g2{background:#f3f7f2;color:#4a6551}
-.rtab.graded td.g3{background:#e9f5ec;color:#1c6b3a;font-weight:700}
-.rtab.graded tr.ours td{background:#fdf1d8;color:var(--replica)}
-.rtab.graded tr.ours td.m{background:#fdf1d8}
+/* ---- results table: colour semantics ----
+   One meaning per colour, so the table reads without explanation:
+     red → amber → green   how good the number is (the only value scale)
+     blue                  where the speaker is pointing right now
+   REPLICA is not given a colour of its own — it sits on the same scale as
+   everyone else, which is the point: it is the greenest row because it is the
+   best row, not because we painted it differently. It is set apart by weight
+   and a rule, not by hue. */
+.rtab.graded td.g0{background:#fdeceb;color:#a02c1f}
+.rtab.graded td.g1{background:#fdf1dd;color:#8a5a12}
+.rtab.graded td.g2{background:#eef5ef;color:#4a6551}
+.rtab.graded td.g3{background:#dcefe1;color:#14663a;font-weight:700}
+.rtab.graded tr.ours td{font-weight:800}
+.rtab.graded tr.ours td.m{background:#fff;color:var(--ink);
+  box-shadow:inset .4vh 0 0 var(--replica)}
+/* attention, not value — never one of the scale colours */
+.rtab td.mark{outline:.25vh solid var(--m3);outline-offset:-.25vh;border-radius:.5vh;font-weight:800}
+.rtab td.good{outline:.25vh solid #14663a;outline-offset:-.25vh;border-radius:.5vh}
 .rlegend{display:flex;align-items:center;gap:.5vw;font-size:1.55vh;color:var(--muted);
   margin-left:auto;opacity:0;transition:opacity .3s}
 .rlegend.on{opacity:1}
-.rlegend i{display:inline-block;width:2.2vh;height:1.4vh;border-radius:3px}
+.rlegend i{display:inline-block;width:2.2vh;height:1.4vh;border-radius:3px;border:1px solid #0001}
+
+/* ---- VFDR-Bench sample carousel ----
+   Thirty samples shown one at a time instead of as a wall of thumbnails: the
+   centre sample is as large as the slide allows, its neighbours sit behind it
+   so the set still reads as a set, and it plays by itself while the speaker
+   talks. Click the centre sample to inspect it full-slide. */
+.carowrap{display:flex;flex-direction:column;flex:1;min-height:0;gap:1vh}
+.carotabs{display:flex;gap:.5vw;justify-content:center;flex-wrap:wrap;flex:0 0 auto}
+.carotab{border:1.5px solid var(--line);background:#fff;border-radius:999px;
+  padding:.5vh 1.3vh;font-size:1.6vh;font-weight:600;color:var(--muted);cursor:pointer;
+  transition:.2s;white-space:nowrap}
+.carotab:hover{border-color:var(--accent);color:var(--accent)}
+.carotab.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.carotab .n{opacity:.65;font-size:1.35vh;margin-left:.5vh}
+
+.carostage{position:relative;flex:1;min-height:0;display:flex;align-items:center;justify-content:center;
+  overflow:hidden}
+.caroitem{position:absolute;top:50%;left:50%;transition:transform .55s cubic-bezier(.22,.7,.3,1),opacity .55s;
+  transform-origin:center center;background:#fff;border:1px solid var(--line);border-radius:6px;
+  box-shadow:0 6px 26px rgba(10,30,60,.16);overflow:hidden;will-change:transform,opacity}
+.caroitem img{display:block;height:100%;width:auto;max-width:none}
+.caroitem.mid{z-index:5;box-shadow:0 10px 40px rgba(10,30,60,.26);cursor:zoom-in;border-color:var(--accent)}
+.caroitem.off{opacity:0;pointer-events:none}
+
+.carocap{flex:0 0 auto;display:flex;align-items:baseline;justify-content:center;gap:.8vw;min-height:4.2vh}
+.carocap .t{font-size:2.1vh;font-weight:700;color:var(--ink)}
+.carocap .d{font-size:1.8vh;color:var(--muted)}
+.carocap .ix{font-family:ui-monospace,Menlo,monospace;font-size:1.6vh;color:var(--faint)}
+
+.carodots{display:flex;gap:.45vw;justify-content:center;flex:0 0 auto}
+.carodot{width:1vh;height:1vh;border-radius:50%;background:var(--line);cursor:pointer;transition:.2s}
+.carodot.on{background:var(--accent);transform:scale(1.35)}
+
+/* click-to-inspect overlay */
+#caroZoom{position:fixed;inset:0;z-index:80;background:#0b1220f2;display:none;
+  align-items:center;justify-content:center;padding:3vh;cursor:zoom-out}
+#caroZoom.on{display:flex}
+#caroZoom img{max-width:96vw;max-height:94vh;object-fit:contain;border-radius:8px;
+  box-shadow:0 12px 60px rgba(0,0,0,.6);background:#fff}
+#caroZoom .z-cap{position:fixed;left:0;right:0;bottom:1.6vh;text-align:center;color:#cbd8e8;font-size:1.9vh}
