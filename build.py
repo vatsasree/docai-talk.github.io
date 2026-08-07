@@ -177,59 +177,84 @@ def global_classes(css: str) -> set[str]:
     return names
 
 
-def main() -> None:
+def vendor_from_upstream() -> None:
+    """Refresh src/grounding.* from Sai's repo. Only run deliberately (./sync.sh),
+    never as part of an ordinary build — see the note in main()."""
     up_file = UPSTREAM / 'index.html'
     if not up_file.exists():
-        die(f'{up_file} not found — run ./sync.sh first')
-
+        die(f'{up_file} not found — clone it first')
     up = up_file.read_text(encoding='utf-8')
-
     for token, why in CONTRACT:
         if token not in up:
             die(f'upstream no longer contains {token!r} — {why}')
-
     for desc, find, repl, n in PATCHES:
         found = up.count(find)
         if n is None:
-            if found == 0:
-                die(f'patch {desc!r} matched nothing upstream')
+            if found == 0: die(f'patch {desc!r} matched nothing upstream')
         elif found != n:
             die(f'patch {desc!r} expected {n} match(es) upstream, found {found}')
         up = up.replace(find, repl)
+    (SRC / 'grounding.head.html').write_text(
+        slice_between(up, '<!DOCTYPE html>', '<style>', 'the document head'), encoding='utf-8')
+    (SRC / 'grounding.css').write_text(
+        slice_between(up, '<style>', '</style>', 'the upstream stylesheet').rstrip('\n') + '\n', encoding='utf-8')
+    (SRC / 'grounding.slides.html').write_text(
+        slice_between(up, '<div class="deck" id="deck">', '\n</div>\n', 'the upstream slides').strip('\n') + '\n',
+        encoding='utf-8')
+    (SRC / 'grounding.engine.js').write_text(
+        slice_between(up, '<script>', '</script>', 'the upstream engine').rstrip('\n') + '\n', encoding='utf-8')
+    for name in ('assets', 'interactive'):
+        src, dst = UPSTREAM / name, ROOT / 'grounding' / name
+        if not src.exists():
+            die(f'upstream is missing {name}/')
+        dst.mkdir(parents=True, exist_ok=True)
+        for f in src.rglob('*'):
+            if f.is_file() and f.name != '.DS_Store':
+                t = dst / f.relative_to(src)
+                t.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(f, t)          # copy in, never delete: files added
+                                            # to this repo directly must survive
+    print('re-vendored src/grounding.* from upstream')
 
-    head       = slice_between(up, '<!DOCTYPE html>', '<style>', 'the document head')
-    up_css     = slice_between(up, '<style>', '</style>', 'the upstream stylesheet')
-    up_slides  = slice_between(up, '<div class="deck" id="deck">', '\n</div>\n', 'the upstream slides')
-    up_engine  = slice_between(up, '<script>', '</script>', 'the upstream engine')
+
+def main() -> None:
+    if '--sync-upstream' in sys.argv:
+        vendor_from_upstream()
+
+    # The grounding half is vendored in src/, not re-read from Sai's repo on
+    # every build. It has to be: he commits changes straight into THIS repo
+    # (new slides, new figures), and rebuilding from his repo would silently
+    # throw all of that away. ./sync.sh --sync-upstream is the deliberate step
+    # that pulls his repo in and overwrites the vendored copy.
+    head       = (SRC / 'grounding.head.html').read_text(encoding='utf-8')
+    up_css     = (SRC / 'grounding.css').read_text(encoding='utf-8')
+    up_slides  = (SRC / 'grounding.slides.html').read_text(encoding='utf-8')
+    up_engine  = (SRC / 'grounding.engine.js').read_text(encoding='utf-8')
 
     rep_css     = (SRC / 'replica.css').read_text(encoding='utf-8')
     rep_slides  = (SRC / 'replica.slides.html').read_text(encoding='utf-8')
     rep_closing = (SRC / 'replica.closing.html').read_text(encoding='utf-8')
     rep_js      = (SRC / 'replica.js').read_text(encoding='utf-8')
 
-    # a team slide at the end of each of Sai's three papers
-    for desc, anchor, key in INSERTS:
-        if up_slides.count(anchor) != 1:
-            die(f'{desc}: anchor {anchor!r} appears '
-                f'{up_slides.count(anchor)}× upstream (expected 1)')
-        up_slides = up_slides.replace(anchor, team_slide(key) + '\n' + anchor)
-
-    # …and one after REPLICA
-    rep_slides = rep_slides.rstrip('\n') + '\n\n' + team_slide('replica')
-
-    # The loop slide is the last thing said before "thank you", so it goes
-    # immediately ahead of Sai's closing slide rather than after it.
-    if up_slides.count(THANKS_ANCHOR) != 1:
-        die(f'closing slide: anchor {THANKS_ANCHOR!r} appears '
-            f'{up_slides.count(THANKS_ANCHOR)}× upstream (expected 1)')
-    up_slides = up_slides.replace(
-        THANKS_ANCHOR, rep_closing.rstrip('\n') + '\n\n' + THANKS_ANCHOR)
-
     clash = global_classes(up_css) & global_classes(rep_css)
     if clash:
         die('these class names are now defined by BOTH stylesheets and would '
             'fight each other: ' + ', '.join(sorted(clash)) +
             '\n  → rename them in src/replica.css')
+
+    for desc, anchor, key in INSERTS:
+        if up_slides.count(anchor) != 1:
+            die(f'{desc}: anchor {anchor!r} appears {up_slides.count(anchor)}× '
+                f'in src/grounding.slides.html (expected 1)')
+        up_slides = up_slides.replace(anchor, team_slide(key) + '\n' + anchor)
+
+    rep_slides = rep_slides.rstrip('\n') + '\n\n' + team_slide('replica')
+
+    if up_slides.count(THANKS_ANCHOR) != 1:
+        die(f'closing slide: anchor {THANKS_ANCHOR!r} appears '
+            f'{up_slides.count(THANKS_ANCHOR)}× (expected 1)')
+    up_slides = up_slides.replace(
+        THANKS_ANCHOR, rep_closing.rstrip('\n') + '\n\n' + THANKS_ANCHOR)
 
     out = ('<!DOCTYPE html>' + head + '<style>' + up_css.rstrip('\n') + '\n\n'
            + rep_css.rstrip('\n') + '\n</style>\n</head>\n<body>\n'
@@ -240,24 +265,13 @@ def main() -> None:
            + '<script>' + up_engine.rstrip('\n') + '\n</script>\n'
            + '<script>\n' + rep_js.rstrip('\n') + '\n</script>\n'
            + '</body>\n</html>\n')
-
     OUT.write_text(out, encoding='utf-8')
 
-    # keep his figures and interactive apps in step with his markup
-    for name in ('assets', 'interactive'):
-        src, dst = UPSTREAM / name, ROOT / 'grounding' / name
-        if not src.exists():
-            die(f'upstream is missing {name}/')
-        shutil.rmtree(dst, ignore_errors=True)
-        shutil.copytree(src, dst, ignore=shutil.ignore_patterns('.DS_Store'))
-
-    # commented-out slides are still in the source text; count only live ones
     live = lambda t: len(re.findall(r'<section class="slide',
                                     re.sub(r'<!--.*?-->', '', t, flags=re.S)))
     n_rep, n_up = live(rep_slides), live(up_slides)
     print(f'built {OUT.name}: {n_rep} REPLICA + {n_up} grounding '
           f'(incl. team slides and the closing loop) = {n_rep + n_up} slides')
-    print(f'upstream figures synced to grounding/')
 
 
 if __name__ == '__main__':
