@@ -112,9 +112,101 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
 .deck.overview{overflow:auto;background:#0d1117;padding:2vh}
 .deck.overview .slide{display:flex;position:relative;inset:auto;width:32vw;height:18vw;float:left;margin:.5vw;border-radius:8px;overflow:hidden;cursor:pointer;zoom:.32}
 .deck.overview .ifwrap iframe{display:none}
+/* ============================================================
+   STORY MOTION LAYER — ported from the DoCoG spotlight deck
+   (itself ported from the MERIT project page). A slide gains .in
+   one frame after it becomes .on (script at the end of
+   grounding.slides.html), so entrances animate on keypress.
+   ============================================================ */
+@keyframes riseIn{from{opacity:0;transform:translateY(2vh)}to{opacity:1;transform:none}}
+.slide.in .casc{animation:riseIn .55s cubic-bezier(.2,.7,.3,1) both}
+
+/* highlighter mark — wipes in left-to-right */
+.mk{font-weight:700;padding:0 .12em;border-radius:2px;
+  background-image:linear-gradient(180deg,transparent 55%,var(--mkc,#ffe08a) 55%);
+  background-repeat:no-repeat;background-size:0% 100%;
+  transition:background-size .6s cubic-bezier(.4,0,.2,1)}
+.slide.in .mk{background-size:100% 100%}
+.slide.in .mk.d1{transition-delay:.35s} .slide.in .mk.d2{transition-delay:.7s} .slide.in .mk.d3{transition-delay:1.05s}
+.frag .mk{background-size:0% 100%} .frag.show .mk{background-size:100% 100%;transition-delay:.1s}
+.mk.bad{--mkc:#ffc9c9} .mk.blue{--mkc:#bcd9f5} .mk.gd{--mkc:#bdedd0}
+
+/* SVG stroke draw-on */
+.draw{stroke-dasharray:var(--len,700);stroke-dashoffset:var(--len,700);
+  transition:stroke-dashoffset 1s cubic-bezier(.4,0,.2,1)}
+.slide.in .draw{stroke-dashoffset:0}
+.frag.show .draw{stroke-dashoffset:0}
+
+/* grow-from-center with overshoot */
+.pop{transform:scale(0);transform-box:fill-box;transform-origin:center;
+  transition:transform .65s cubic-bezier(.34,1.28,.5,1)}
+.slide.in .pop{transform:scale(1)}
+.frag .pop{transform:scale(0)} .frag.show .pop{transform:scale(1)}
+.slide.in .pop.s1{transition-delay:.06s} .slide.in .pop.s2{transition-delay:.16s}
+.slide.in .pop.s3{transition-delay:.26s} .slide.in .pop.s4{transition-delay:.36s}
+.slide.in .pop.s5{transition-delay:.46s} .slide.in .pop.s6{transition-delay:.56s}
+
+/* problem / solution card pair */
+.mot{border-radius:14px;padding:1.5vh 1.8vh;border:1px solid var(--line);background:#fff;
+  box-shadow:0 2px 10px rgba(10,30,60,.05);display:flex;flex-direction:column;gap:.8vh}
+.mot h4{font-size:2.1vh;font-weight:800;margin:0}
+.mot p{font-size:2vh;line-height:1.45;color:#39485a}
+.mot.prob{background:#fffcfc;border-color:#f7d9da;border-top:3px solid var(--bad)}
+.mot.prob h4{color:var(--bad)} .mot.prob h4::before{content:"⚠  "}
+.mot.sol{background:#fafffa;border-color:#d2e7d2;border-top:3px solid #39a450}
+.mot.sol h4{color:#2f8a42} .mot.sol h4::before{content:"✓  "}
+
+/* key-idea callout */
+.keyidea{background:#fff;border-left:5px solid var(--accent,var(--blue));border-radius:0 14px 14px 0;
+  padding:1.4vh 2vh;box-shadow:0 2px 12px rgba(10,30,60,.07)}
+.keyidea .tag{display:inline-block;background:var(--accent,var(--blue));color:#fff;font-size:1.45vh;
+  font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:.3vh 1vh;border-radius:999px;margin-bottom:.7vh}
+.keyidea p{font-size:2.15vh;line-height:1.4}
+.keyidea b{color:var(--accent,var(--blue))}
+
+/* numbered question header */
+.mnum{flex:0 0 auto;width:4.4vh;height:4.4vh;border-radius:50%;display:grid;place-items:center;
+  font-weight:800;font-size:2.1vh;color:#fff;background:var(--accent,var(--blue))}
+.qhead{display:flex;align-items:center;gap:1vw;margin-bottom:.6vh}
+.qhead h2{margin-bottom:0}
+.term{font-family:ui-monospace,Menlo,monospace}
+
+/* "every step points at the image" — grounded-chain anatomy */
+.gimg{position:relative;line-height:0}
+.gimg img{width:100%;display:block;border:1px solid var(--line);border-radius:10px;box-shadow:0 3px 14px rgba(10,30,60,.12);background:#fff}
+.gmask{position:absolute;border-radius:5px;background:var(--mc);border:2px solid var(--mb);
+  mix-blend-mode:multiply;opacity:0;transform:scale(.55);
+  transition:opacity .35s ease,transform .5s cubic-bezier(.34,1.3,.5,1)}
+.gmask.show{opacity:.9;transform:none}
+.gmask.group{background:none;border:0;opacity:0 !important}
+.grow{display:flex;gap:.8vw;align-items:baseline;position:relative;padding-left:2vw}
+.gdot{position:absolute;left:.2vw;top:50%;width:1.9vh;height:1.9vh;border-radius:50%;
+  background:var(--mb,var(--blue));box-shadow:0 0 0 3px #fff,0 0 0 4.5px var(--mb,var(--blue));
+  transform:translateY(-50%) scale(0);transition:transform .45s cubic-bezier(.34,1.3,.5,1)}
+.grow.lit .gdot{transform:translateY(-50%) scale(1)}
+.grow .msk{background:transparent;transition:background .35s ease}
+.grow.lit .msk{background:var(--mc)}
+.msk{border-radius:5px;padding:0 .42vh;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.glines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;z-index:3}
+.glines path{fill:none;stroke-width:2.4;stroke-linecap:round;
+  stroke-dasharray:var(--len);stroke-dashoffset:var(--len);
+  transition:stroke-dashoffset .75s cubic-bezier(.4,0,.2,1) .12s}
+.glines path.on{stroke-dashoffset:0}
+.glines circle{opacity:0;transition:opacity .3s ease .7s}
+.glines circle.on{opacity:1}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001s !important;animation-iteration-count:1 !important;
+    transition-duration:.001s !important;transition-delay:0s !important}
+}
 @media print{
   html,body{background:#fff}
   .deck .slide{display:flex !important;position:relative;inset:auto;width:100%;height:100vh;page-break-after:always}
   .frag{opacity:1 !important;transform:none !important}
+  .slide .casc{animation:none !important}
+  .mk{background-size:100% 100% !important}
+  .pop{transform:scale(1) !important}
+  .draw{stroke-dashoffset:0 !important}
+  .gmask{opacity:.9 !important;transform:none !important}
   #bar,#count,.navbtns{display:none}
 }

@@ -126,10 +126,13 @@ def team_slide(key: str) -> str:
 # immediately before whatever starts the next section.
 THANKS_ANCHOR = '<!-- ====== 47 · THANKS ====== -->'
 
+# The paper-title cards sit at the END of each paper's run now (the talk is
+# told as a story — the reveal is the punchline), so each team slide anchors
+# right after its paper card, before the next section begins.
 INSERTS = [
-    ('m3 team',    '<!-- ====== 20 · DOCOG DIVIDER ====== -->', 'm3'),
-    ('docog team', '<!-- ====== 33 · DLVL DIVIDER ====== -->',  'docog'),
-    ('dlvl team',  '<!-- ====== 45 · SYNTHESIS ====== -->',     'dlvl'),
+    ('m3 team',    '<!-- ====== ANCHOR · AFTER M3GROUNDER ====== -->', 'm3'),
+    ('docog team', '<!-- ====== ANCHOR · AFTER DOCOG ====== -->',      'docog'),
+    ('dlvl team',  '<!-- ====== ANCHOR · AFTER DLVL ====== -->',       'dlvl'),
 ]
 
 # What src/replica.js and src/replica.css rely on in Sai's engine and CSS.
