@@ -1,6 +1,6 @@
 # Rebuilding the Page — and Grounding It
 
-A single 79-slide, ~1-hour research talk (research-lab visits), in one
+A single 78-slide, ~1-hour research talk (research-lab visits), in one
 self-contained `index.html`. Told as a **story**: slide 2 leads with the
 headline numbers (frontier VLMs in the 30s, our models around 80), each
 paper's section opens from a question and only names the paper at its end —
@@ -21,10 +21,10 @@ grounding. The loop slide, just before the thank-you, draws that cycle.
 | 23–27 | The grounding problem — boxes-as-text, the polygon surgery, divide & conquer | |
 | 28–42 | **M3Grounder** — incl. "why not just chain two tools?" | CVPR 2026 |
 | 43–56 | **DoCoG** — incl. the better-vs-worse-chain DPO story | ECCV 2026 Spotlight |
-| 57–74 | **DocLayout-VL** — "SAM for documents?" + the animated workflow | ECCV 2026 |
-| 75–77 | Synthesis — one recipe · the frontier pushed per axis · lessons | |
-| 78 | The loop closes — REPLICA feeds the grounding models, they feed it back | |
-| 79 | Thank you | |
+| 56–73 | **DocLayout-VL** — opens on the "SAM for documents" one-shot, plus the animated workflow | ECCV 2026 |
+| 74–76 | Synthesis — one recipe · the frontier pushed per axis · lessons | |
+| 77 | The loop closes — REPLICA feeds the grounding models, they feed it back | |
+| 78 | Thank you | |
 
 A team slide closes each of the four papers. Photos go in `team/` — see
 [`team/README.md`](team/README.md) for the filenames; anyone without a photo

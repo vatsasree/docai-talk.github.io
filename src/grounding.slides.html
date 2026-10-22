@@ -923,66 +923,111 @@
 
 <!-- ====== ANCHOR · AFTER DOCOG ====== -->
 
-<!-- ====== L1 · YOU KNOW SAM ====== -->
+<!-- ====== L2 · SAM FOR DOCUMENTS (one-shot) ====== -->
 <section class="slide" style="--accent:var(--dlvl)">
-  <div class="kicker">Paper 3 · Start from something familiar</div>
-  <h2>SAM, in one slide</h2>
-  <div class="svgbox vc" style="flex:1">
-  <svg viewBox="0 0 940 380" style="width:86%" aria-label="SAM: a click on a photo returns a mask for the object">
-    <rect x="30" y="30" width="400" height="300" rx="14" fill="#eaf2f8" stroke="#c9d4de" stroke-width="2"/>
-    <path d="M30 240 L130 150 L220 230 L300 170 L430 270 L430 316 a14 14 0 0 1 -14 14 L44 330 a14 14 0 0 1 -14 -14 z" fill="#cfe0d8"/>
-    <circle cx="360" cy="86" r="26" fill="#ffd28a"/>
+  <div class="kicker">Paper 3 · The whole idea, in one picture</div>
+  <h2><span class="k">SAM for documents</span></h2>
+  <div class="svgbox" style="flex:1;min-height:0">
+  <svg viewBox="0 0 1000 412" style="width:95%" aria-label="SAM segments an object from one click; ours segments every region of a page from one prompt, as a tree">
+    <defs>
+      <marker id="arrSD" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#8a97a5"/></marker>
+      <marker id="arrSDg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#0E7C61"/></marker>
+    </defs>
+
+    <!-- ============ LEFT · SAM ============ -->
+    <rect x="8" y="8" width="478" height="300" rx="16" fill="#fbfcfd" stroke="#dde5ec" stroke-width="2"/>
+    <text x="28" y="38" font-size="15" font-weight="800" fill="#7d8b99">SAM · natural images</text>
+
+    <!-- photo, before -->
     <g>
-      <path d="M150 266 q-6 -34 24 -44 q10 -26 40 -24 q30 2 36 24 q26 2 30 22 q4 18 -12 26 q4 16 -12 22 q-10 16 -34 12 q-26 10 -48 -4 q-22 -6 -24 -34 z" fill="#b0906a"/>
-      <circle cx="196" cy="226" r="4" fill="#4a3826"/><circle cx="226" cy="224" r="4" fill="#4a3826"/>
-      <path d="M206 240 q8 8 18 0" stroke="#4a3826" stroke-width="3" fill="none" stroke-linecap="round"/>
-      <path d="M162 226 q-12 -16 2 -28 l10 14 z" fill="#8a6c4a"/><path d="M252 222 q14 -14 2 -28 l-12 14 z" fill="#8a6c4a"/>
+      <rect x="28" y="52" width="170" height="118" rx="8" fill="#eaf2f8" stroke="#c9d4de" stroke-width="1.5"/>
+      <path d="M28 132 L74 96 L112 128 L146 102 L198 142 L198 162 a8 8 0 0 1 -8 8 L36 170 a8 8 0 0 1 -8 -8 z" fill="#cfe0d8"/>
+      <circle cx="172" cy="74" r="12" fill="#ffd28a"/>
+      <g>
+        <path d="M76 160 q-3 -20 14 -26 q6 -15 24 -14 q18 1 21 14 q15 1 18 13 q2 11 -7 15 q2 10 -7 13 q-6 10 -20 7 q-16 6 -29 -2 q-13 -4 -14 -20 z" fill="#b0906a"/>
+        <circle cx="103" cy="137" r="2.6" fill="#4a3826"/><circle cx="121" cy="136" r="2.6" fill="#4a3826"/>
+        <path d="M109 145 q5 5 11 0" stroke="#4a3826" stroke-width="2" fill="none" stroke-linecap="round"/>
+      </g>
+      <circle cx="113" cy="142" r="7" fill="#fff" stroke="#05539C" stroke-width="3"/>
+      <circle cx="113" cy="142" r="2.4" fill="#05539C"/>
     </g>
+    <text x="113" y="196" text-anchor="middle" font-size="13.5" font-weight="700" fill="#05539C">one click</text>
+
+    <path d="M212 111 h34" stroke="#8a97a5" stroke-width="3" marker-end="url(#arrSD)"/>
+
+    <!-- photo, after -->
+    <g>
+      <rect x="262" y="52" width="170" height="118" rx="8" fill="#eaf2f8" stroke="#c9d4de" stroke-width="1.5"/>
+      <path d="M262 132 L308 96 L346 128 L380 102 L432 142 L432 162 a8 8 0 0 1 -8 8 L270 170 a8 8 0 0 1 -8 -8 z" fill="#cfe0d8"/>
+      <circle cx="406" cy="74" r="12" fill="#ffd28a"/>
+      <path class="pop s2" d="M310 160 q-3 -20 14 -26 q6 -15 24 -14 q18 1 21 14 q15 1 18 13 q2 11 -7 15 q2 10 -7 13 q-6 10 -20 7 q-16 6 -29 -2 q-13 -4 -14 -20 z" fill="#05539C" opacity=".55" stroke="#05539C" stroke-width="2.5"/>
+    </g>
+
+    <text x="247" y="236" text-anchor="middle" font-size="16" fill="#16222e">→ <tspan font-weight="700">that one object</tspan></text>
+
+    <g font-size="12.5" font-weight="700" text-anchor="middle">
+      <rect x="82" y="254" width="106" height="26" rx="13" fill="#eef2f6" stroke="#c9d4de"/><text x="135" y="271" fill="#52616f">promptable</text>
+      <rect x="196" y="254" width="100" height="26" rx="13" fill="#eef2f6" stroke="#c9d4de"/><text x="246" y="271" fill="#52616f">class-free</text>
+      <rect x="304" y="254" width="104" height="26" rx="13" fill="#eef2f6" stroke="#c9d4de"/><text x="356" y="271" fill="#52616f">1B masks</text>
+    </g>
+
+    <!-- ============ RIGHT · OURS ============ -->
+    <rect x="514" y="8" width="478" height="300" rx="16" fill="#f4fbf8" stroke="#0E7C61" stroke-width="2.5"/>
+    <text x="534" y="38" font-size="15" font-weight="800" fill="#0E7C61">Ours · documents</text>
+
+    <!-- page, before -->
+    <g>
+      <rect x="534" y="52" width="130" height="118" rx="8" fill="#fff" stroke="#c9d4de" stroke-width="1.5"/>
+      <rect x="546" y="64" width="106" height="11" rx="3" fill="#33424f"/>
+      <rect x="546" y="82" width="106" height="5" rx="2.5" fill="#d5dee6"/><rect x="546" y="92" width="106" height="5" rx="2.5" fill="#d5dee6"/>
+      <rect x="546" y="106" width="48" height="34" rx="3" fill="#eef2f6" stroke="#dde5ec"/>
+      <rect x="602" y="106" width="50" height="5" rx="2.5" fill="#d5dee6"/><rect x="602" y="116" width="50" height="5" rx="2.5" fill="#d5dee6"/><rect x="602" y="126" width="50" height="5" rx="2.5" fill="#d5dee6"/>
+      <rect x="546" y="150" width="106" height="5" rx="2.5" fill="#d5dee6"/>
+    </g>
+    <rect x="534" y="180" width="130" height="28" rx="14" fill="#e9f2ef" stroke="#0E7C61" stroke-width="2"/>
+    <text x="599" y="198" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1d4437">“parse this page”</text>
+
+    <path d="M676 111 h34" stroke="#0E7C61" stroke-width="3" marker-end="url(#arrSDg)"/>
+
+    <!-- page, after -->
+    <g>
+      <rect x="726" y="52" width="130" height="118" rx="8" fill="#fff" stroke="#c9d4de" stroke-width="1.5"/>
+      <rect class="pop s1" x="738" y="64" width="106" height="11" rx="3" fill="#0E7C61" opacity=".9"/>
+      <rect class="pop s2" x="738" y="82" width="106" height="15" rx="3" fill="#54ab92" opacity=".8"/>
+      <rect class="pop s3" x="738" y="106" width="48" height="34" rx="3" fill="#8cc5b3" opacity=".95"/>
+      <rect class="pop s4" x="794" y="106" width="50" height="25" rx="3" fill="#b5dcce" opacity=".95"/>
+      <rect class="pop s5" x="738" y="150" width="106" height="12" rx="3" fill="#54ab92" opacity=".6"/>
+    </g>
+
+    <!-- and the tree it keeps -->
+    <g class="pop s5">
+      <circle cx="928" cy="62" r="11" fill="#0E7C61"/>
+      <path d="M928 73 v12 M928 85 h-32 v12 M928 85 h32 v12 M960 97 v12 M960 109 h-14 v10 M960 109 h14 v10" stroke="#9db4ab" stroke-width="2" fill="none"/>
+      <circle cx="896" cy="104" r="9" fill="#54ab92"/>
+      <circle cx="960" cy="104" r="9" fill="#54ab92"/>
+      <circle cx="946" cy="126" r="7.5" fill="#8cc5b3"/>
+      <circle cx="974" cy="126" r="7.5" fill="#8cc5b3"/>
+      <text x="928" y="156" text-anchor="middle" font-size="11.5" font-weight="700" fill="#0E7C61">+ the tree</text>
+    </g>
+
+    <text x="753" y="236" text-anchor="middle" font-size="16" fill="#16222e">→ <tspan font-weight="700">every region — and how they nest</tspan></text>
+
+    <g font-size="12.5" font-weight="700" text-anchor="middle">
+      <rect x="543" y="254" width="104" height="26" rx="13" fill="#e9f2ef" stroke="#9db4ab"/><text x="595" y="271" fill="#1d4437">promptable</text>
+      <rect x="655" y="254" width="96" height="26" rx="13" fill="#e9f2ef" stroke="#9db4ab"/><text x="703" y="271" fill="#1d4437">open-set</text>
+      <rect x="759" y="254" width="110" height="26" rx="13" fill="#0E7C61"/><text x="814" y="271" fill="#fff">hierarchical</text>
+      <rect x="877" y="254" width="106" height="26" rx="13" fill="#e9f2ef" stroke="#9db4ab"/><text x="930" y="271" fill="#1d4437">80M masks</text>
+    </g>
+
+    <!-- closing bar -->
     <g class="frag">
-      <circle cx="208" cy="240" r="9" fill="#fff" stroke="#0E7C61" stroke-width="3.5"/>
-      <circle cx="208" cy="240" r="3" fill="#0E7C61"/>
-      <text x="208" y="300" text-anchor="middle" font-size="14.5" font-weight="700" fill="#0E7C61">one click</text>
-    </g>
-    <g class="frag">
-      <path d="M150 266 q-6 -34 24 -44 q10 -26 40 -24 q30 2 36 24 q26 2 30 22 q4 18 -12 26 q4 16 -12 22 q-10 16 -34 12 q-26 10 -48 -4 q-22 -6 -24 -34 z" fill="#0E7C61" opacity=".4" stroke="#0E7C61" stroke-width="3"/>
-    </g>
-    <path d="M448 180 h64" stroke="#8a97a5" stroke-width="3.5" marker-end="url(#arrS)"/>
-    <defs><marker id="arrS" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#8a97a5"/></marker></defs>
-    <g font-size="15">
-      <rect x="530" y="52" width="380" height="74" rx="12" fill="#fff" stroke="#dde5ec" stroke-width="2"/>
-      <text x="550" y="82" font-weight="800" fill="#0E7C61">TASK</text><text x="550" y="106" fill="#39485a">promptable segmentation — point, box, or text in</text>
-      <rect x="530" y="146" width="380" height="74" rx="12" fill="#fff" stroke="#dde5ec" stroke-width="2"/>
-      <text x="550" y="176" font-weight="800" fill="#0E7C61">MODEL</text><text x="550" y="200" fill="#39485a">one promptable segmenter for every object</text>
-      <rect x="530" y="240" width="380" height="74" rx="12" fill="#fff" stroke="#dde5ec" stroke-width="2"/>
-      <text x="550" y="270" font-weight="800" fill="#0E7C61">DATA</text><text x="550" y="294" fill="#39485a">a billion masks, engine-generated</text>
+      <rect x="8" y="330" width="984" height="66" rx="14" fill="#fff" stroke="#0E7C61" stroke-width="2"/>
+      <text x="500" y="358" text-anchor="middle" font-size="17" fill="#16222e">Same recipe — <tspan font-weight="700">promptable task · one model · an engine for the data</tspan>.</text>
+      <text x="500" y="382" text-anchor="middle" font-size="17" fill="#0E7C61" font-weight="700">The one thing documents add: a page is a tree, not a pile of objects.</text>
     </g>
   </svg>
   </div>
-  <p class="small" style="text-align:center">Task → model → data. That recipe changed segmentation for natural images.</p>
-  <div class="footer"><span class="act">Paper 3</span><span>SAM, in one slide</span></div>
-</section>
-
-<!-- ====== L2 · SAM FOR DOCUMENTS? ====== -->
-<section class="slide" style="--accent:var(--dlvl)">
-  <div class="kicker">Paper 3 · The question</div>
-  <h2>So — <span class="k">SAM for documents?</span></h2>
-  <p class="small" style="margin-bottom:.6vh">Run the same recipe on pages instead of photos. Each ingredient has a document-shaped answer:</p>
-  <div class="vc" style="display:flex;flex-direction:column;gap:1.5vh;justify-content:center">
-    <div class="cols casc" style="animation-delay:.05s;grid-template-columns:.42fr 1.58fr;align-items:stretch">
-      <div class="card" style="display:flex;align-items:center;justify-content:center"><h3 style="margin:0;font-size:2.8vh">TASK</h3></div>
-      <div class="card"><p><b>Hierarchical, open-set, promptable layout segmentation</b> — page + prompt in; a <b>tree</b>, a <b>mask per node</b>, an explanation on request.</p></div>
-    </div>
-    <div class="cols casc" style="animation-delay:.25s;grid-template-columns:.42fr 1.58fr;align-items:stretch">
-      <div class="card" style="display:flex;align-items:center;justify-content:center"><h3 style="margin:0;font-size:2.8vh">MODEL</h3></div>
-      <div class="card"><p>A VLM writes the tree, a segmenter draws the masks, and a <b>hierarchy-aware module</b> sits between them.</p></div>
-    </div>
-    <div class="cols casc" style="animation-delay:.45s;grid-template-columns:.42fr 1.58fr;align-items:stretch">
-      <div class="card" style="display:flex;align-items:center;justify-content:center"><h3 style="margin:0;font-size:2.8vh">DATA</h3></div>
-      <div class="card"><p><b>2.5M pages · 80M masks</b> · 400K open-set labels · 40 languages — engine-generated, like SAM’s.</p></div>
-    </div>
-    <p class="small frag" style="text-align:center">Plus <b>one idea SAM never needed</b>: hierarchy.</p>
-  </div>
-  <div class="footer"><span class="act">Paper 3</span><span>The recipe</span></div>
+  <div class="footer"><span class="act">Paper 3</span><span>SAM for documents</span></div>
 </section>
 
 <!-- ====== L3 · WHY NOT TODAY'S TOOLS ====== -->
