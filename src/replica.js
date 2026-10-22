@@ -69,7 +69,7 @@
       { m:'Webcode2m',           v:[0.33,0.45,0.82,0.15,0.29,0.39,0.30] },
       { m:'Waffle VLM Websight', v:[0.14,0.42,0.84,0.11,0.29,0.19,0.22] } ]},
     { name:'Ours', ours:true, rows:[
-      { m:'REPLICA', v:[0.88,0.93,0.20,0.73,0.86,0.93,0.86], ours:true } ]}
+      { m:'Ours', v:[0.88,0.93,0.20,0.73,0.86,0.93,0.86], ours:true } ]}
   ];
   // column 0 is the method name; 1..7 are the metrics above
   const AXES = [
@@ -106,7 +106,7 @@
       g.rows.forEach(r=>{
         const extra = (!g.ours && r !== best) ? ' xtra' : '';
         body += `<tr class="row${extra}${r.ours?' ours':''}" data-g="${gi}" data-m="${r.m}">` +
-                `<td class="m" data-c="0">${r.m}${r.ours?' <b>(ours)</b>':''}</td>` +
+                `<td class="m" data-c="0">${r.m}</td>` +
                 r.v.map((x,i)=>`<td data-c="${i+1}">${x.toFixed(2)}</td>`).join('') + '</tr>';
       });
     });

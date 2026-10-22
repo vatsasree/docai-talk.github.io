@@ -18,38 +18,62 @@
     <path d="M470 42 q10 -26 42 -24 q28 2 38 15 q10 12 -4 24 q-24 18 -60 8 q-26 -8 -16 -23 z" fill="#05539C" opacity=".88"/>
     <text x="512" y="53" text-anchor="middle" font-size="15" fill="#fff" font-weight="700">mask</text>
   </svg>
-  <h1 style="margin-top:1.6vh;font-size:5.4vh">Rebuilding the Page — <span class="k">and Grounding It</span></h1>
-  <p class="sub" style="margin-top:1.2vh">Visually faithful reconstruction, and precise grounding with hierarchical context</p>
-  <div class="papers" style="margin-top:1.8vh">
+  <h1 style="margin-top:1.8vh;font-size:6vh">Rebuilding and Grounding <span class="k">Documents</span></h1>
+  <p class="sub" style="margin-top:1.4vh">Faithful reconstruction · precise grounding with hierarchical context</p>
+  <div class="papers" style="margin-top:2.6vh">
     <div class="paper"><h4>REPLICA</h4><span>ICDAR 2026 <b class="oral">Oral</b></span></div>
     <div class="paper"><h4>M3Grounder</h4><span>CVPR 2026</span></div>
     <div class="paper"><h4>DoCoG</h4><span>ECCV 2026 <b class="oral">Spotlight</b></span></div>
     <div class="paper"><h4>DocLayout-VL</h4><span>ECCV 2026</span></div>
   </div>
-  <div class="card" style="margin-top:2vh;padding:1.4vh 2vh">
-    <svg viewBox="0 0 1060 96" style="width:62vw;max-width:1000px" role="img" aria-label="Ours vs the best frontier VLM on three tasks">
-      <g font-size="14.5" fill="#33424f">
-        <text x="6" y="22">grounded answers (F1)</text>
-        <rect x="236" y="10" width="64" height="14" rx="4" fill="#a5b2be"/><text x="306" y="22" fill="#5b6b7a">Gemini 43.4</text>
-        <rect x="236" y="28" width="118" height="14" rx="4" fill="#05539C"/><text x="360" y="40" font-weight="800" fill="#05539C">ours 79.0</text>
-        <text x="446" y="22">grounded reasoning (GQ)</text>
-        <rect x="700" y="10" width="8" height="14" rx="3" fill="#a5b2be"/><text x="714" y="22" fill="#5b6b7a">GPT-5 4.8</text>
-        <rect x="700" y="28" width="122" height="14" rx="4" fill="#7C3AED"/><text x="828" y="40" font-weight="800" fill="#7C3AED">ours 81.9</text>
-        <text x="6" y="74">whole-page layout (OS)</text>
-        <rect x="236" y="62" width="56" height="14" rx="4" fill="#a5b2be"/><text x="298" y="74" fill="#5b6b7a">Gemini 37.2</text>
-        <rect x="236" y="80" width="119" height="14" rx="4" fill="#0E7C61"/><text x="361" y="92" font-weight="800" fill="#0E7C61">ours 79.4</text>
-        <text x="446" y="74">page reconstruction (OS)</text>
-        <rect x="700" y="62" width="87" height="14" rx="4" fill="#a5b2be"/><text x="793" y="74" fill="#5b6b7a">GPT-5 0.58</text>
-        <rect x="700" y="80" width="129" height="14" rx="4" fill="#B7791F"/><text x="835" y="92" font-weight="800" fill="#B7791F">ours 0.86</text>
-      </g>
-    </svg>
-    <p class="tiny" style="text-align:center;margin-top:.5vh">frontier VLMs vs our 8–9B models, on our four benchmarks — <b>this talk is about how</b></p>
-  </div>
-  <div class="logos" style="margin-top:1.6vh">
+  <div class="logos" style="margin-top:2.6vh">
     <span><img src="grounding/assets/logo_bharatgen.png" alt="BharatGen"></span>
     <span><img src="grounding/assets/logo_iiith.jpg" alt="IIIT Hyderabad"></span>
   </div>
   </div>
+</section>
+
+<!-- ====== 2 · WHERE WE STAND ====== -->
+<section class="slide" style="--accent:var(--replica)">
+  <div class="kicker">Before we start</div>
+  <h2>Our models vs <span class="k">frontier VLMs</span></h2>
+  <div class="vc" style="display:flex;flex-direction:column;gap:2vh;justify-content:center">
+    <div class="chartcard" style="padding:2.6vh 3vh">
+      <svg viewBox="0 0 980 340" style="width:100%;max-height:54vh" role="img" aria-label="Ours versus the best frontier VLM on four benchmarks">
+        <g font-size="19" fill="#16222e">
+          <text x="4" y="32" font-weight="700">Page reconstruction</text>
+          <text x="4" y="52" font-size="14.5" fill="#8a97a5">VFDR-Bench · overall</text>
+          <rect class="draw" style="--len:340" x="300" y="16" width="212" height="22" rx="5" fill="#c3ceda"/>
+          <text x="524" y="33" font-size="17" fill="#5b6b7a">GPT-5 &nbsp;0.58</text>
+          <rect class="draw" style="--len:340" x="300" y="46" width="314" height="22" rx="5" fill="#B7791F"/>
+          <text x="626" y="63" font-size="17" font-weight="800" fill="#B7791F">Ours &nbsp;0.86</text>
+
+          <text x="4" y="114" font-weight="700">Grounded answers</text>
+          <text x="4" y="134" font-size="14.5" fill="#8a97a5">GDQA-Bench · F1</text>
+          <rect class="draw" style="--len:340" x="300" y="98" width="158" height="22" rx="5" fill="#c3ceda"/>
+          <text x="470" y="115" font-size="17" fill="#5b6b7a">Gemini 2.5 Pro &nbsp;43.4</text>
+          <rect class="draw" style="--len:340" x="300" y="128" width="289" height="22" rx="5" fill="#05539C"/>
+          <text x="601" y="145" font-size="17" font-weight="800" fill="#05539C">Ours &nbsp;79.0</text>
+
+          <text x="4" y="196" font-weight="700">Grounded reasoning</text>
+          <text x="4" y="216" font-size="14.5" fill="#8a97a5">DoCoG-Bench · grounding</text>
+          <rect class="draw" style="--len:340" x="300" y="180" width="18" height="22" rx="5" fill="#c3ceda"/>
+          <text x="330" y="197" font-size="17" fill="#5b6b7a">GPT-5 &nbsp;4.8</text>
+          <rect class="draw" style="--len:340" x="300" y="210" width="299" height="22" rx="5" fill="#7C3AED"/>
+          <text x="611" y="227" font-size="17" font-weight="800" fill="#7C3AED">Ours &nbsp;81.9</text>
+
+          <text x="4" y="278" font-weight="700">Whole-page layout</text>
+          <text x="4" y="298" font-size="14.5" fill="#8a97a5">HOPLay-Bench · overall</text>
+          <rect class="draw" style="--len:340" x="300" y="262" width="136" height="22" rx="5" fill="#c3ceda"/>
+          <text x="448" y="279" font-size="17" fill="#5b6b7a">Gemini 3 Pro &nbsp;37.2</text>
+          <rect class="draw" style="--len:340" x="300" y="292" width="290" height="22" rx="5" fill="#0E7C61"/>
+          <text x="602" y="309" font-size="17" font-weight="800" fill="#0E7C61">Ours &nbsp;79.4</text>
+        </g>
+      </svg>
+    </div>
+    <p class="small" style="text-align:center">Four benchmarks, four of our models — all <b>8–9B parameters</b>. The rest of the talk is <b>how</b>.</p>
+  </div>
+  <div class="footer"><span class="act">Overview</span><span>Where we stand</span></div>
 </section>
 
 <!-- ====== R1 · WHAT IS VFDR (ladder) ====== -->
@@ -101,7 +125,7 @@
 <!-- ====== R2 · REQUIREMENTS (axes) ====== -->
 <section class="slide" style="--accent:var(--replica)">
   <div class="kicker">Part 1 · Naming the axes</div>
-  <h2>Requirements for visually faithful reconstruction</h2>
+  <h2>Four axes of reconstruction</h2>
   <div class="cols" style="grid-template-columns:repeat(4,1fr);flex:0 0 auto;align-items:stretch;margin-top:auto">
     <div class="card frag" style="--accent:var(--m3)"><h3>Text Extraction</h3>
       <p style="font-style:italic;color:var(--muted);margin-bottom:.8vh">Are the words right?</p>
@@ -125,7 +149,7 @@
 <!-- ====== R3 · TEASER (paper Fig. 1A, live) ====== -->
 <section class="slide iframe-slide" data-embednav="nav" style="--accent:var(--replica)">
   <div class="kicker">Part 1 · Where the field stands</div>
-  <h2 style="font-size:3.4vh">Everyone recovers text. <span class="k">Nobody recovers the page.</span></h2>
+  <h2 style="font-size:3.4vh">How existing methods compare</h2>
   <div class="ifwrap"><iframe data-src="replica/index.html?embed=teaser&part=compare" loading="lazy" title="Teaser comparison (paper Fig. 1A)"></iframe></div>
   <div class="ifbar">
     <span class="small">Paper Fig. 1A, live — pick a method to compare against the input, then use ‹ › to continue</span>
@@ -138,7 +162,7 @@
 <!-- ====== R4 · RADAR (paper Fig. 1B, live) ====== -->
 <section class="slide iframe-slide" style="--accent:var(--replica)">
   <div class="kicker">Part 1 · All four axes at once</div>
-  <h2 style="font-size:3.4vh">The baselines are <span class="k">lopsided</span></h2>
+  <h2 style="font-size:3.4vh">All four axes at once</h2>
   <div class="ifwrap"><iframe data-src="replica/index.html?embed=teaser&part=radar&hide=.method-pills,.teaser-i > .tp-label" loading="lazy" title="Fidelity radar (paper Fig. 1B)"></iframe></div>
   <div class="ifbar">
     <span class="small">Paper Fig. 1B, live — every baseline collapses on at least one axis; only REPLICA stays near the rim on all four</span>
@@ -150,7 +174,7 @@
 <!-- ====== R5 · FORMAT TABLE (paper Table 1, live) ====== -->
 <section class="slide iframe-slide" style="--accent:var(--replica)">
   <div class="kicker">Part 1 · Comparing representations</div>
-  <h2 style="font-size:3.4vh">Generic HTML <em style="font-style:normal;color:var(--muted)">permits</em> fidelity. FID-HTML <span class="k">guarantees</span> it.</h2>
+  <h2 style="font-size:3.4vh">Comparison with existing representations</h2>
   <div class="ifwrap"><iframe data-src="replica/index.html?embed=fidhtml&part=table" loading="lazy" title="Format comparison (paper Table 1)"></iframe></div>
   <div class="ifbar">
     <span class="small">Paper Table 1, live — position and style are <b>mandatory, inline, per element</b>, so fidelity is a property of the format</span>
@@ -162,7 +186,7 @@
 <!-- ====== R6 · FID-HTML ANATOMY (paper Fig. 3, live) ====== -->
 <section class="slide iframe-slide" data-embednav="nav" style="--accent:var(--replica)">
   <div class="kicker">Part 1 · What FID-HTML encodes</div>
-  <h2 style="font-size:3.4vh">Six aspects of FID-HTML — <span class="k">click one</span> to see where it lives</h2>
+  <h2 style="font-size:3.4vh">Six aspects of FID-HTML</h2>
   <div class="ifwrap"><iframe data-src="replica/index.html?embed=fidhtml&part=figure" loading="lazy" title="FID-HTML anatomy (paper Fig. 3)"></iframe></div>
   <div class="ifbar">
     <span class="small">Paper Fig. 3, live — <kbd>←</kbd> <kbd>→</kbd> step through the six dimensions; the code shown is the page’s real source</span>
@@ -175,29 +199,29 @@
 <!-- ====== R7 · AGENTS VS TOOLS ====== -->
 <section class="slide" style="--accent:var(--replica)">
   <div class="kicker">Part 1 · The vocabulary, precisely</div>
-  <h2>Agents <span class="k">reason</span>. Tools <span class="k">execute</span>.</h2>
+  <h2>Agents and tools</h2>
   <div class="atgrid" style="margin-top:auto">
     <div class="atcard" style="--ac:var(--m3)">
       <div class="hd"><h3>A tool</h3><span class="sub">deterministic</span></div>
-      <p class="big">Fixed function. Same input, same output. No judgment.</p>
-      <p>A layout detector always returns boxes the same way. It cannot notice that it merged two columns, or that the “table” it found is really a form.</p>
+      <p class="big">Fixed function. Same input, same output.</p>
+      <p>A detector cannot notice that it merged two columns, or that the “table” it found is really a form.</p>
       <div class="ex">detectors · OCR · table structure<br>reading order · font fitting · background restoration</div>
     </div>
     <div class="atcard" style="--ac:var(--docog)">
       <div class="hd"><h3>An agent</h3><span class="sub">reasons</span></div>
       <p class="big">Decides which tool, when — and whether the result is good enough.</p>
-      <p>Then retries, overrides an upstream label, reroutes to a different specialist, or injects a correction. It is allowed to <b>disagree with what it was given</b>.</p>
+      <p>It can retry, reroute, or override what it was given.</p>
       <div class="ex">labelling · grouping · routing<br>specialist generation · reading order · reflection</div>
     </div>
   </div>
-  <div class="callout frag" style="margin-top:1.8vh;margin-bottom:auto">The goal is that the <b>rendered page</b> matches the source — not that the markup looks plausible. Judging the render is what forces a <b>Refine</b> stage to exist at all.</div>
+  <div class="callout frag" style="margin-top:1.8vh;margin-bottom:auto">The goal: the <b>rendered page</b> matches the source — not that the markup looks plausible.</div>
   <div class="footer"><span class="act">REPLICA</span><span>Why agentic</span></div>
 </section>
 
 <!-- ====== R8 · THE PIPELINE, STAGE BY STAGE ====== -->
 <section class="slide" id="stagesSlide" style="--accent:var(--replica)">
   <div class="kicker">Part 1 · Four questions, four stages</div>
-  <h2>The agentic framework, <span class="k">stage by stage</span></h2>
+  <h2>The framework, stage by stage</h2>
   <div class="stagerow" id="stageRow" style="margin-top:1.2vh">
     <div class="stagecard" style="--sc:#05539C">
       <div class="sc-h"><span class="sc-n">1</span><span class="sc-t">Segment</span><span class="sc-q">“How do we divide the page into meaningful pieces?”</span></div>
@@ -253,7 +277,7 @@
 <!-- ====== R9 · PIPELINE DEMO (live) ====== -->
 <section class="slide iframe-slide" data-embednav="demo" style="--accent:var(--replica)">
   <div class="kicker">Part 1 · The pipeline on a real page</div>
-  <h2 style="font-size:3.4vh">Segment → Localize → Assemble → Refine, <span class="k">running live</span></h2>
+  <h2 style="font-size:3.4vh">The framework on a real page</h2>
   <div class="ifwrap"><iframe data-src="replica/index.html?embed=demo&doc=magazine&autoplay=1&rate=1.5" data-fit="1560 900" loading="lazy" title="REPLICA pipeline demo"></iframe></div>
   <div class="ifbar">
     <span class="small">Plays automatically at 1.5× · <kbd>←</kbd> <kbd>→</kbd> take over and walk it beat by beat · the deck moves on once the last stage finishes</span>
@@ -315,7 +339,7 @@
 <!-- ====== R12 · MAIN RESULTS (interactive) ====== -->
 <section class="slide" id="resSlide" style="--accent:var(--replica)">
   <div class="kicker">Part 1 · VFDR-Bench, all 16 methods &nbsp;·&nbsp; <span class="tiny" style="color:var(--faint)">click a category to expand it</span></div>
-  <h2>Everyone passes text. <span class="k">The field collapses on position.</span></h2>
+  <h2>Results on VFDR-Bench</h2>
   <div class="rwrap"><table class="rtab" id="resTable"></table></div>
   <div class="rnote">
     <div class="rlegend" id="resLegend"><span>weakest</span><i style="background:#fdeceb"></i><i style="background:#fdf1dd"></i><i style="background:#eef5ef"></i><i style="background:#dcefe1"></i><span>strongest</span></div>
@@ -323,7 +347,7 @@
     <div class="rline frag" data-ax="LS"><span class="t">Logical structure</span><span class="d">Tree edit distance is passable for the better systems, but nothing about it says <i>where</i> anything is.</span></div>
     <div class="rline bad frag" data-ax="PS"><span class="t">Physical structure</span><span class="d">Total collapse: best baseline LPS <b>0.22</b>, best GPS <b>0.43</b>, most under 0.30. Nothing lands where it belongs.</span></div>
     <div class="rline frag" data-ax="VF"><span class="t">Visual fidelity</span><span class="d">GPT-5 reaches <b style="color:var(--ink)">0.86</b> and Gemini <b style="color:var(--ink)">0.82</b> — good-looking pages that are <i>not the source page</i>, with GPS of 0.43 and 0.31.</span></div>
-    <div class="rline win frag" data-ax="OS"><span class="t">REPLICA</span><span class="d">Position <b>0.73 / 0.86</b> and visual fidelity <b>0.93</b>, for <b>0.86</b> overall. The claim is not that we win a column — it is that there is <b>no weak column</b>.</span></div>
+    <div class="rline win frag" data-ax="OS"><span class="t">Ours</span><span class="d">Position <b>0.73 / 0.86</b> and visual fidelity <b>0.93</b>, for <b>0.86</b> overall. The claim is not that we win a column — it is that there is <b>no weak column</b>.</span></div>
   </div>
   <div class="footer"><span class="act">REPLICA</span><span>Evaluation · paper Table 2</span></div>
 </section>
@@ -331,7 +355,7 @@
 <!-- ====== R13 · ABLATIONS ====== -->
 <section class="slide" style="--accent:var(--replica)">
   <div class="kicker">Part 1 · One ablation worth seeing</div>
-  <h2>The agents are the <span class="k">jump</span></h2>
+  <h2>What each component adds</h2>
   <div class="cols vc" style="grid-template-columns:1.15fr .85fr;align-items:center">
     <div class="chartcard">
       <h3>Framework ablation — each row adds one component</h3>
@@ -357,7 +381,7 @@
 <!-- ====== R14 · QUALITATIVE ====== -->
 <section class="slide" id="qualSlide" style="--accent:var(--replica)">
   <div class="kicker">Part 1 · Spot the difference <span class="qdots" id="qualDots" style="display:inline-flex;vertical-align:middle"></span></div>
-  <h2>Source scan <span class="k">vs</span> live FID-HTML render</h2>
+  <h2>Source scan vs our render</h2>
   <div class="qual" style="margin-top:1vh">
     <div class="ladcol">
       <div class="qbox"><img id="qualImg" src="replica/static/images/qual/IndicDLP_1.png" alt="Original scanned document"></div>
@@ -365,7 +389,7 @@
     </div>
     <div class="ladcol">
       <div class="qbox"><iframe id="qualFrame" src="replica/static/images/qual/IndicDLP_1_corrected.html" title="REPLICA FID-HTML render" scrolling="no"></iframe></div>
-      <div class="lcap"><b style="color:var(--replica)">REPLICA</b> — live FID-HTML: real DOM, selectable text, inline CSS</div>
+      <div class="lcap"><b style="color:var(--replica)">Ours</b> — live FID-HTML: real DOM, selectable text</div>
     </div>
   </div>
   <span class="steps"><i class="frag"></i><i class="frag"></i><i class="frag"></i></span>
@@ -375,7 +399,7 @@
 <!-- ====== R15 · LIMITATIONS ====== -->
 <section class="slide" style="--accent:var(--replica)">
   <div class="kicker">Part 1 · Being honest about the edges</div>
-  <h2>Where REPLICA <span class="x">still falls short</span></h2>
+  <h2>Limitations</h2>
   <div class="probs" style="margin-top:auto;margin-bottom:auto">
     <div class="prob frag"><h3>Single-page only</h3><p>No multi-page consistency yet — structures spanning a page break, such as continued tables, can <b>fragment</b>.</p></div>
     <div class="prob frag"><h3>Font identification</h3><p>Bold, italic, underline and colour are recovered reliably; <b>exact font families are not</b>. Large-scale multilingual font recognition is still open.</p></div>
@@ -387,7 +411,7 @@
 <!-- ====== R16 · DOWNSTREAM (live) ====== -->
 <section class="slide iframe-slide" style="--accent:var(--replica)">
   <div class="kicker">Part 1 · Beyond reconstruction</div>
-  <h2 style="font-size:3.4vh">What FID-HTML <span class="k">unlocks</span></h2>
+  <h2 style="font-size:3.4vh">Applications</h2>
   <div class="ifwrap"><iframe data-src="replica/index.html?embed=downstream" loading="lazy" title="Downstream applications (paper Fig. 2)"></iframe></div>
   <div class="ifbar">
     <span class="small">Paper Fig. 2, live · hover to zoom — translation, preservation, indexing, <b>grounded document intelligence</b>, chunking, position-aware retrieval</span>
@@ -399,7 +423,7 @@
 <!-- ====== R17 · HANDOFF / DATA GENERATOR ====== -->
 <section class="slide" style="--accent:var(--replica)">
   <div class="kicker">Part 1 · The bigger picture</div>
-  <h2>REPLICA as a <span class="k">data generator</span></h2>
+  <h2>A data generator for what comes next</h2>
   <div class="svgbox" style="flex:1;min-height:0;margin-top:.6vh">
   <svg viewBox="0 0 1000 330" aria-label="A page becomes FID-HTML, complete on all four axes">
     <defs><marker id="aH" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#8a97a5"/></marker></defs>
@@ -415,7 +439,7 @@
     <rect x="58" y="258" width="96" height="6" rx="3" fill="#c7d2dd"/>
     <text x="132" y="312" text-anchor="middle" font-size="17" fill="#5b6b7a">scanned or born-digital</text>
     <path d="M252 164 h96" stroke="#8a97a5" stroke-width="3.5" marker-end="url(#aH)"/>
-    <text x="300" y="150" text-anchor="middle" font-size="21" font-weight="800" fill="#B7791F">REPLICA</text>
+    <text x="300" y="150" text-anchor="middle" font-size="21" font-weight="800" fill="#B7791F">Ours</text>
     <rect x="372" y="40" width="594" height="248" rx="14" fill="#fff" stroke="#B7791F" stroke-width="3"/>
     <rect x="372" y="40" width="594" height="10" rx="5" fill="#B7791F"/>
     <text x="669" y="96" text-anchor="middle" font-size="34" font-weight="800" fill="#1E3A5F">FID-HTML</text>
@@ -433,7 +457,7 @@
     <text x="669" y="312" text-anchor="middle" font-size="19" fill="#5b6b7a">the highest-fidelity text representation of that page</text>
   </svg>
   </div>
-  <div class="callout" style="margin-top:.8vh">A page that is <b>complete on all four axes</b> is no longer just a reconstruction — it is <b>labelled data</b>. Millions of them, without a single hand annotation.<br><span class="small" style="color:var(--muted)">That is what the next three systems are trained on.</span></div>
+  <div class="callout" style="margin-top:.8vh">Complete on all four axes, a page is no longer a reconstruction — it is <b>labelled data</b>. Millions, with no hand annotation.<br><span class="small" style="color:var(--muted)">That is what the next three systems train on.</span></div>
   <div class="footer"><span class="act">REPLICA</span><span>Handoff</span></div>
 </section>
 
