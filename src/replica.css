@@ -265,3 +265,12 @@
 .carostate.on{color:var(--accent)}
 .carohint{flex:0 0 auto;text-align:center;font-size:1.5vh;color:var(--muted);margin-top:.5vh}
 .carohint kbd{font-size:1.4vh;padding:.1vh .6vh}
+
+/* ---- team grid inside the paper cards (dark divider background) ---- */
+.divider .team{max-width:94vw;gap:1.2vh 1vw;padding:2.6vh 0 .4vh;flex-wrap:nowrap}
+.divider .person{width:11.4vw}
+.divider .person .ph{width:6.6vw;height:6.6vw;border-color:#fff;background:rgba(255,255,255,.16);box-shadow:none}
+.divider .person .ini{color:#fff}
+.divider .person figcaption{color:#fff;font-size:1.7vh;font-weight:600}
+.divider .person sup{color:#ffd98a}
+.divider .teamfoot{color:#ffffffcc;font-size:1.9vh;padding:.4vh 0 0}

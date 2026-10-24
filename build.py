@@ -98,6 +98,37 @@ TEAM = {
 }
 
 
+SITES = {'replica': 'replica-agents.github.io', 'm3': 'm3grounder.github.io',
+         'docog': 'docog-eccv.github.io', 'dlvl': 'doclayoutvl.github.io'}
+AFFIL = {'docog': 'IIIT Hyderabad · BharatGen'}
+
+
+def team_people(key: str) -> tuple[str, str]:
+    paper, accent, members = TEAM[key]
+    people = []
+    for name, slug, mark in members:
+        initials = ''.join(w[0] for w in name.split()[:2]).upper()
+        people.append(
+            f'<figure class="person">'
+            f'<span class="ph"><span class="ini">{initials}</span>'
+            f'<img src="team/{slug}" alt="{name}" loading="lazy"'
+            f' onerror="this.remove()"></span>'
+            f'<figcaption>{name}<sup>{mark}</sup></figcaption></figure>')
+    marks = [m for _, _, m in members if m]
+    note = ' · '.join(f'{m} equal contribution' for m in sorted(set(marks)))
+    return ''.join(people), note
+
+
+def team_block(key: str) -> str:
+    """The team grid that sits INSIDE each paper's title card (one slide per
+    paper: card + photos together, so the credits never interrupt the talk)."""
+    people, note = team_people(key)
+    affil = AFFIL.get(key, 'BharatGen · IIIT Hyderabad')
+    return (f'<div class="team">{people}</div>\n'
+            f'  <div class="teamfoot">{note} &nbsp;·&nbsp; {affil} '
+            f'&nbsp;·&nbsp; {SITES[key]}</div>')
+
+
 def team_slide(key: str) -> str:
     paper, accent, members = TEAM[key]
     people = []
@@ -122,9 +153,9 @@ def team_slide(key: str) -> str:
             f'</section>\n')
 
 
-# Team slides for Sai's three papers go at the end of each paper's run, i.e.
-# immediately before whatever starts the next section.
-THANKS_ANCHOR = '<!-- ====== 47 · THANKS ====== -->'
+# The loop slide (what flows between REPLICA and the grounding models) goes
+# right after the "one recipe" synthesis, before "What made this possible".
+LOOP_ANCHOR = '<!-- ====== S1b · WHAT MADE IT POSSIBLE ====== -->'
 
 # The paper-title cards sit at the END of each paper's run now (the talk is
 # told as a story — the reveal is the punchline), so each team slide anchors
@@ -245,19 +276,24 @@ def main() -> None:
             'fight each other: ' + ', '.join(sorted(clash)) +
             '\n  → rename them in src/replica.css')
 
-    for desc, anchor, key in INSERTS:
-        if up_slides.count(anchor) != 1:
-            die(f'{desc}: anchor {anchor!r} appears {up_slides.count(anchor)}× '
+    # team grids live inside the paper cards: one placeholder per paper
+    for key in ('m3', 'docog', 'dlvl'):
+        ph = f'<!-- TEAM:{key} -->'
+        if up_slides.count(ph) != 1:
+            die(f'team {key}: placeholder {ph!r} appears {up_slides.count(ph)}× '
                 f'in src/grounding.slides.html (expected 1)')
-        up_slides = up_slides.replace(anchor, team_slide(key) + '\n' + anchor)
+        up_slides = up_slides.replace(ph, team_block(key))
+    ph = '<!-- TEAM:replica -->'
+    if rep_slides.count(ph) != 1:
+        die(f'team replica: placeholder {ph!r} appears {rep_slides.count(ph)}× '
+            f'in src/replica.slides.html (expected 1)')
+    rep_slides = rep_slides.replace(ph, team_block('replica'))
 
-    rep_slides = rep_slides.rstrip('\n') + '\n\n' + team_slide('replica')
-
-    if up_slides.count(THANKS_ANCHOR) != 1:
-        die(f'closing slide: anchor {THANKS_ANCHOR!r} appears '
-            f'{up_slides.count(THANKS_ANCHOR)}× (expected 1)')
+    if up_slides.count(LOOP_ANCHOR) != 1:
+        die(f'closing slide: anchor {LOOP_ANCHOR!r} appears '
+            f'{up_slides.count(LOOP_ANCHOR)}× (expected 1)')
     up_slides = up_slides.replace(
-        THANKS_ANCHOR, rep_closing.rstrip('\n') + '\n\n' + THANKS_ANCHOR)
+        LOOP_ANCHOR, rep_closing.rstrip('\n') + '\n\n' + LOOP_ANCHOR)
 
     out = ('<!DOCTYPE html>' + head + '<style>' + up_css.rstrip('\n') + '\n\n'
            + rep_css.rstrip('\n') + '\n</style>\n</head>\n<body>\n'
@@ -274,7 +310,7 @@ def main() -> None:
                                     re.sub(r'<!--.*?-->', '', t, flags=re.S)))
     n_rep, n_up = live(rep_slides), live(up_slides)
     print(f'built {OUT.name}: {n_rep} REPLICA + {n_up} grounding '
-          f'(incl. team slides and the closing loop) = {n_rep + n_up} slides')
+          f'(team grids inside the paper cards; incl. the loop slide) = {n_rep + n_up} slides')
 
 
 if __name__ == '__main__':

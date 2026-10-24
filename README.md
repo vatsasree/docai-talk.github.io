@@ -1,34 +1,39 @@
 # Rebuilding the Page — and Grounding It
 
-A single 88-slide, ~1-hour research talk (research-lab visits), in one
-self-contained `index.html`. Told as a **story**: slide 2 leads with the
-headline numbers (frontier VLMs in the 30s, our models around 80), each
-paper's section opens from a question and only names the paper at its end —
-the paper-title card and the team slide close each section. Before that
-reveal, charts and tables label our systems **"Ours"**, never the paper name.
+A single 83-slide, ~1-hour research talk (research-lab visits), in one
+self-contained `index.html`. Told as a **story**: slide 2 opens on the gap
+(GPT-5 answers our questions almost as well as we do and can point at the
+evidence five times in a hundred), each paper's section opens from a question
+and only names the paper at its end, where the title card carries the team.
+Before that reveal, charts and tables label our systems **"Ours"**, never the
+paper name.
 
 The story runs **REPLICA first**: the page has to be *representable* before it
-can be *queryable*. REPLICA produces FID-HTML — layout, geometry and style at
-scale, without hand labels — which is what the grounding models are then built
-on; and those models in turn sharpen REPLICA's own segmentation, ordering and
-grounding. The loop slide, just before the thank-you, draws that cycle.
+can be *queryable*. REPLICA produces FID-HTML, which is what two of the three
+grounding models are trained on; slide 22 is the bridge that says so, plants
+the "how do the pointers talk to each other" thread and the "is there a SAM
+for documents?" question, and the loop slide (77) draws what actually flows
+between the four systems.
 
 | Slides | Part | |
 |---|---|---|
 | 1 | Title | |
-| 2 | **Ours vs frontier VLMs** — the headline numbers, up front | |
-| 3–22 | **REPLICA** (the ICDAR talk, ~15 min) | ICDAR 2026 Oral |
-| 23–27 | The grounding problem — boxes-as-text, the polygon surgery, divide & conquer | |
-| 28–44 | **M3Grounder** — "why not chain two tools?", LISA acknowledged, Direct-VLM vs Fid-HTML data engine | CVPR 2026 |
-| 45–62 | **DoCoG** — the $27.50 bill (why CoT *and* grounding), worked K=13 output, DPO derivation, sorted ablations | ECCV 2026 Spotlight |
-| 63–80 | **DocLayout-VL** — "SAM for documents" one-shot, the animated workflow | ECCV 2026 |
-| 81–86 | Synthesis — one recipe · what made it possible (data · compute · BharatGen) · design choices with receipts · where it still breaks · the frontier · lessons | |
-| 87 | The loop — which outputs trained which model, what flows back, what is next | |
-| 88 | Thank you | |
+| 2 | **Ours vs frontier VLMs** — the gap, with grounding defined on the slide | |
+| 3–21 | **REPLICA** (the ICDAR talk, ~15 min); 21 is the title card with the team | ICDAR 2026 Oral |
+| 22 | Bridge — from rebuilding to grounding | |
+| 23–26 | The grounding problem — boxes-as-text, the polygon surgery, where boxes break | |
+| 27–42 | **M3Grounder** — requirements, "why not chain two tools?", LISA, Direct-VLM vs Fid-HTML engine | CVPR 2026 |
+| 43–59 | **DoCoG** — the uncheckable chain, the $27.50 bill, worked K=13 output, DPO in two lines, drift + anchor, sorted ablations | ECCV 2026 Spotlight |
+| 60–75 | **DocLayout-VL** — "SAM for documents", the tagged tree, HGC, architecture vs data on the hierarchy track | ECCV 2026 |
+| 76 | Three papers, one recipe | |
+| 77 | The loop — which outputs trained which model, what flows back, what is next | |
+| 78–82 | What made it possible · design choices and evidence · where it still breaks · the frontier · lessons with receipts | |
+| 83 | Thank you | |
 
-A team slide closes each of the four papers. Photos go in `team/` — see
+Each paper's title card carries its team (build.py injects the grid at a
+`<!-- TEAM:key -->` placeholder). Photos go in `team/` — see
 [`team/README.md`](team/README.md) for the filenames; anyone without a photo
-shows their initials, so the slide never looks unfinished.
+shows their initials, so the card never looks unfinished.
 
 One engine, one design system, one continuous slide count. The grounding half
 carries a story motion layer (cascading entrances, highlighter wipes, SVG
@@ -39,6 +44,13 @@ Hyderabad, 2026): the medical-bill example (§1.1.2, Fig 1.2 — the crop lives
 in `grounding/assets/docog_bill*.png`), the Fig 3.1 worked output (§3.2.4), the DPO/anchor derivation (§3.3.2) and the
 dense-page error analysis (§5.3.1) on the limits slide. Every number on those slides was checked
 against the thesis and the live `.tex` of the papers.
+
+The deck was rehearsed with two narrating agents and four cold-audience
+note-takers (MS students who had never heard of document grounding). The
+bridges on slides 2, 3, 22 and 60, the on-slide definitions (grounding, GIM,
+HGC, the reward metrics, the benchmark tracks), the hooks ($27.50, the River
+Thames polygon, "hands up if you trust chain B") and the merged credit slides
+all come from that pass.
 
 ## Presenting
 
