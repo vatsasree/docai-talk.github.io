@@ -8,10 +8,10 @@
 
   /* ---------- the fidelity ladder ---------- */
   const LADDER = [
-    '<b>Level 0 · text only.</b> Every word is present and in order — but the heading, the table and the total are indistinguishable, and the output has <i>no page</i>: its shape does not match the original at all.',
-    '<b>Level 1 · + logical structure.</b> Headings, table rows and columns are marked up. Machine-readable — but still no geometry, so the page shape still does not match.',
-    '<b>Level 2 · + physical position.</b> The page now has the <b>same dimensions as the source</b>, the two-column body is back, and numbers align under their headers. You can finally tell which number belongs to which item.',
-    '<b>Level 3 · + visual fidelity.</b> Typography, weight, colour — and the strikethrough and the OVERDUE stamp. The reconstruction is now <b>identical to the original</b>: only here does the cancelled line read as cancelled.'
+    '<b>Level 0 · text only.<\/b> Every word is present and in order — but the heading, the table and the total are indistinguishable, and the output has <i>no page<\/i>: its shape does not match the original at all.',
+    '<b>Level 1 · + logical structure.<\/b> Headings, table rows and columns are marked up. Machine-readable — but still no geometry, so the page shape still does not match.',
+    '<b>Level 2 · + physical position.<\/b> The page now has the <b>same dimensions as the source<\/b>, the two-column body is back, and numbers align under their headers. You can finally tell which number belongs to which item.',
+    '<b>Level 3 · + visual fidelity.<\/b> Typography, weight, colour — and the strikethrough and the OVERDUE stamp. The reconstruction is now <b>identical to the original<\/b>: only here does the cancelled line read as cancelled.'
   ];
   (function buildLadder(){
     const src = $('#ladderSrc'), box = $('#ladderBox');
@@ -83,16 +83,16 @@
     const t = $('#resTable'); if(!t) return;
     const head =
       '<thead>' +
-      '<tr><th class="gh m"></th>' +
-      '<th class="gh b" colspan="2" data-ax="TE">Text extraction</th>' +
-      '<th class="gh b" data-ax="LS">Logical structure</th>' +
-      '<th class="gh b" colspan="2" data-ax="PS">Physical structure</th>' +
-      '<th class="gh b" data-ax="VF">Visual fidelity</th>' +
-      '<th class="gh b" data-ax="OS">Overall</th></tr>' +
-      '<tr class="hd2"><th class="m">Method</th>' +
+      '<tr><th class="gh m"><\/th>' +
+      '<th class="gh b" colspan="2" data-ax="TE">Text extraction<\/th>' +
+      '<th class="gh b" data-ax="LS">Logical structure<\/th>' +
+      '<th class="gh b" colspan="2" data-ax="PS">Physical structure<\/th>' +
+      '<th class="gh b" data-ax="VF">Visual fidelity<\/th>' +
+      '<th class="gh b" data-ax="OS">Overall<\/th><\/tr>' +
+      '<tr class="hd2"><th class="m">Method<\/th>' +
       ['WRR ↑','CRR ↑','NTED ↓','LPS ↑','GPS ↑','VFS ↑','OS ↑']
-        .map((c,i)=>`<th data-c="${i+1}">${c}</th>`).join('') +
-      '</tr></thead>';
+        .map((c,i)=>`<th data-c="${i+1}">${c}<\/th>`).join('') +
+      '<\/tr><\/thead>';
     let body = '<tbody>';
     GROUPS.forEach((g,gi)=>{
       // rank within the category so the collapsed view shows its best system
@@ -100,17 +100,17 @@
       const best = order[0];
       if(!g.ours){
         body += `<tr class="cat" data-g="${gi}"><td colspan="8">` +
-                `<span class="car">▸</span>${g.name}` +
-                `<span class="cn">${g.rows.length} systems — showing best</span></td></tr>`;
+                `<span class="car">▸<\/span>${g.name}` +
+                `<span class="cn">${g.rows.length} systems — showing best<\/span><\/td><\/tr>`;
       }
       g.rows.forEach(r=>{
         const extra = (!g.ours && r !== best) ? ' xtra' : '';
         body += `<tr class="row${extra}${r.ours?' ours':''}" data-g="${gi}" data-m="${r.m}">` +
-                `<td class="m" data-c="0">${r.m}</td>` +
-                r.v.map((x,i)=>`<td data-c="${i+1}">${x.toFixed(2)}</td>`).join('') + '</tr>';
+                `<td class="m" data-c="0">${r.m}<\/td>` +
+                r.v.map((x,i)=>`<td data-c="${i+1}">${x.toFixed(2)}<\/td>`).join('') + '<\/tr>';
       });
     });
-    t.innerHTML = head + body + '</tbody>';
+    t.innerHTML = head + body + '<\/tbody>';
     t.querySelectorAll('tr.cat').forEach(tr=>{
       tr.addEventListener('click', e=>{
         e.stopPropagation();
@@ -187,7 +187,7 @@
   ];
   (function buildDots(){
     const d = $('#qualDots'); if(!d) return;
-    d.innerHTML = QUAL.map((_,i)=>`<span class="qdot${i?'':' on'}"></span>`).join('');
+    d.innerHTML = QUAL.map((_,i)=>`<span class="qdot${i?'':' on'}"><\/span>`).join('');
   })();
   // The source scan and the FID-HTML render must occupy the *same rectangle* on
   // screen. A size difference between them reads as a layout error in the
@@ -346,7 +346,7 @@
     VFDR.forEach(([g, items], gi) => {
       const b = document.createElement('button');
       b.className = 'carotab';
-      b.innerHTML = g + '<span class="n">' + items.length + '</span>';
+      b.innerHTML = g + '<span class="n">' + items.length + '<\/span>';
       b.addEventListener('click', e => { e.stopPropagation(); go(flat.findIndex(f => f.gi === gi)); });
       tabs.appendChild(b);
     });
@@ -390,8 +390,8 @@
         el.style.transform = 'translate(-50%,-50%) translateX(' + (s.dx * W * 0.5) + 'px) scale(' + s.sc + ')';
       });
       const f = flat[cur];
-      cap.innerHTML = '<span class="t">' + f.title + '</span><span class="d">' + f.detail +
-                      '</span><span class="ix">' + (cur + 1) + ' / ' + flat.length + '</span>';
+      cap.innerHTML = '<span class="t">' + f.title + '<\/span><span class="d">' + f.detail +
+                      '<\/span><span class="ix">' + (cur + 1) + ' / ' + flat.length + '<\/span>';
       [...tabs.children].forEach((t, gi) => t.classList.toggle('on', gi === f.gi));
       [...dots.children].forEach((d, i) => d.classList.toggle('on', i === cur));
     }
@@ -422,7 +422,7 @@
       let z = document.getElementById('caroZoom');
       if(!z){
         z = document.createElement('div'); z.id = 'caroZoom';
-        z.innerHTML = '<img><div class="z-cap"></div>';
+        z.innerHTML = '<img><div class="z-cap"><\/div>';
         z.addEventListener('click', () => { z.classList.remove('on'); hoverPaused = false; restart(); });
         document.body.appendChild(z);
       }

@@ -1,6 +1,6 @@
 # Rebuilding the Page — and Grounding It
 
-A single 87-slide, ~1-hour research talk (research-lab visits), in one
+A single 88-slide, ~1-hour research talk (research-lab visits), in one
 self-contained `index.html`. Told as a **story**: slide 2 leads with the
 headline numbers (frontier VLMs in the 30s, our models around 80), each
 paper's section opens from a question and only names the paper at its end —
@@ -22,9 +22,9 @@ grounding. The loop slide, just before the thank-you, draws that cycle.
 | 28–44 | **M3Grounder** — "why not chain two tools?", LISA acknowledged, Direct-VLM vs Fid-HTML data engine | CVPR 2026 |
 | 45–62 | **DoCoG** — the $27.50 bill (why CoT *and* grounding), worked K=13 output, DPO derivation, sorted ablations | ECCV 2026 Spotlight |
 | 63–80 | **DocLayout-VL** — "SAM for documents" one-shot, the animated workflow | ECCV 2026 |
-| 81–85 | Synthesis — one recipe · what made it possible (data · compute · BharatGen) · design choices with receipts · the frontier · lessons | |
-| 86 | The loop — which outputs trained which model, what flows back, what is next | |
-| 87 | Thank you | |
+| 81–86 | Synthesis — one recipe · what made it possible (data · compute · BharatGen) · design choices with receipts · where it still breaks · the frontier · lessons | |
+| 87 | The loop — which outputs trained which model, what flows back, what is next | |
+| 88 | Thank you | |
 
 A team slide closes each of the four papers. Photos go in `team/` — see
 [`team/README.md`](team/README.md) for the filenames; anyone without a photo
@@ -36,8 +36,8 @@ draw-ons) ported from the DoCoG spotlight deck.
 
 Several DoCoG slides are lifted from the DoCoG MS thesis (Rachakonda, IIIT
 Hyderabad, 2026): the medical-bill example (§1.1.2, Fig 1.2 — the crop lives
-in `grounding/assets/docog_bill*.png`), the Fig 3.1 worked output (§3.2.4) and
-the DPO/anchor derivation (§3.3.2). Every number on those slides was checked
+in `grounding/assets/docog_bill*.png`), the Fig 3.1 worked output (§3.2.4), the DPO/anchor derivation (§3.3.2) and the
+dense-page error analysis (§5.3.1) on the limits slide. Every number on those slides was checked
 against the thesis and the live `.tex` of the papers.
 
 ## Presenting

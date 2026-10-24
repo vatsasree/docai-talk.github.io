@@ -1335,7 +1335,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
 <!-- ====== M3c · LISA ====== -->
 <section class="slide" style="--accent:var(--m3)">
   <div class="kicker">Paper 1 · Credit where it is due</div>
-  <h2>The plug comes from <span class="k">LISA</span>. Everything around it is new.</h2>
+  <h2>What comes from <span class="k">LISA</span>, and what is new</h2>
   <div class="cols vc" style="grid-template-columns:.9fr 1.1fr;align-items:stretch;gap:1.6vw">
     <div class="card casc" style="animation-delay:.05s;border-top:5px solid #7d8b99">
       <h3 style="color:#52616f">LISA · Lai et al., CVPR 2024</h3>
@@ -1357,7 +1357,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
     <div class="card casc" style="animation-delay:.2s;border-top:5px solid var(--m3)">
       <h3>What documents forced us to add</h3>
       <div style="display:flex;flex-direction:column;gap:.7vh;font-size:1.9vh;line-height:1.4">
-        <div><b>Transfer fails.</b> These models “do not transfer well to documents, where interpretation depends on text layout, reading order, and the semantic structure of graphical elements.” So: a <b>document data engine</b> — 2M grounded QA, no hand-drawn masks.</div>
+        <div><b>Transfer fails.</b> These models “do not transfer well to documents, where interpretation depends on text layout, reading order, and the semantic structure of graphical elements.” We measured it: LISA++ and GLaMM, even <i>fine-tuned on our data</i>, reach <b>25.4 / 35.2</b> F1 on GDQA-Bench (supplement) — ours 79.0. So: a <b>document data engine</b>, 2M grounded QA, no hand-drawn masks.</div>
         <div><b>Evidence is plural.</b> One answer, K pointers — K chosen by the model.</div>
         <div><b>Evidence has scope.</b> Three nested masks per pointer: phrase ⊂ line ⊂ block.</div>
         <div><b>Text has priors.</b> Don’t bleed off the text; finer masks nest in coarser ones — as losses.</div>
@@ -1376,7 +1376,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
     <img src="grounding/assets/m3_model.png" alt="M3Grounder architecture" style="max-height:60vh">
   </figure>
   <p class="small" style="text-align:center;margin-top:.8vh">The VLM answers normally, dropping a <span class="tok">[GROUND]</span> after each cited span. Each token’s hidden state prompts the segmenter → <b>three nested masks</b>.</p>
-  <p class="tiny" style="text-align:center;margin-top:.4vh">backbones: InternVL3.5-8B / Qwen3-VL-8B · segmenter: SAM, backbone-agnostic · grounding adds <b>+63 ms</b> per sample</p>
+  <p class="tiny" style="text-align:center;margin-top:.4vh">backbones: InternVL3.5-8B / Qwen3-VL-8B · segmenter: SAM, backbone-agnostic · grounding adds <b>+63 ms</b> per sample (supplement)</p>
   <div class="footer"><span class="act">Paper 1</span><span>Architecture</span></div>
 </section>
 
@@ -1691,7 +1691,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
     </div>
     <div class="keyidea frag" style="--accent:var(--docog);max-width:86vw;margin:0 auto">
       <span class="tag">step-wise grounded chain-of-thought</span>
-      <p>The chain is the <b>what</b>. The masks are the <b>where</b>. <b>Both, on every step</b> — and the evidence can be a cell, a wedge, a legend, an arrow.</p>
+      <p>The chain is the <b>what</b>. The masks are the <b>where</b>. <b>Both, on every step that reads the page</b> — and the evidence can be a cell, a wedge, a legend, an arrow.</p>
     </div>
   </div>
   <svg class="glines" aria-hidden="true"></svg>
@@ -1721,7 +1721,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
         <div class="mot prob"><h4>Chain-of-thought alone</h4><p>“the cost is $50” can’t be checked without knowing <b>which cell</b> it read</p></div>
       </div>
       <div class="keyidea frag" style="--accent:var(--docog)"><span class="tag">on DoCoG-Bench · answer / grounding</span>
-        <p>CoT only <b>78.1 / —</b> &nbsp;·&nbsp; answer-only grounding <b>73.3 / 69.3</b> &nbsp;·&nbsp; CoT + answer grounding <b>81.5 / 77.8</b> &nbsp;·&nbsp; every step grounded <b>84.1 / 80.3</b> &nbsp;·&nbsp; + preference training <b>85.8 / 81.9</b></p></div>
+        <p>CoT only <b>78.1 / —</b> &nbsp;·&nbsp; answer-only grounding <b>73.3 / 69.3</b> &nbsp;·&nbsp; CoT + answer grounding <b>81.5 / 77.8</b> &nbsp;·&nbsp; every reading step grounded <b>84.1 / 80.3</b> &nbsp;·&nbsp; + preference training <b>85.8 / 81.9</b></p></div>
     </div>
   </div>
   <div class="footer"><span class="act">Paper 2</span><span>Why both</span></div>
@@ -1768,7 +1768,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
     <div style="display:flex;flex-direction:column;gap:1.1vh;justify-content:center">
       <div class="card frag"><h3>One image pass</h3><p class="small">the segmenter encodes the page <b>once</b>; every one of the 13 masks is decoded from that</p></div>
       <div class="card frag"><h3>Text and graphics in one step</h3><p class="small">S₁ grounds labels <i>and</i> wedges — a label and its wedge inform each other inside GIM</p></div>
-      <div class="stat frag"><div class="v" style="font-size:3.4vh">+15% · +23%</div><div class="l">latency · memory over the bare backbone (580 vs 505 ms, 1×H100)</div></div>
+      <div class="stat frag"><div class="v" style="font-size:3.4vh">+15% · +23%</div><div class="l">latency · memory over the bare backbone (580 vs 505 ms, 1×H100, supplement)</div></div>
     </div>
   </div>
   <div class="footer"><span class="act">Paper 2</span><span>Worked example</span></div>
@@ -1790,7 +1790,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
 <section class="slide" style="--accent:var(--docog)">
   <div class="kicker">Paper 2 · The new piece</div>
   <h2>Keeping the pointers consistent</h2>
-  <p class="small" style="margin-bottom:.4vh">One pointer per answer was easy. A chain drops one in <b>every step</b> — and S₂’s masks must line up with S₁’s column and S<sub>f</sub>’s total.</p>
+  <p class="small" style="margin-bottom:.4vh">One pointer per answer was easy. A chain drops one in <b>every step that reads the page</b> — and S₂’s masks must line up with S₁’s column and S<sub>f</sub>’s total.</p>
   <div class="cols vc" style="grid-template-columns:1.3fr .7fr">
     <div class="svgbox">
     <svg viewBox="0 0 720 330" style="width:100%">
@@ -2598,6 +2598,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   </svg>
   </div>
   <p class="small" style="text-align:center">The data splits mirror the stages: FlatLay-25M → HierLay-40M → PromptLay-15M.</p>
+  <p class="small" style="text-align:center;margin-top:-1.2vh"><b>The receipt:</b> train the three jointly instead and the overall score drops 79.4 → 76.3, hierarchy 77.5 → 68.7.</p>
   </div>
   <div class="footer"><span class="act">Paper 3</span><span>Curriculum</span></div>
 </section>
@@ -2628,6 +2629,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
     <div style="display:flex;flex-direction:column;gap:1.1vh;justify-content:center">
       <div class="stat"><div class="v" style="font-size:4vh">6.9 vs 77.5</div><div class="l">hierarchy quality, Gemini 3 Pro vs ours</div></div>
       <div class="card frag"><h3>Zero-shot on classic benchmarks</h3><p class="small">PubLayNet 96.5 · M6Docs 76.9 · IndicDLP 77.5 mAP — never trained on these, competitive with per-dataset detectors</p></div>
+      <div class="card"><h3>Not a judge artifact</h3><p class="small">The prompt track re-scored by two other LLM judges: 17-model ranking ρ = 0.97 / 0.96, ours first under all three.</p></div>
     </div>
   </div>
   <div class="footer"><span class="act">Paper 3</span><span>Main results</span></div>
@@ -2666,7 +2668,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
         <path d="M732 229 v-125" stroke="#b42318" stroke-width="2" marker-end="url(#arr8)" stroke-dasharray="6 4"/>
         <defs><marker id="arr8" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#b42318"/></marker></defs>
       </svg>
-      <p class="small" style="text-align:center;margin-top:.4vh"><b>Both — but architecture wins.</b> 4× the data never buys back what the architecture adds.</p>
+      <p class="small" style="text-align:center;margin-top:.4vh"><b>Both — but architecture wins.</b> On the hierarchy track, adding HGC is worth +11 to +13 points at every data scale; doubling the data is worth +5.</p>
     </div>
   </div>
   <div class="footer"><span class="act">Paper 3</span><span>Architecture vs data</span></div>
@@ -2749,7 +2751,8 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
         <div><b>325K</b> docs · <b>1.5M</b> step-wise QA · <b>20K</b> preference pairs</div>
         <div><b>2.5M</b> pages · <b>80M</b> masks · 40 languages</div>
       </div>
-      <p class="small" style="margin-top:.7vh">Verified by construction, then by judges, then by hand — 33,500 masks checked.</p>
+      <table class="abl" style="font-size:1.6vh;margin-top:.8vh"><thead><tr><th>same 8B backbone</th><th>zero-shot</th><th>+ our data</th><th>+ our model</th></tr></thead><tbody><tr><td>M3Grounder · F1<sub>g</sub></td><td>12.8</td><td>60.6</td><td><b>79.0</b></td></tr><tr><td>DoCoG · GQ<sub>fa</sub></td><td>5.5</td><td>61.9</td><td><b>81.9</b></td></tr><tr><td>DocLayout-VL · OS</td><td>31.6</td><td>45.8</td><td><b>79.4</b></td></tr></tbody></table>
+      <p class="small" style="margin-top:.6vh">The data moves the backbone first; the architecture takes it the rest of the way. Verified by construction, LLM judges, then by hand — 33,500 DoCoG masks; 30 annotators on GDQA-Bench; VFDR fully expert-annotated.</p>
     </div>
     <div class="card casc" style="animation-delay:.2s;border-top:6px solid var(--blue)">
       <h3>Compute — what it bought</h3>
@@ -2773,7 +2776,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
 <!-- ====== S1c · DESIGN CHOICES AND THEIR RECEIPTS ====== -->
 <section class="slide" style="--accent:var(--blue)">
   <div class="kicker">Stepping back</div>
-  <h2>Design choices, with the receipts</h2>
+  <h2>Design choices and their evidence</h2>
   <div class="vc" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.2vw;align-items:stretch">
     <div class="card casc" style="animation-delay:.05s;border-top:6px solid var(--m3)">
       <h3 style="color:var(--m3)">M3Grounder · grounding F1</h3>
@@ -2805,6 +2808,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
           <tr><td>tree-sparse attention (HGC)</td><td>58.3 → <b>77.5</b></td></tr>
           <tr><td>structure-aware losses</td><td>72.3 → <b>77.5</b></td></tr>
           <tr><td>mask head, not box regression <span class="tiny">(OS)</span></td><td>66.1 → <b>76.8</b></td></tr>
+          <tr><td>…on curved regions <span class="tiny">(CurveLay Om)</span></td><td>39.7 → <b>87.9</b></td></tr>
           <tr><td>4× more data, same architecture <span class="tiny">(OS)</span></td><td>61.2 → 66.1</td></tr>
           <tr><td>same data, full architecture <span class="tiny">(OS)</span></td><td>66.1 → <b>79.4</b></td></tr>
         </tbody>
@@ -2813,6 +2817,37 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   </div>
   <p class="small frag" style="text-align:center;margin-top:.8vh">None of these is a trick. Each is a document prior or a training constraint that natural-image grounders never needed — and each one is measured.</p>
   <div class="footer"><span class="act">Synthesis</span><span>Design choices</span></div>
+</section>
+
+<!-- ====== S1d · WHERE IT STILL BREAKS ====== -->
+<section class="slide" style="--accent:var(--blue)">
+  <div class="kicker">Stepping back · honestly</div>
+  <h2>Where it still breaks</h2>
+  <div class="vc" style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:1.1vw;align-items:stretch">
+    <div class="card casc" style="animation-delay:.05s;border-top:6px solid var(--replica)">
+      <h3 style="color:var(--replica)">REPLICA</h3>
+      <p class="small"><b>One page at a time.</b> Tables and figures that span pages fragment.</p>
+      <p class="small" style="margin-top:.6vh">Bold, italic and colour come back; the <b>font itself</b> is not identified.</p>
+    </div>
+    <div class="card casc" style="animation-delay:.2s;border-top:6px solid var(--m3)">
+      <h3 style="color:var(--m3)">M3Grounder</h3>
+      <p class="small"><b>Grounds the answer, not the reasoning.</b> The evidence behind intermediate steps stays hidden.</p>
+      <p class="small" style="margin-top:.6vh">That gap is what DoCoG was built to close.</p>
+    </div>
+    <div class="card casc" style="animation-delay:.35s;border-top:6px solid var(--docog)">
+      <h3 style="color:var(--docog)">DoCoG</h3>
+      <p class="small"><b>Dense pages.</b> Questions needing more than 30 evidence regions:</p>
+      <div class="stat" style="padding:.8vh;margin-top:.6vh"><div class="v" style="font-size:3vh;color:#b42318">25% → 52%</div><div class="l">of the benchmark → of the errors</div></div>
+      <p class="small" style="margin-top:.6vh">Answers hold; masks degrade as the sequence grows.</p>
+    </div>
+    <div class="card casc" style="animation-delay:.5s;border-top:6px solid var(--dlvl)">
+      <h3 style="color:var(--dlvl)">DocLayout-VL</h3>
+      <p class="small"><b>Single page, long trees.</b> Element-dense pages serialize into long sequences — slower, and generation can slip.</p>
+      <p class="small" style="margin-top:.6vh">Cross-page structure is not modelled.</p>
+    </div>
+  </div>
+  <p class="small" style="text-align:center;margin-top:.8vh">Each of these is written down in the paper or the thesis — and each is the next thing to build.</p>
+  <div class="footer"><span class="act">Synthesis</span><span>Limits</span></div>
 </section>
 
 <!-- ====== S2 · THE FRONTIER ====== -->
@@ -2892,39 +2927,39 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
     <text x="165" y="146" text-anchor="middle" font-size="30" font-weight="800" fill="#B7791F">REPLICA</text>
     <text x="165" y="174" text-anchor="middle" font-size="16" fill="#5b6b7a">rebuilds a page as</text>
     <text x="165" y="206" text-anchor="middle" font-size="23" font-weight="800" fill="#1E3A5F">Fid-HTML</text>
-    <text x="165" y="232" text-anchor="middle" font-size="13" fill="#8a97a5">ID-tagged · ordered · geometry · style</text>
+    <text x="165" y="232" text-anchor="middle" font-size="13" fill="#8a97a5">text · tree · order · geometry · style</text>
     <text x="165" y="266" text-anchor="middle" font-size="12.5" fill="#5b6b7a">Segment: 2 detectors · Hi-SAM · 2 agents</text>
 
     <!-- models -->
-    <rect x="690" y="40" width="290" height="80" rx="14" fill="#fff" stroke="#05539C" stroke-width="2.5"/>
-    <text x="835" y="72" text-anchor="middle" font-size="22" font-weight="800" fill="#05539C">M3Grounder</text>
-    <text x="835" y="98" text-anchor="middle" font-size="13.5" fill="#5b6b7a">140K pages via Fid-HTML → 2M QA</text>
-    <rect x="690" y="140" width="290" height="80" rx="14" fill="#fff" stroke="#7C3AED" stroke-width="2.5"/>
-    <text x="835" y="172" text-anchor="middle" font-size="22" font-weight="800" fill="#7C3AED">DoCoG</text>
-    <text x="835" y="198" text-anchor="middle" font-size="13.5" fill="#5b6b7a">100K pages via Fid-HTML → step-wise QA</text>
-    <rect x="690" y="240" width="290" height="80" rx="14" fill="#fff" stroke="#0E7C61" stroke-width="2.5"/>
-    <text x="835" y="272" text-anchor="middle" font-size="22" font-weight="800" fill="#0E7C61">DocLayout-VL</text>
-    <text x="835" y="298" text-anchor="middle" font-size="13.5" fill="#5b6b7a">same recipe, with a zero-shot VLM</text>
+    <rect x="670" y="40" width="310" height="80" rx="14" fill="#fff" stroke="#05539C" stroke-width="2.5"/>
+    <text x="825" y="72" text-anchor="middle" font-size="22" font-weight="800" fill="#05539C">M3Grounder</text>
+    <text x="825" y="98" text-anchor="middle" font-size="12.5" fill="#5b6b7a">140K docs via Fid-HTML → about half of 2M QA</text>
+    <rect x="670" y="140" width="310" height="80" rx="14" fill="#fff" stroke="#7C3AED" stroke-width="2.5"/>
+    <text x="825" y="172" text-anchor="middle" font-size="22" font-weight="800" fill="#7C3AED">DoCoG</text>
+    <text x="825" y="198" text-anchor="middle" font-size="12.5" fill="#5b6b7a">100K docs + 75K tables via Fid-HTML → CoT QA</text>
+    <rect x="670" y="240" width="310" height="80" rx="14" fill="#fff" stroke="#0E7C61" stroke-width="2.5"/>
+    <text x="825" y="272" text-anchor="middle" font-size="22" font-weight="800" fill="#0E7C61">DocLayout-VL</text>
+    <text x="825" y="298" text-anchor="middle" font-size="12.5" fill="#5b6b7a">same recipe, with a zero-shot VLM</text>
 
     <!-- forward edges -->
-    <text x="494" y="56" text-anchor="middle" font-size="16" font-weight="800" fill="#B7791F">the LLM writes QA citing element IDs</text>
-    <text x="470" y="76" text-anchor="middle" font-size="13" fill="#5b6b7a">IDs map back to Hi-SAM masks — no coordinate is generated</text>
-    <path d="M305 150 C 440 150, 540 86, 684 80" fill="none" stroke="#B7791F" stroke-width="4" marker-end="url(#aG3)"/>
-    <path d="M305 186 C 440 186, 540 180, 684 180" fill="none" stroke="#B7791F" stroke-width="4" marker-end="url(#aG3)"/>
-    <path d="M305 224 C 440 224, 540 280, 684 280" fill="none" stroke="#B7791F" stroke-width="2.5" stroke-dasharray="8 6" marker-end="url(#aG3)"/>
-    <text x="494" y="238" text-anchor="middle" font-size="12.5" fill="#8a97a5">the idea, not the engine</text>
+    <text x="470" y="56" text-anchor="middle" font-size="16" font-weight="800" fill="#B7791F">the LLM writes QA citing element IDs</text>
+    <text x="430" y="76" text-anchor="middle" font-size="12.5" fill="#5b6b7a">engines add IDs → IDs map back to Hi-SAM masks, not coordinates</text>
+    <path d="M305 150 C 440 150, 540 86, 664 80" fill="none" stroke="#B7791F" stroke-width="4" marker-end="url(#aG3)"/>
+    <path d="M305 186 C 440 186, 540 180, 664 180" fill="none" stroke="#B7791F" stroke-width="4" marker-end="url(#aG3)"/>
+    <path d="M305 224 C 440 224, 540 280, 664 280" fill="none" stroke="#B7791F" stroke-width="2.5" stroke-dasharray="8 6" marker-end="url(#aG3)"/>
+    <text x="470" y="214" text-anchor="middle" font-size="12.5" fill="#8a97a5">the idea, not the engine</text>
 
     <!-- return edge -->
-    <path d="M684 312 C 560 362, 420 362, 305 300" fill="none" stroke="#0E7C61" stroke-width="3" stroke-dasharray="9 6" marker-end="url(#aGr3)"/>
+    <path d="M664 312 C 560 362, 420 362, 305 300" fill="none" stroke="#0E7C61" stroke-width="3" stroke-dasharray="9 6" marker-end="url(#aGr3)"/>
     <text x="494" y="372" text-anchor="middle" font-size="14.5" font-weight="800" fill="#0E7C61">next: one model replaces the ensemble</text>
     <text x="494" y="390" text-anchor="middle" font-size="12.5" fill="#5b6b7a">the tree REPLICA assembles from detectors + agents is what DocLayout-VL emits in one pass</text>
 
     <!-- shared segmenters -->
     <rect x="30" y="404" width="950" height="34" rx="10" fill="#f2f6fa" stroke="#dde5ec" stroke-width="2"/>
-    <text x="505" y="426" text-anchor="middle" font-size="13.5" fill="#33424f"><tspan font-weight="800">Shared segmenters:</tspan> Hi-SAM draws the text masks for REPLICA and both QA engines · SAM 3 draws the graphical masks for DoCoG and DocLayout-VL</text>
+    <text x="505" y="426" text-anchor="middle" font-size="12.5" fill="#33424f"><tspan font-weight="800">Shared segmenters:</tspan> Hi-SAM — text masks for REPLICA and both QA engines · SAM 3 — graphical masks in the DoCoG and DocLayout-VL data engines</text>
   </svg>
   </div>
-  <div class="callout" style="margin-top:.6vh">Solid arrows are in the papers; the dashed return is the integration not yet shipped. And the models answer over the pages REPLICA represents — the <b>grounded document intelligence</b> REPLICA’s own paper lists as its application.</div>
+  <div class="callout" style="margin-top:.6vh">Solid arrows are in the papers (DoCoG’s, in its supplement); the element IDs are added by the QA engines on top of Fid-HTML; the dashed return is the integration not yet shipped. And the models answer over the pages REPLICA represents — the <b>grounded document intelligence</b> REPLICA’s own paper lists as its application.</div>
 </section>
 
 <!-- ====== 47 · THANKS ====== -->
@@ -3093,10 +3128,10 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
 
   /* ---------- the fidelity ladder ---------- */
   const LADDER = [
-    '<b>Level 0 · text only.</b> Every word is present and in order — but the heading, the table and the total are indistinguishable, and the output has <i>no page</i>: its shape does not match the original at all.',
-    '<b>Level 1 · + logical structure.</b> Headings, table rows and columns are marked up. Machine-readable — but still no geometry, so the page shape still does not match.',
-    '<b>Level 2 · + physical position.</b> The page now has the <b>same dimensions as the source</b>, the two-column body is back, and numbers align under their headers. You can finally tell which number belongs to which item.',
-    '<b>Level 3 · + visual fidelity.</b> Typography, weight, colour — and the strikethrough and the OVERDUE stamp. The reconstruction is now <b>identical to the original</b>: only here does the cancelled line read as cancelled.'
+    '<b>Level 0 · text only.<\/b> Every word is present and in order — but the heading, the table and the total are indistinguishable, and the output has <i>no page<\/i>: its shape does not match the original at all.',
+    '<b>Level 1 · + logical structure.<\/b> Headings, table rows and columns are marked up. Machine-readable — but still no geometry, so the page shape still does not match.',
+    '<b>Level 2 · + physical position.<\/b> The page now has the <b>same dimensions as the source<\/b>, the two-column body is back, and numbers align under their headers. You can finally tell which number belongs to which item.',
+    '<b>Level 3 · + visual fidelity.<\/b> Typography, weight, colour — and the strikethrough and the OVERDUE stamp. The reconstruction is now <b>identical to the original<\/b>: only here does the cancelled line read as cancelled.'
   ];
   (function buildLadder(){
     const src = $('#ladderSrc'), box = $('#ladderBox');
@@ -3168,16 +3203,16 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
     const t = $('#resTable'); if(!t) return;
     const head =
       '<thead>' +
-      '<tr><th class="gh m"></th>' +
-      '<th class="gh b" colspan="2" data-ax="TE">Text extraction</th>' +
-      '<th class="gh b" data-ax="LS">Logical structure</th>' +
-      '<th class="gh b" colspan="2" data-ax="PS">Physical structure</th>' +
-      '<th class="gh b" data-ax="VF">Visual fidelity</th>' +
-      '<th class="gh b" data-ax="OS">Overall</th></tr>' +
-      '<tr class="hd2"><th class="m">Method</th>' +
+      '<tr><th class="gh m"><\/th>' +
+      '<th class="gh b" colspan="2" data-ax="TE">Text extraction<\/th>' +
+      '<th class="gh b" data-ax="LS">Logical structure<\/th>' +
+      '<th class="gh b" colspan="2" data-ax="PS">Physical structure<\/th>' +
+      '<th class="gh b" data-ax="VF">Visual fidelity<\/th>' +
+      '<th class="gh b" data-ax="OS">Overall<\/th><\/tr>' +
+      '<tr class="hd2"><th class="m">Method<\/th>' +
       ['WRR ↑','CRR ↑','NTED ↓','LPS ↑','GPS ↑','VFS ↑','OS ↑']
-        .map((c,i)=>`<th data-c="${i+1}">${c}</th>`).join('') +
-      '</tr></thead>';
+        .map((c,i)=>`<th data-c="${i+1}">${c}<\/th>`).join('') +
+      '<\/tr><\/thead>';
     let body = '<tbody>';
     GROUPS.forEach((g,gi)=>{
       // rank within the category so the collapsed view shows its best system
@@ -3185,17 +3220,17 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
       const best = order[0];
       if(!g.ours){
         body += `<tr class="cat" data-g="${gi}"><td colspan="8">` +
-                `<span class="car">▸</span>${g.name}` +
-                `<span class="cn">${g.rows.length} systems — showing best</span></td></tr>`;
+                `<span class="car">▸<\/span>${g.name}` +
+                `<span class="cn">${g.rows.length} systems — showing best<\/span><\/td><\/tr>`;
       }
       g.rows.forEach(r=>{
         const extra = (!g.ours && r !== best) ? ' xtra' : '';
         body += `<tr class="row${extra}${r.ours?' ours':''}" data-g="${gi}" data-m="${r.m}">` +
-                `<td class="m" data-c="0">${r.m}</td>` +
-                r.v.map((x,i)=>`<td data-c="${i+1}">${x.toFixed(2)}</td>`).join('') + '</tr>';
+                `<td class="m" data-c="0">${r.m}<\/td>` +
+                r.v.map((x,i)=>`<td data-c="${i+1}">${x.toFixed(2)}<\/td>`).join('') + '<\/tr>';
       });
     });
-    t.innerHTML = head + body + '</tbody>';
+    t.innerHTML = head + body + '<\/tbody>';
     t.querySelectorAll('tr.cat').forEach(tr=>{
       tr.addEventListener('click', e=>{
         e.stopPropagation();
@@ -3272,7 +3307,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   ];
   (function buildDots(){
     const d = $('#qualDots'); if(!d) return;
-    d.innerHTML = QUAL.map((_,i)=>`<span class="qdot${i?'':' on'}"></span>`).join('');
+    d.innerHTML = QUAL.map((_,i)=>`<span class="qdot${i?'':' on'}"><\/span>`).join('');
   })();
   // The source scan and the FID-HTML render must occupy the *same rectangle* on
   // screen. A size difference between them reads as a layout error in the
@@ -3431,7 +3466,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
     VFDR.forEach(([g, items], gi) => {
       const b = document.createElement('button');
       b.className = 'carotab';
-      b.innerHTML = g + '<span class="n">' + items.length + '</span>';
+      b.innerHTML = g + '<span class="n">' + items.length + '<\/span>';
       b.addEventListener('click', e => { e.stopPropagation(); go(flat.findIndex(f => f.gi === gi)); });
       tabs.appendChild(b);
     });
@@ -3475,8 +3510,8 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
         el.style.transform = 'translate(-50%,-50%) translateX(' + (s.dx * W * 0.5) + 'px) scale(' + s.sc + ')';
       });
       const f = flat[cur];
-      cap.innerHTML = '<span class="t">' + f.title + '</span><span class="d">' + f.detail +
-                      '</span><span class="ix">' + (cur + 1) + ' / ' + flat.length + '</span>';
+      cap.innerHTML = '<span class="t">' + f.title + '<\/span><span class="d">' + f.detail +
+                      '<\/span><span class="ix">' + (cur + 1) + ' / ' + flat.length + '<\/span>';
       [...tabs.children].forEach((t, gi) => t.classList.toggle('on', gi === f.gi));
       [...dots.children].forEach((d, i) => d.classList.toggle('on', i === cur));
     }
@@ -3507,7 +3542,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
       let z = document.getElementById('caroZoom');
       if(!z){
         z = document.createElement('div'); z.id = 'caroZoom';
-        z.innerHTML = '<img><div class="z-cap"></div>';
+        z.innerHTML = '<img><div class="z-cap"><\/div>';
         z.addEventListener('click', () => { z.classList.remove('on'); hoverPaused = false; restart(); });
         document.body.appendChild(z);
       }
