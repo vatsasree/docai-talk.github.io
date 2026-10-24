@@ -335,9 +335,44 @@
   </div>
   <div class="keyidea frag" style="--accent:var(--m3)">
     <span class="tag">the key idea</span>
-    <p>Skip the string. The VLM already builds an internal representation of the evidence while it answers — <b>feed that straight to the segmenter as the prompt</b>. One model, learnt end to end, no tool-calling glue.</p>
+    <p>Skip the string. The VLM already builds an internal representation of the evidence while it answers — <b>feed that straight to the segmenter as the prompt</b>. One model, learnt end to end, no tool-calling glue. This idea has a name — next slide.</p>
   </div>
   <div class="footer"><span class="act">Paper 1</span><span>Pipeline vs end-to-end</span></div>
+</section>
+
+<!-- ====== M3c · LISA ====== -->
+<section class="slide" style="--accent:var(--m3)">
+  <div class="kicker">Paper 1 · Credit where it is due</div>
+  <h2>The plug comes from <span class="k">LISA</span>. Everything around it is new.</h2>
+  <div class="cols vc" style="grid-template-columns:.9fr 1.1fr;align-items:stretch;gap:1.6vw">
+    <div class="card casc" style="animation-delay:.05s;border-top:5px solid #7d8b99">
+      <h3 style="color:#52616f">LISA · Lai et al., CVPR 2024</h3>
+      <p class="small" style="margin-bottom:.8vh">Reasoning segmentation on <b>natural images</b>.</p>
+      <svg viewBox="0 0 420 96" style="width:100%">
+        <defs><marker id="arrLi" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#8a97a5"/></marker></defs>
+        <rect x="4" y="26" width="92" height="44" rx="10" fill="#fff" stroke="#c9d4de" stroke-width="2"/><text x="50" y="53" text-anchor="middle" font-size="14" font-weight="700" fill="#33424f">LLM</text>
+        <path d="M100 48 h26" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrLi)"/>
+        <rect x="130" y="30" width="78" height="36" rx="8" fill="#0d2740"/><text x="169" y="53" text-anchor="middle" font-size="13" font-family="Menlo,monospace" fill="#ffd28a">&lt;SEG&gt;</text>
+        <path d="M212 48 h26" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrLi)"/>
+        <rect x="242" y="26" width="92" height="44" rx="10" fill="#fff" stroke="#c9d4de" stroke-width="2"/><text x="288" y="46" text-anchor="middle" font-size="12.5" font-weight="700" fill="#33424f">SAM</text><text x="288" y="62" text-anchor="middle" font-size="11" fill="#5b6b7a">decoder</text>
+        <path d="M338 48 h26" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrLi)"/>
+        <path d="M374 36 q10 -14 24 -8 q14 8 10 20 q-8 14 -24 8 q-14 -8 -10 -20 z" fill="#7d8b99"/>
+        <text x="169" y="88" text-anchor="middle" font-size="11.5" fill="#5b6b7a">the token’s embedding is the prompt</text>
+      </svg>
+      <p class="small" style="margin-top:.8vh">One token → one mask. Trained end to end with text + mask losses. Followed by GLaMM, PixelLM, LISA++ — all on natural scenes.</p>
+    </div>
+    <div class="card casc" style="animation-delay:.2s;border-top:5px solid var(--m3)">
+      <h3>What documents forced us to add</h3>
+      <div style="display:flex;flex-direction:column;gap:.7vh;font-size:1.9vh;line-height:1.4">
+        <div><b>Transfer fails.</b> Pages are text-dense and far from natural scenes — these models “transfer poorly to documents”. So: a <b>document data engine</b>, 2M grounded QA, no hand-drawn masks.</div>
+        <div><b>Evidence is plural.</b> One answer, K pointers — K chosen by the model.</div>
+        <div><b>Evidence has scope.</b> Three nested masks per pointer: phrase ⊂ line ⊂ block.</div>
+        <div><b>Text has priors.</b> Don’t bleed off the text; finer masks nest in coarser ones — as losses.</div>
+        <div style="color:var(--muted)">…and in the next two papers: pointers that <b>agree</b> across steps (GIM), preference training that <b>keeps</b> the masks (anchor), and a page that is a <b>tree</b> (HGC).</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><span class="act">Paper 1</span><span>LISA, and the difference</span></div>
 </section>
 
 <!-- ====== M4 · THE IDEA + ARCHITECTURE ====== -->
@@ -424,6 +459,77 @@
   <figure class="fig framed vc" style="width:100%"><img src="grounding/assets/m3_engine_row1.png" alt="Layout-aware documents pipeline" style="max-height:52vh;width:98%"></figure>
   <p class="small frag" style="text-align:center;margin-top:1vh">The QA writer cites <b>element IDs, never coordinates</b> — IDs map back to exact masks.<br><b>Hallucinated geometry is impossible by construction.</b></p>
   <div class="footer"><span class="act">Paper 1</span><span>Data engine · layout docs</span></div>
+</section>
+
+<!-- ====== M7b · TWO WAYS TO MAKE GROUNDED QA ====== -->
+<section class="slide" style="--accent:var(--m3)">
+  <div class="kicker">Paper 1 · Data engine · the design choice</div>
+  <h2>Two ways to make grounded QA</h2>
+  <div class="svgbox vc" style="flex:1">
+  <svg viewBox="0 0 1000 400" style="width:96%" aria-label="Direct VLM pipeline versus the Fid-HTML pipeline">
+    <defs><marker id="arrFd" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#8a97a5"/></marker></defs>
+    <!-- direct -->
+    <rect x="8" y="8" width="984" height="160" rx="16" fill="#fffafa" stroke="#f0c9c9" stroke-width="2"/>
+    <text x="28" y="36" font-size="15" font-weight="800" fill="#b42318">DIRECT · image → frontier VLM → grounded QA</text>
+    <rect x="28" y="56" width="104" height="92" rx="8" fill="#fff" stroke="#c9d4de" stroke-width="1.5"/>
+    <rect x="40" y="68" width="80" height="9" rx="3" fill="#33424f"/><rect x="40" y="84" width="80" height="5" rx="2.5" fill="#d5dee6"/><rect x="40" y="94" width="80" height="5" rx="2.5" fill="#d5dee6"/><rect x="40" y="108" width="36" height="28" rx="3" fill="#eef2f6" stroke="#dde5ec"/><rect x="84" y="108" width="36" height="5" rx="2.5" fill="#d5dee6"/><rect x="84" y="118" width="36" height="5" rx="2.5" fill="#d5dee6"/>
+    <path d="M140 102 h34" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrFd)"/>
+    <rect x="180" y="56" width="420" height="92" rx="12" fill="#fdecea" stroke="#b42318" stroke-width="2"/>
+    <text x="390" y="82" text-anchor="middle" font-size="15" font-weight="700" fill="#16222e">one VLM does everything, coupled</text>
+    <text x="390" y="106" text-anchor="middle" font-size="12.5" fill="#5b6b7a">read the text · infer the layout · recover structure · reason</text>
+    <text x="390" y="126" text-anchor="middle" font-size="12.5" fill="#5b6b7a">write the question · ground the answer</text>
+    <path d="M606 102 h34" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrFd)"/>
+    <rect x="646" y="56" width="326" height="92" rx="12" fill="#fff" stroke="#c9d4de" stroke-width="1.5"/>
+    <text x="662" y="84" font-size="13.5" fill="#33424f">Q: “What is the last date for application?”</text>
+    <text x="662" y="106" font-size="13.5" fill="#33424f">A: 15 March 2024 <tspan fill="#b42318" font-weight="700">+ a box the model guessed</tspan></text>
+    <text x="662" y="132" font-size="12" fill="#b42318" font-weight="700">if any step is wrong, nothing shows it</text>
+
+    <!-- fid-html -->
+    <rect x="8" y="188" width="984" height="204" rx="16" fill="#f4fbf8" stroke="#0E7C61" stroke-width="2.5"/>
+    <text x="28" y="216" font-size="15" font-weight="800" fill="#0E7C61">OURS · image → Fid-HTML → LLM → grounded QA</text>
+    <rect x="28" y="236" width="104" height="92" rx="8" fill="#fff" stroke="#c9d4de" stroke-width="1.5"/>
+    <rect x="40" y="248" width="80" height="9" rx="3" fill="#33424f"/><rect x="40" y="264" width="80" height="5" rx="2.5" fill="#d5dee6"/><rect x="40" y="274" width="80" height="5" rx="2.5" fill="#d5dee6"/><rect x="40" y="288" width="36" height="28" rx="3" fill="#eef2f6" stroke="#dde5ec"/><rect x="84" y="288" width="36" height="5" rx="2.5" fill="#d5dee6"/><rect x="84" y="298" width="36" height="5" rx="2.5" fill="#d5dee6"/>
+    <path d="M140 282 h30" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrFd)"/>
+    <rect x="176" y="250" width="110" height="64" rx="12" fill="#fff" stroke="#B7791F" stroke-width="2.5"/>
+    <text x="231" y="278" text-anchor="middle" font-size="14" font-weight="800" fill="#B7791F">REPLICA</text><text x="231" y="298" text-anchor="middle" font-size="11.5" fill="#5b6b7a">perception only</text>
+    <path d="M292 282 h30" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrFd)"/>
+    <rect x="328" y="232" width="212" height="100" rx="10" fill="#0d2740"/>
+    <g font-family="Menlo,monospace" font-size="11.5" fill="#dfe9f5">
+      <text x="342" y="254">&lt;h1 <tspan fill="#ffd28a">id="e12"</tspan>&gt;Govt Circular&lt;/h1&gt;</text>
+      <text x="342" y="274">&lt;td <tspan fill="#ffd28a">id="e47"</tspan> style="bbox:…"&gt;</text>
+      <text x="342" y="294">  15 March 2024 &lt;/td&gt;</text>
+      <text x="342" y="318" fill="#9fb0c0">exact text · structure · geometry · style</text>
+    </g>
+    <path d="M546 282 h30" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrFd)"/>
+    <rect x="582" y="250" width="110" height="64" rx="12" fill="#fff" stroke="#05539C" stroke-width="2.5"/>
+    <text x="637" y="278" text-anchor="middle" font-size="14" font-weight="800" fill="#05539C">LLM</text><text x="637" y="298" text-anchor="middle" font-size="11.5" fill="#5b6b7a">reasoning only</text>
+    <path d="M698 282 h30" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrFd)"/>
+    <rect x="734" y="232" width="238" height="100" rx="12" fill="#fff" stroke="#c9d4de" stroke-width="1.5"/>
+    <text x="750" y="258" font-size="13" fill="#33424f">Q: “What is the last date…?”</text>
+    <text x="750" y="280" font-size="13" fill="#33424f">A: 15 March 2024 <tspan fill="#0E7C61" font-weight="700">cites e47</tspan></text>
+    <text x="750" y="302" font-size="12" fill="#0E7C61" font-weight="700">the ID is the mask — no coordinate</text>
+    <text x="750" y="320" font-size="12" fill="#0E7C61" font-weight="700">was ever written by a model</text>
+    <text x="500" y="372" text-anchor="middle" font-size="14" fill="#16222e">Perception and reasoning are <tspan font-weight="700">separated</tspan>; the LLM never sees a pixel and never invents geometry.</text>
+  </svg>
+  </div>
+  <div class="footer"><span class="act">Paper 1</span><span>Direct vs Fid-HTML</span></div>
+</section>
+
+<!-- ====== M7c · WHY FID-HTML + LLM MAKES BETTER DATA ====== -->
+<section class="slide" style="--accent:var(--m3)">
+  <div class="kicker">Paper 1 · Data engine · the design choice</div>
+  <h2>Why Fid-HTML + LLM makes better QA</h2>
+  <div class="vc" style="display:grid;grid-template-columns:repeat(4,1fr);gap:1.1vw;align-items:stretch">
+    <div class="card casc" style="animation-delay:.05s"><h3>1 · Task decomposition</h3><p class="small">perception first, reasoning second — errors stop cascading</p></div>
+    <div class="card casc" style="animation-delay:.15s"><h3>2 · Structure is explicit</h3><p class="small">tables, hierarchy, coordinates are in the markup, not inferred</p></div>
+    <div class="card casc" style="animation-delay:.25s"><h3>3 · Exact text</h3><p class="small">numbers, dates, symbols arrive as tokens, not pixels</p></div>
+    <div class="card casc" style="animation-delay:.35s"><h3>4 · Whole-document view</h3><p class="small">the LLM attends across distant sections at once</p></div>
+    <div class="card casc" style="animation-delay:.45s"><h3>5 · Design semantics kept</h3><p class="small">bold, size, colour, alignment still carry meaning</p></div>
+    <div class="card casc" style="animation-delay:.55s"><h3>6 · Matches LLM priors</h3><p class="small">models already read HTML, DOM trees, tables</p></div>
+    <div class="card casc" style="animation-delay:.65s;border:2px solid var(--m3)"><h3>7 · Evidence is addressable</h3><p class="small">every answer links to a span, an element, a box — by ID</p></div>
+    <div class="keyidea casc" style="animation-delay:.75s;--accent:var(--m3)"><span class="tag">so</span><p>2M grounded QA pairs, and <b>not one coordinate hallucinated</b>.</p></div>
+  </div>
+  <div class="footer"><span class="act">Paper 1</span><span>Seven reasons</span></div>
 </section>
 
 <!-- ====== M8 · DATA ENGINE 2 ====== -->
@@ -591,6 +697,35 @@
   <div class="footer"><span class="act">Paper 2</span><span>The idea</span></div>
 </section>
 
+<!-- ====== D2b · REASONING AND GROUNDING TOGETHER ====== -->
+<section class="slide" style="--accent:var(--docog)">
+  <div class="kicker">Paper 2 · A real output</div>
+  <h2>Why reasoning and grounding are needed <span class="k">together</span></h2>
+  <div class="cols" style="grid-template-columns:.9fr 1.1fr;flex:1;min-height:0;align-items:center;gap:1.6vw">
+    <figure class="fig framed" style="height:100%;min-height:0;justify-content:center"><img src="grounding/assets/docog_bill.png" alt="A scanned medical bill with the regions each reasoning step grounds" style="max-height:72vh;width:100%"></figure>
+    <div style="display:flex;flex-direction:column;gap:1vh;min-height:0">
+      <p style="font-size:2.2vh"><b>“How much should I pay for the blood test?”</b> — the answer, <b>$27.50</b>, is printed nowhere on the bill.</p>
+      <div class="card" style="padding:1.2vh 1.6vh;font-size:1.85vh;line-height:1.55">
+        <div><span class="term" style="color:var(--faint);font-weight:800">S₁</span> cost of the <span class="mk d1" style="--mkc:#ffd9b8">Blood Test</span> is <span class="mk d1" style="--mkc:#c9f3ef">$50</span> <span class="tok g">[GND]</span>×3</div>
+        <div><span class="term" style="color:var(--faint);font-weight:800">S₂</span> premium members get a <span class="mk d2" style="--mkc:#cdeec9">5% discount</span> <span class="tok g">[GND]</span></div>
+        <div><span class="term" style="color:var(--faint);font-weight:800">S₃</span> your plan is <span class="mk d2" style="--mkc:#cfe6fb">premium</span> <span class="tok g">[GND]</span></div>
+        <div style="color:var(--muted)"><span class="term" style="color:var(--faint);font-weight:800">S₄</span> 5% of 50 is 2.50 &nbsp;<i>— arithmetic, no mask</i></div>
+        <div><span class="term" style="color:var(--faint);font-weight:800">S₅</span> discounted cost 50 − 2.50 = 47.50</div>
+        <div><span class="term" style="color:var(--faint);font-weight:800">S₆</span> the <span class="mk d3" style="--mkc:#e9d5ff">Claim</span> for the Blood Test is <span class="mk d3" style="--mkc:#f9d0ec">$20</span> <span class="tok g">[GND]</span>×3</div>
+        <div style="color:var(--muted)"><span class="term" style="color:var(--faint);font-weight:800">S₇</span> 47.50 − 20 = 27.50 &nbsp;<i>— arithmetic, no mask</i></div>
+        <div><span class="term" style="color:var(--faint);font-weight:800">S<sub>f</sub></span> you should pay <b>$27.50</b></div>
+      </div>
+      <div class="cols frag" style="grid-template-columns:1fr 1fr;gap:1vw;align-items:stretch">
+        <div class="mot prob"><h4>Grounding alone</h4><p>a mask for “$27.50” has <b>nothing to point to</b></p></div>
+        <div class="mot prob"><h4>Chain-of-thought alone</h4><p>“the cost is $50” can’t be checked without knowing <b>which cell</b> it read</p></div>
+      </div>
+      <div class="keyidea frag" style="--accent:var(--docog)"><span class="tag">on DoCoG-Bench · answer / grounding</span>
+        <p>CoT only <b>78.1 / —</b> &nbsp;·&nbsp; answer-only grounding <b>73.3 / 69.3</b> &nbsp;·&nbsp; CoT + answer grounding <b>81.5 / 77.8</b> &nbsp;·&nbsp; every step grounded <b>84.1 / 80.3</b> &nbsp;·&nbsp; + preference training <b>85.8 / 81.9</b></p></div>
+    </div>
+  </div>
+  <div class="footer"><span class="act">Paper 2</span><span>Why both</span></div>
+</section>
+
 <!-- ====== D3 · TEASER FLOWCHART ====== -->
 <section class="slide" style="--accent:var(--docog)">
   <div class="kicker">Paper 2 · In one picture</div>
@@ -609,6 +744,33 @@
   <figure class="fig framed" style="flex:1;width:100%"><img src="grounding/assets/docog_model.png" alt="DoCoG architecture" style="max-height:62vh;width:96%"></figure>
   <p class="small" style="text-align:center;margin-top:.8vh">The VLM writes the steps, dropping a <span class="tok g">[GND]</span> per cited evidence · GIM refines those token states against the image · the segmenter turns each one into a mask.</p>
   <div class="footer"><span class="act">Paper 2</span><span>Architecture</span></div>
+</section>
+
+<!-- ====== D4b · READING ONE OUTPUT ====== -->
+<section class="slide" style="--accent:var(--docog)">
+  <div class="kicker">Paper 2 · Reading one output</div>
+  <h2>Where the masks come from, step by step</h2>
+  <div class="cols vc" style="grid-template-columns:1.25fr .75fr;align-items:start">
+    <div class="card" style="padding:1.6vh 2vh">
+      <p style="font-size:2.1vh;margin-bottom:1vh"><b>Q:</b> “Does the combined weight of the top three stock holdings exceed the allocation to the IT sector?” — two donut charts.</p>
+      <table class="abl">
+        <thead><tr><th style="text-align:left">step</th><th style="text-align:left">what it reads</th><th>[GND]</th></tr></thead>
+        <tbody>
+          <tr class="casc" style="animation-delay:.05s"><td>S₁</td><td style="text-align:left">the <i>Top Stock Holdings</i> chart: its title, the three labels (HDFC, Reliance, ICICI) and their three wedges</td><td><b>7</b></td></tr>
+          <tr class="casc" style="animation-delay:.2s"><td>S₂</td><td style="text-align:left">the three percentages it adds: 8.84 + 6.03 + 5.85 = 20.72</td><td><b>3</b></td></tr>
+          <tr class="casc" style="animation-delay:.35s"><td>S₃</td><td style="text-align:left">the <i>Sector Allocation</i> chart: its title, the IT label, its value 7.88</td><td><b>3</b></td></tr>
+          <tr class="casc" style="animation-delay:.5s"><td>S₄</td><td style="text-align:left;color:var(--muted)">compares 20.72 &gt; 7.88 — numbers already on the table</td><td style="color:var(--muted)">0</td></tr>
+          <tr class="casc ours" style="animation-delay:.65s"><td>S<sub>f</sub></td><td style="text-align:left">yes — 20.72% exceeds 7.88%</td><td>K = 13</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:1.1vh;justify-content:center">
+      <div class="card frag"><h3>One image pass</h3><p class="small">the segmenter encodes the page <b>once</b>; every one of the 13 masks is decoded from that</p></div>
+      <div class="card frag"><h3>Text and graphics in one step</h3><p class="small">S₁ grounds labels <i>and</i> wedges — a label and its wedge inform each other inside GIM</p></div>
+      <div class="stat frag"><div class="v" style="font-size:3.4vh">+15% · +23%</div><div class="l">latency · memory over the bare backbone (580 vs 505 ms, 1×H100)</div></div>
+    </div>
+  </div>
+  <div class="footer"><span class="act">Paper 2</span><span>Worked example</span></div>
 </section>
 
 <!-- ====== D5 · INTERACTIVE ====== -->
@@ -727,7 +889,7 @@
         <span class="term" style="color:var(--faint)">S₃</span> …so the answer is <b>no</b> <span style="color:#b42318">— right, for the wrong reasons</span></p>
       </div>
     </div>
-    <p class="small frag" style="text-align:center">SFT treats both the same — it never compares them. <b>Preference optimization is exactly that comparison.</b></p>
+    <p class="small frag" style="text-align:center">SFT never shows the model two of its <i>own</i> chains and says which is better. <b>Preference training is exactly that comparison.</b></p>
     <div class="svgbox frag">
       <svg viewBox="0 0 900 74" style="width:84%">
         <defs><marker id="arrP" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#8a97a5"/></marker></defs>
@@ -735,13 +897,43 @@
         <path d="M182 37 h30" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrP)"/>
         <rect x="216" y="14" width="150" height="46" rx="23" fill="#fff" stroke="#7d8b99" stroke-width="2"/><text x="291" y="42" text-anchor="middle" font-size="14.5" font-weight="700" fill="#33424f">format gate</text>
         <path d="M370 37 h30" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrP)"/>
-        <rect x="404" y="14" width="236" height="46" rx="23" fill="#fff" stroke="#7d8b99" stroke-width="2"/><text x="522" y="42" text-anchor="middle" font-size="14.5" font-weight="700" fill="#33424f">score answer · chain · grounding</text>
+        <rect x="404" y="14" width="236" height="46" rx="23" fill="#fff" stroke="#7d8b99" stroke-width="2"/><text x="522" y="42" text-anchor="middle" font-size="14.5" font-weight="700" fill="#33424f">R = AQ + CQ + GQ</text>
         <path d="M644 37 h30" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrP)"/>
         <rect x="678" y="14" width="216" height="46" rx="23" fill="#f4eeff" stroke="#7C3AED" stroke-width="2.5"/><text x="786" y="42" text-anchor="middle" font-size="13.5" font-weight="800" fill="#7C3AED">best ✓ vs worst ✗ · 20K pairs</text>
       </svg>
     </div>
   </div>
   <div class="footer"><span class="act">Paper 2</span><span>DoCoG-PQA · why preferences</span></div>
+</section>
+
+<!-- ====== D8b · PREFERENCES TO DPO ====== -->
+<section class="slide" style="--accent:var(--docog)">
+  <div class="kicker">Paper 2 · Training stage 2 · background</div>
+  <h2>From preferences to DPO, in four lines</h2>
+  <div class="vc" style="display:flex;flex-direction:column;gap:1.3vh;justify-content:center">
+    <div class="card casc" style="animation-delay:.05s;display:grid;grid-template-columns:.32fr 1fr .9fr;gap:1.2vw;align-items:center;padding:1.3vh 1.8vh">
+      <h3 style="margin:0">1 · a preference</h3>
+      <p style="font-family:Georgia,serif;font-style:italic;font-size:2.3vh;margin:0">p(y<sub>w</sub> ≻ y<sub>l</sub> | x) = σ( r(x, y<sub>w</sub>) − r(x, y<sub>l</sub>) )</p>
+      <p class="small" style="margin:0">Bradley–Terry: a hidden reward r explains which of two outputs people prefer</p>
+    </div>
+    <div class="card casc" style="animation-delay:.2s;display:grid;grid-template-columns:.32fr 1fr .9fr;gap:1.2vw;align-items:center;padding:1.3vh 1.8vh">
+      <h3 style="margin:0">2 · RLHF</h3>
+      <p style="font-family:Georgia,serif;font-style:italic;font-size:2.3vh;margin:0">max<sub>π</sub> 𝔼[ r<sub>φ</sub>(x, y) ] − β · KL( π<sub>θ</sub> ‖ π<sub>ref</sub> )</p>
+      <p class="small" style="margin:0">fit a reward model, then push the policy toward it without drifting far from the SFT model — needs RL, often unstable</p>
+    </div>
+    <div class="card casc" style="animation-delay:.35s;display:grid;grid-template-columns:.32fr 1fr .9fr;gap:1.2vw;align-items:center;padding:1.3vh 1.8vh">
+      <h3 style="margin:0">3 · the optimum is closed-form</h3>
+      <p style="font-family:Georgia,serif;font-style:italic;font-size:2.3vh;margin:0">π* ∝ π<sub>ref</sub> · e<sup>r/β</sup> &nbsp;⇒&nbsp; r = β log π*/π<sub>ref</sub> + const</p>
+      <p class="small" style="margin:0">the reward can be read off the policy itself</p>
+    </div>
+    <div class="card casc" style="animation-delay:.5s;display:grid;grid-template-columns:.32fr 1fr .9fr;gap:1.2vw;align-items:center;padding:1.3vh 1.8vh;border:2px solid var(--docog)">
+      <h3 style="margin:0;color:var(--docog)">4 · substitute — the constant cancels</h3>
+      <p style="font-family:Georgia,serif;font-style:italic;font-size:2.3vh;margin:0">𝓛<sub>DPO</sub> = −𝔼 log σ( β log π<sub>θ</sub>(y<sub>w</sub>)/π<sub>ref</sub>(y<sub>w</sub>) − β log π<sub>θ</sub>(y<sub>l</sub>)/π<sub>ref</sub>(y<sub>l</sub>) )</p>
+      <p class="small" style="margin:0">a classification loss on the policy — <b>no reward model, no RL</b></p>
+    </div>
+    <p class="small frag" style="text-align:center">For a token sequence, log π is a sum of next-token log-probabilities — the loss touches exactly what the language-model head writes.</p>
+  </div>
+  <div class="footer"><span class="act">Paper 2</span><span>DPO · background</span></div>
 </section>
 
 <!-- ====== D9 · DPO, ANNOTATED ====== -->
@@ -777,7 +969,7 @@
     <div class="eqb" style="border-color:transparent;background:transparent;box-shadow:none;padding-left:0">] )</div>
   </div>
   <div class="cols" style="grid-template-columns:repeat(3,1fr);gap:1.2vw;align-items:stretch">
-    <div class="card frag"><h3>π = probability of writing that chain</h3><p class="small">token by token — steps, words, pointers. θ = tuned model · ref = frozen copy.</p></div>
+    <div class="card frag"><h3>π = probability of writing that chain</h3><p class="small">token by token — steps, words, <b>and the [GND] tokens</b>. DPO shapes <i>where</i> the model grounds, though it never sees a mask.</p></div>
     <div class="card frag"><h3>So only the VLM moves</h3><p class="small">every term is text → the mask pipeline appears nowhere → <b>❄ frozen</b>.</p></div>
     <div class="card frag"><h3>Why no mask term?</h3><p class="small">a preference needs a likelihood — the decoder emits <b>one mask</b>, not a distribution.</p></div>
   </div>
@@ -898,6 +1090,74 @@
     </div>
   </div>
   <div class="footer"><span class="act">Paper 2</span><span>Main results</span></div>
+</section>
+
+<!-- ====== D11b · ABLATIONS, SORTED ====== -->
+<section class="slide" style="--accent:var(--docog)">
+  <div class="kicker">Paper 2 · Ablations · DoCoG-Bench</div>
+  <h2>What breaks when you remove each piece</h2>
+  <div class="cols vc" style="grid-template-columns:1fr 1fr;align-items:start">
+    <div class="chartcard">
+      <h3>Answer quality · full model 85.8</h3><p class="sub">drop in AQ when the component is removed</p>
+      <svg viewBox="0 0 560 298" role="img" aria-label="Loss in answer quality per removed component">
+        <text x="232" y="18" font-size="12" fill="#8a97a5" font-weight="700">0</text><line x1="232" y1="24" x2="232" y2="292" stroke="#dde5ec" stroke-width="1.5"/>
+        <text x="222" y="47" text-anchor="end" font-size="13.5" fill="#16222e" font-weight='700'>LoRA, not full fine-tune</text>
+<rect class="draw" style="--len:270" x="232" y="34" width="103.2" height="19" rx="4" fill="#b42318"/>
+<text x="343.2" y="48" font-size="13.5" font-weight="700" fill="#16222e">-17.2</text>
+<text x="222" y="80" text-anchor="end" font-size="13.5" fill="#16222e">without chain-of-thought</text>
+<rect class="draw" style="--len:270" x="232" y="67" width="75.0" height="19" rx="4" fill="#a5b2be"/>
+<text x="315.0" y="81" font-size="13.5" font-weight="700" fill="#16222e">-12.5</text>
+<text x="222" y="113" text-anchor="end" font-size="13.5" fill="#16222e">without the anchor loss</text>
+<rect class="draw" style="--len:270" x="232" y="100" width="46.2" height="19" rx="4" fill="#a5b2be"/>
+<text x="286.2" y="114" font-size="13.5" font-weight="700" fill="#16222e">-7.7</text>
+<text x="222" y="146" text-anchor="end" font-size="13.5" fill="#16222e">without any grounding</text>
+<rect class="draw" style="--len:270" x="232" y="133" width="46.2" height="19" rx="4" fill="#a5b2be"/>
+<text x="286.2" y="147" font-size="13.5" font-weight="700" fill="#16222e">-7.7</text>
+<text x="222" y="179" text-anchor="end" font-size="13.5" fill="#16222e">without GIM</text>
+<rect class="draw" style="--len:270" x="232" y="166" width="30.6" height="19" rx="4" fill="#a5b2be"/>
+<text x="270.6" y="180" font-size="13.5" font-weight="700" fill="#16222e">-5.1</text>
+<text x="222" y="212" text-anchor="end" font-size="13.5" fill="#16222e">grounding the answer only</text>
+<rect class="draw" style="--len:270" x="232" y="199" width="25.8" height="19" rx="4" fill="#a5b2be"/>
+<text x="265.8" y="213" font-size="13.5" font-weight="700" fill="#16222e">-4.3</text>
+<text x="222" y="245" text-anchor="end" font-size="13.5" fill="#16222e">GIM without image attention</text>
+<rect class="draw" style="--len:270" x="232" y="232" width="15.6" height="19" rx="4" fill="#a5b2be"/>
+<text x="255.6" y="246" font-size="13.5" font-weight="700" fill="#16222e">-2.6</text>
+<text x="222" y="278" text-anchor="end" font-size="13.5" fill="#16222e">without preference training</text>
+<rect class="draw" style="--len:270" x="232" y="265" width="10.2" height="19" rx="4" fill="#a5b2be"/>
+<text x="250.2" y="279" font-size="13.5" font-weight="700" fill="#16222e">-1.7</text>
+      </svg>
+    </div>
+    <div class="chartcard">
+      <h3>Final-answer grounding · full model 81.9</h3><p class="sub">drop in GQ<sub>fa</sub> when the component is removed</p>
+      <svg viewBox="0 0 560 298" role="img" aria-label="Loss in grounding quality per removed component">
+        <text x="232" y="18" font-size="12" fill="#8a97a5" font-weight="700">0</text><line x1="232" y1="24" x2="232" y2="259" stroke="#dde5ec" stroke-width="1.5"/>
+        <text x="222" y="47" text-anchor="end" font-size="13.5" fill="#16222e" font-weight='700'>without the anchor loss</text>
+<rect class="draw" style="--len:270" x="232" y="34" width="241.2" height="19" rx="4" fill="#b42318"/>
+<text x="481.2" y="48" font-size="13.5" font-weight="700" fill="#16222e">-40.2</text>
+<text x="222" y="80" text-anchor="end" font-size="13.5" fill="#16222e">LoRA, not full fine-tune</text>
+<rect class="draw" style="--len:270" x="232" y="67" width="98.4" height="19" rx="4" fill="#a5b2be"/>
+<text x="338.4" y="81" font-size="13.5" font-weight="700" fill="#16222e">-16.4</text>
+<text x="222" y="113" text-anchor="end" font-size="13.5" fill="#16222e">without chain-of-thought</text>
+<rect class="draw" style="--len:270" x="232" y="100" width="75.6" height="19" rx="4" fill="#a5b2be"/>
+<text x="315.6" y="114" font-size="13.5" font-weight="700" fill="#16222e">-12.6</text>
+<text x="222" y="146" text-anchor="end" font-size="13.5" fill="#16222e">without GIM</text>
+<rect class="draw" style="--len:270" x="232" y="133" width="73.8" height="19" rx="4" fill="#a5b2be"/>
+<text x="313.8" y="147" font-size="13.5" font-weight="700" fill="#16222e">-12.3</text>
+<text x="222" y="179" text-anchor="end" font-size="13.5" fill="#16222e">GIM without image attention</text>
+<rect class="draw" style="--len:270" x="232" y="166" width="29.4" height="19" rx="4" fill="#a5b2be"/>
+<text x="269.4" y="180" font-size="13.5" font-weight="700" fill="#16222e">-4.9</text>
+<text x="222" y="212" text-anchor="end" font-size="13.5" fill="#16222e">grounding the answer only</text>
+<rect class="draw" style="--len:270" x="232" y="199" width="24.6" height="19" rx="4" fill="#a5b2be"/>
+<text x="264.6" y="213" font-size="13.5" font-weight="700" fill="#16222e">-4.1</text>
+<text x="222" y="245" text-anchor="end" font-size="13.5" fill="#16222e">without preference training</text>
+<rect class="draw" style="--len:270" x="232" y="232" width="9.6" height="19" rx="4" fill="#a5b2be"/>
+<text x="249.6" y="246" font-size="13.5" font-weight="700" fill="#16222e">-1.6</text>
+        <text x="40" y="275" font-size="12.5" fill="#8a97a5">“without any grounding” has no masks to score</text>
+      </svg>
+    </div>
+  </div>
+  <p class="small frag" style="text-align:center;margin-top:.6vh">Answers depend on chain-of-thought, full fine-tuning and <i>some</i> grounding. Masks depend on <b>the anchor — without it, preference training wipes out 40 points of grounding, five times what the answers lose.</b></p>
+  <div class="footer"><span class="act">Paper 2</span><span>Ablations</span></div>
 </section>
 
 <!-- ====== D12 · QUAL ====== -->
@@ -1456,6 +1716,86 @@
   <p class="small frag" style="margin-top:1vh;text-align:center">The interaction grows with the structure it must respect — <b>independent spans → consistent steps → a full tree</b> — and the losses grow the same way.</p>
   </div>
   <div class="footer"><span class="act">Synthesis</span><span>One recipe</span></div>
+</section>
+
+<!-- ====== S1b · WHAT MADE IT POSSIBLE ====== -->
+<section class="slide" style="--accent:var(--blue)">
+  <div class="kicker">Stepping back</div>
+  <h2>What made this possible</h2>
+  <div class="vc" style="display:grid;grid-template-columns:1.15fr .95fr .9fr;gap:1.3vw;align-items:stretch">
+    <div class="card casc" style="animation-delay:.05s;border-top:6px solid var(--orange)">
+      <h3 style="color:#8a4b00">Data — the backbone</h3>
+      <p class="small" style="margin-bottom:.6vh">Four engines. <b>Zero hand-drawn masks.</b></p>
+      <div style="display:flex;flex-direction:column;gap:.45vh;font-size:1.8vh">
+        <div><b>5K</b> pages · 22 languages · expert-annotated — VFDR-Bench</div>
+        <div><b>200K</b> docs · <b>2M</b> grounded QA — Fid-HTML → IDs → masks</div>
+        <div><b>325K</b> docs · <b>1.5M</b> step-wise QA · <b>20K</b> preference pairs</div>
+        <div><b>2.5M</b> pages · <b>80M</b> masks · 40 languages</div>
+      </div>
+      <p class="small" style="margin-top:.7vh">Verified by construction, then by judges, then by hand — 33,500 masks checked.</p>
+    </div>
+    <div class="card casc" style="animation-delay:.2s;border-top:6px solid var(--blue)">
+      <h3>Compute — what it bought</h3>
+      <div style="display:flex;flex-direction:column;gap:.45vh;font-size:1.8vh">
+        <div><b>64 × H100</b> — M3Grounder</div>
+        <div><b>32 × H100</b> — DoCoG</div>
+        <div><b>64 × H100</b> — DocLayout-VL</div>
+        <div>DeepSpeed ZeRO-3 · batch 128–256</div>
+      </div>
+      <p class="small" style="margin-top:.7vh"><b>Full fine-tuning, every time.</b> LoRA loses 16–18 points of grounding — the parameters that write the pointer must all move.</p>
+    </div>
+    <div class="card casc" style="animation-delay:.35s;border-top:6px solid var(--dlvl)">
+      <h3 style="color:var(--dlvl)">One place</h3>
+      <p class="small">The reconstruction engine, the multilingual document corpus and the GPUs sat under one roof at <b>BharatGen</b> — so the data could be made in-house, at whatever scale each model needed.</p>
+      <p class="small" style="margin-top:.7vh">That is how systems built here, at 8–9B parameters, beat frontier VLMs on every one of these benchmarks.</p>
+    </div>
+  </div>
+  <div class="footer"><span class="act">Synthesis</span><span>Data · compute · place</span></div>
+</section>
+
+<!-- ====== S1c · DESIGN CHOICES AND THEIR RECEIPTS ====== -->
+<section class="slide" style="--accent:var(--blue)">
+  <div class="kicker">Stepping back</div>
+  <h2>Design choices, with the receipts</h2>
+  <div class="vc" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.2vw;align-items:stretch">
+    <div class="card casc" style="animation-delay:.05s;border-top:6px solid var(--m3)">
+      <h3 style="color:var(--m3)">M3Grounder · grounding F1</h3>
+      <table class="abl" style="font-size:1.75vh">
+        <tbody>
+          <tr><td>three granularity heads, not one</td><td>63.6 → <b>79.0</b></td></tr>
+          <tr><td>full fine-tune, not LoRA</td><td>61.5 → <b>79.0</b></td></tr>
+          <tr><td>enclosure loss</td><td>74.0 → <b>78.2</b></td></tr>
+          <tr><td>bleed loss (block level)</td><td>84.4 → <b>86.5</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card casc" style="animation-delay:.2s;border-top:6px solid var(--docog)">
+      <h3 style="color:var(--docog)">DoCoG · final-answer grounding</h3>
+      <table class="abl" style="font-size:1.75vh">
+        <tbody>
+          <tr><td>GIM between VLM and segmenter</td><td>69.6 → <b>81.9</b></td></tr>
+          <tr><td>…with image cross-attention</td><td>77.0 → <b>81.9</b></td></tr>
+          <tr><td>anchor loss under DPO</td><td>41.7 → <b>81.9</b></td></tr>
+          <tr><td>full fine-tune, not LoRA</td><td>65.5 → <b>81.9</b></td></tr>
+          <tr><td>ground every step, not just the answer <span class="tiny">(AQ)</span></td><td>81.5 → <b>84.1</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card casc" style="animation-delay:.35s;border-top:6px solid var(--dlvl)">
+      <h3 style="color:var(--dlvl)">DocLayout-VL · hierarchy / overall</h3>
+      <table class="abl" style="font-size:1.75vh">
+        <tbody>
+          <tr><td>tree-sparse attention (HGC)</td><td>58.3 → <b>77.5</b></td></tr>
+          <tr><td>structure-aware losses</td><td>72.3 → <b>77.5</b></td></tr>
+          <tr><td>mask head, not box regression <span class="tiny">(OS)</span></td><td>66.1 → <b>76.8</b></td></tr>
+          <tr><td>4× more data, same architecture <span class="tiny">(OS)</span></td><td>61.2 → 66.1</td></tr>
+          <tr><td>same data, full architecture <span class="tiny">(OS)</span></td><td>66.1 → <b>79.4</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <p class="small frag" style="text-align:center;margin-top:.8vh">None of these is a trick. Each is a document prior or a training constraint that natural-image grounders never needed — and each one is measured.</p>
+  <div class="footer"><span class="act">Synthesis</span><span>Design choices</span></div>
 </section>
 
 <!-- ====== S2 · THE FRONTIER ====== -->
