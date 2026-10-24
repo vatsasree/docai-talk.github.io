@@ -1349,14 +1349,15 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
         <rect x="242" y="26" width="92" height="44" rx="10" fill="#fff" stroke="#c9d4de" stroke-width="2"/><text x="288" y="46" text-anchor="middle" font-size="12.5" font-weight="700" fill="#33424f">SAM</text><text x="288" y="62" text-anchor="middle" font-size="11" fill="#5b6b7a">decoder</text>
         <path d="M338 48 h26" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrLi)"/>
         <path d="M374 36 q10 -14 24 -8 q14 8 10 20 q-8 14 -24 8 q-14 -8 -10 -20 z" fill="#7d8b99"/>
-        <text x="169" y="88" text-anchor="middle" font-size="11.5" fill="#5b6b7a">the token’s embedding is the prompt</text>
+        <text x="169" y="88" text-anchor="middle" font-size="11.5" fill="#5b6b7a">the token’s hidden state, projected, is the prompt</text>
       </svg>
-      <p class="small" style="margin-top:.8vh">One token → one mask. Trained end to end with text + mask losses. Followed by GLaMM, PixelLM, LISA++ — all on natural scenes.</p>
+      <p class="small" style="margin-top:.8vh">One token → one mask, trained end to end with text + mask losses. Followed by LISA++, GLaMM, PixelLM — all on natural scenes.</p>
+      <p class="small" style="margin-top:.6vh;color:var(--muted)">“SAM’s prompt interface can be driven not by human-provided points or boxes but by learned prompt embeddings derived from the VLM’s hidden states.”</p>
     </div>
     <div class="card casc" style="animation-delay:.2s;border-top:5px solid var(--m3)">
       <h3>What documents forced us to add</h3>
       <div style="display:flex;flex-direction:column;gap:.7vh;font-size:1.9vh;line-height:1.4">
-        <div><b>Transfer fails.</b> Pages are text-dense and far from natural scenes — these models “transfer poorly to documents”. So: a <b>document data engine</b>, 2M grounded QA, no hand-drawn masks.</div>
+        <div><b>Transfer fails.</b> These models “do not transfer well to documents, where interpretation depends on text layout, reading order, and the semantic structure of graphical elements.” So: a <b>document data engine</b> — 2M grounded QA, no hand-drawn masks.</div>
         <div><b>Evidence is plural.</b> One answer, K pointers — K chosen by the model.</div>
         <div><b>Evidence has scope.</b> Three nested masks per pointer: phrase ⊂ line ⊂ block.</div>
         <div><b>Text has priors.</b> Don’t bleed off the text; finer masks nest in coarser ones — as losses.</div>
@@ -2877,43 +2878,53 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
 <!-- ====== FINAL · THE LOOP CLOSES ====== -->
 <section class="slide" style="--accent:var(--replica)">
   <div class="kicker">Where the four systems meet</div>
-  <h2>REPLICA builds the data. The grounding models <span class="k">pay it back</span>.</h2>
-  <div class="svgbox" style="flex:1;min-height:0;margin-top:1vh">
-  <svg viewBox="0 0 1000 430" aria-label="REPLICA generates supervision for the grounding models, which in turn improve REPLICA">
+  <h2>What actually flows around the loop</h2>
+  <div class="svgbox" style="flex:1;min-height:0;margin-top:.4vh">
+  <svg viewBox="0 0 1000 440" aria-label="REPLICA's Fid-HTML feeds the grounding models' data engines; shared segmenters and the DocLayout-VL parse flow back">
     <defs>
-      <marker id="aG2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#B7791F"/></marker>
-      <marker id="aB2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#05539C"/></marker>
+      <marker id="aG3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#B7791F"/></marker>
+      <marker id="aGr3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#0E7C61"/></marker>
     </defs>
 
-    <rect x="30" y="120" width="300" height="190" rx="20" fill="#fff" stroke="#B7791F" stroke-width="3"/>
-    <rect x="30" y="120" width="300" height="10" rx="5" fill="#B7791F"/>
-    <text x="180" y="180" text-anchor="middle" font-size="38" font-weight="800" fill="#B7791F">REPLICA</text>
-    <text x="180" y="214" text-anchor="middle" font-size="20" fill="#5b6b7a">rebuilds any page as</text>
-    <text x="180" y="250" text-anchor="middle" font-size="27" font-weight="800" fill="#1E3A5F">FID-HTML</text>
-    <text x="180" y="282" text-anchor="middle" font-size="18" fill="#8a97a5">text · structure · position · style</text>
+    <!-- REPLICA -->
+    <rect x="30" y="96" width="270" height="190" rx="18" fill="#fff" stroke="#B7791F" stroke-width="3"/>
+    <rect x="30" y="96" width="270" height="10" rx="5" fill="#B7791F"/>
+    <text x="165" y="146" text-anchor="middle" font-size="30" font-weight="800" fill="#B7791F">REPLICA</text>
+    <text x="165" y="174" text-anchor="middle" font-size="16" fill="#5b6b7a">rebuilds a page as</text>
+    <text x="165" y="206" text-anchor="middle" font-size="23" font-weight="800" fill="#1E3A5F">Fid-HTML</text>
+    <text x="165" y="232" text-anchor="middle" font-size="13" fill="#8a97a5">ID-tagged · ordered · geometry · style</text>
+    <text x="165" y="266" text-anchor="middle" font-size="12.5" fill="#5b6b7a">Segment: 2 detectors · Hi-SAM · 2 agents</text>
 
-    <rect x="670" y="60" width="300" height="310" rx="20" fill="#f2f6fa" stroke="#dde5ec" stroke-width="2"/>
-    <text x="820" y="95" text-anchor="middle" font-size="17" font-weight="700" fill="#8a97a5" letter-spacing="2">GROUNDED UNDERSTANDING</text>
-    <rect x="700" y="115" width="240" height="62" rx="12" fill="#fff" stroke="#05539C" stroke-width="2.5"/>
-    <text x="820" y="146" text-anchor="middle" font-size="24" font-weight="800" fill="#05539C">M3Grounder</text>
-    <text x="820" y="166" text-anchor="middle" font-size="16" fill="#8a97a5">masks as evidence</text>
-    <rect x="700" y="189" width="240" height="62" rx="12" fill="#fff" stroke="#7C3AED" stroke-width="2.5"/>
-    <text x="820" y="220" text-anchor="middle" font-size="24" font-weight="800" fill="#7C3AED">DoCoG</text>
-    <text x="820" y="240" text-anchor="middle" font-size="16" fill="#8a97a5">grounded reasoning</text>
-    <rect x="700" y="263" width="240" height="62" rx="12" fill="#fff" stroke="#0E7C61" stroke-width="2.5"/>
-    <text x="820" y="294" text-anchor="middle" font-size="24" font-weight="800" fill="#0E7C61">DocLayout-VL</text>
-    <text x="820" y="314" text-anchor="middle" font-size="16" fill="#8a97a5">the page as a tree</text>
+    <!-- models -->
+    <rect x="690" y="40" width="290" height="80" rx="14" fill="#fff" stroke="#05539C" stroke-width="2.5"/>
+    <text x="835" y="72" text-anchor="middle" font-size="22" font-weight="800" fill="#05539C">M3Grounder</text>
+    <text x="835" y="98" text-anchor="middle" font-size="13.5" fill="#5b6b7a">140K pages via Fid-HTML → 2M QA</text>
+    <rect x="690" y="140" width="290" height="80" rx="14" fill="#fff" stroke="#7C3AED" stroke-width="2.5"/>
+    <text x="835" y="172" text-anchor="middle" font-size="22" font-weight="800" fill="#7C3AED">DoCoG</text>
+    <text x="835" y="198" text-anchor="middle" font-size="13.5" fill="#5b6b7a">100K pages via Fid-HTML → step-wise QA</text>
+    <rect x="690" y="240" width="290" height="80" rx="14" fill="#fff" stroke="#0E7C61" stroke-width="2.5"/>
+    <text x="835" y="272" text-anchor="middle" font-size="22" font-weight="800" fill="#0E7C61">DocLayout-VL</text>
+    <text x="835" y="298" text-anchor="middle" font-size="13.5" fill="#5b6b7a">same recipe, with a zero-shot VLM</text>
 
-    <text x="452" y="86" text-anchor="middle" font-size="21" font-weight="800" fill="#B7791F">generates the training data</text>
-    <text x="452" y="110" text-anchor="middle" font-size="15" fill="#5b6b7a">millions of pages, labelled by construction</text>
-    <path d="M345 180 C 470 180, 550 156, 658 150" fill="none" stroke="#B7791F" stroke-width="4" marker-end="url(#aG2)"/>
+    <!-- forward edges -->
+    <text x="494" y="56" text-anchor="middle" font-size="16" font-weight="800" fill="#B7791F">the LLM writes QA citing element IDs</text>
+    <text x="470" y="76" text-anchor="middle" font-size="13" fill="#5b6b7a">IDs map back to Hi-SAM masks — no coordinate is generated</text>
+    <path d="M305 150 C 440 150, 540 86, 684 80" fill="none" stroke="#B7791F" stroke-width="4" marker-end="url(#aG3)"/>
+    <path d="M305 186 C 440 186, 540 180, 684 180" fill="none" stroke="#B7791F" stroke-width="4" marker-end="url(#aG3)"/>
+    <path d="M305 224 C 440 224, 540 280, 684 280" fill="none" stroke="#B7791F" stroke-width="2.5" stroke-dasharray="8 6" marker-end="url(#aG3)"/>
+    <text x="494" y="238" text-anchor="middle" font-size="12.5" fill="#8a97a5">the idea, not the engine</text>
 
-    <path d="M658 292 C 545 288, 460 264, 345 262" fill="none" stroke="#05539C" stroke-width="4" marker-end="url(#aB2)"/>
-    <text x="452" y="322" text-anchor="middle" font-size="21" font-weight="800" fill="#05539C">sharpen every stage</text>
-    <text x="452" y="350" text-anchor="middle" font-size="15" fill="#5b6b7a">better segmentation, reading order and grounding</text>
+    <!-- return edge -->
+    <path d="M684 312 C 560 362, 420 362, 305 300" fill="none" stroke="#0E7C61" stroke-width="3" stroke-dasharray="9 6" marker-end="url(#aGr3)"/>
+    <text x="494" y="372" text-anchor="middle" font-size="14.5" font-weight="800" fill="#0E7C61">next: one model replaces the ensemble</text>
+    <text x="494" y="390" text-anchor="middle" font-size="12.5" fill="#5b6b7a">the tree REPLICA assembles from detectors + agents is what DocLayout-VL emits in one pass</text>
+
+    <!-- shared segmenters -->
+    <rect x="30" y="404" width="950" height="34" rx="10" fill="#f2f6fa" stroke="#dde5ec" stroke-width="2"/>
+    <text x="505" y="426" text-anchor="middle" font-size="13.5" fill="#33424f"><tspan font-weight="800">Shared segmenters:</tspan> Hi-SAM draws the text masks for REPLICA and both QA engines · SAM 3 draws the graphical masks for DoCoG and DocLayout-VL</text>
   </svg>
   </div>
-  <div class="callout" style="margin-top:1vh">Neither half stands alone. <b>Representation makes the supervision; the supervision makes the models; the models make the representation better.</b></div>
+  <div class="callout" style="margin-top:.6vh">Solid arrows are in the papers; the dashed return is the integration not yet shipped. And the models answer over the pages REPLICA represents — the <b>grounded document intelligence</b> REPLICA’s own paper lists as its application.</div>
 </section>
 
 <!-- ====== 47 · THANKS ====== -->

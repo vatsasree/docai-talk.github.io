@@ -357,14 +357,15 @@
         <rect x="242" y="26" width="92" height="44" rx="10" fill="#fff" stroke="#c9d4de" stroke-width="2"/><text x="288" y="46" text-anchor="middle" font-size="12.5" font-weight="700" fill="#33424f">SAM</text><text x="288" y="62" text-anchor="middle" font-size="11" fill="#5b6b7a">decoder</text>
         <path d="M338 48 h26" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrLi)"/>
         <path d="M374 36 q10 -14 24 -8 q14 8 10 20 q-8 14 -24 8 q-14 -8 -10 -20 z" fill="#7d8b99"/>
-        <text x="169" y="88" text-anchor="middle" font-size="11.5" fill="#5b6b7a">the token’s embedding is the prompt</text>
+        <text x="169" y="88" text-anchor="middle" font-size="11.5" fill="#5b6b7a">the token’s hidden state, projected, is the prompt</text>
       </svg>
-      <p class="small" style="margin-top:.8vh">One token → one mask. Trained end to end with text + mask losses. Followed by GLaMM, PixelLM, LISA++ — all on natural scenes.</p>
+      <p class="small" style="margin-top:.8vh">One token → one mask, trained end to end with text + mask losses. Followed by LISA++, GLaMM, PixelLM — all on natural scenes.</p>
+      <p class="small" style="margin-top:.6vh;color:var(--muted)">“SAM’s prompt interface can be driven not by human-provided points or boxes but by learned prompt embeddings derived from the VLM’s hidden states.”</p>
     </div>
     <div class="card casc" style="animation-delay:.2s;border-top:5px solid var(--m3)">
       <h3>What documents forced us to add</h3>
       <div style="display:flex;flex-direction:column;gap:.7vh;font-size:1.9vh;line-height:1.4">
-        <div><b>Transfer fails.</b> Pages are text-dense and far from natural scenes — these models “transfer poorly to documents”. So: a <b>document data engine</b>, 2M grounded QA, no hand-drawn masks.</div>
+        <div><b>Transfer fails.</b> These models “do not transfer well to documents, where interpretation depends on text layout, reading order, and the semantic structure of graphical elements.” So: a <b>document data engine</b> — 2M grounded QA, no hand-drawn masks.</div>
         <div><b>Evidence is plural.</b> One answer, K pointers — K chosen by the model.</div>
         <div><b>Evidence has scope.</b> Three nested masks per pointer: phrase ⊂ line ⊂ block.</div>
         <div><b>Text has priors.</b> Don’t bleed off the text; finer masks nest in coarser ones — as losses.</div>
