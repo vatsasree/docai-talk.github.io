@@ -549,6 +549,30 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
 .abswap .chartcard svg{width:100%;max-height:58vh}
 .abswap:has(.p2.show) .p1{opacity:0}
 .mchip{display:inline-block;color:#fff;border-radius:6px;padding:.1vh .8vh;margin-right:.4vw}
+
+/* ---- DocLayout-VL problem columns / needs / curriculum ---- */
+.probcol{display:flex;flex-direction:column;gap:1vh;min-height:0}
+.needcard{text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.8vh;padding:4vh 2vw}
+.needcard .needicon{font-size:6vh;color:var(--dlvl);font-weight:800;line-height:1}
+.needcard h3{font-size:3vh;margin:0}
+.stagec{display:flex;flex-direction:column;gap:1vh}
+.stagec .stg{font-size:2.3vh;font-weight:800;color:var(--dlvl)}
+.stagec .stg span{display:block;font-size:1.6vh;color:var(--muted);font-weight:700;letter-spacing:.04em}
+.stagec figure{flex:1;min-height:0;margin:0;display:flex;align-items:center;justify-content:center;background:#f8fafc;border-radius:8px}
+.stagec img{max-width:100%;max-height:40vh;object-fit:contain}
+/* ---- what made this possible: zoom-in cards ---- */
+.zoomcard{display:flex;flex-direction:column;gap:1.2vh}
+.zoomcard .zbig{font-size:3.6vh;font-weight:800;color:var(--ink)}
+.zoomcard .zsub{font-size:1.9vh;color:var(--muted)}
+.zoomcard .zdetail{display:flex;flex-direction:column;gap:1vh;font-size:2vh;margin-top:auto}
+.gpurow{display:grid;grid-template-columns:7.4vw 1fr;gap:.2vh .8vw;align-items:center}
+.gpurow span{font-size:1.7vh;font-weight:700}
+.gpurow em{grid-column:2;font-style:normal;font-size:1.6vh;color:var(--muted)}
+.zoomcard .zdetail{margin-top:1.4vh}
+/* frontier blobs grow out from the centre */
+.growc{transform-box:view-box;transform-origin:480px 215px;transform:scale(.05);transition:transform 1.1s cubic-bezier(.2,.8,.2,1) var(--d,0s)}
+.slide.on .growc{transform:scale(1)}
+.slide.on .frag:not(.show) .growc{transform:scale(.05)}
 </style>
 </head>
 <body>
@@ -1627,6 +1651,40 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
 
 <!-- ====== ANCHOR · AFTER DOCOG ====== -->
 
+<!-- ====== L3 · WHY NOT TODAY'S TOOLS ====== -->
+<section class="slide" style="--accent:var(--dlvl)">
+  <div class="kicker">Paper 3 · The whole page</div>
+  <h2>Why today’s layout tools fall short</h2>
+  <div class="vc" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.2vw;align-items:stretch">
+    <div class="probcol casc" style="animation-delay:.05s">
+      <div class="mot prob"><h4>Real pages are messy</h4><p>a rectangle cannot trace them</p></div>
+      <div class="cyc" data-interval="3200" style="height:46vh"><figure class="on"><img src="grounding/assets/dlvl_ex_seals.jpg" alt="Circular seals with curved text on a certificate"><figcaption>curved seals</figcaption></figure><figure><img src="grounding/assets/dlvl_ex_wedges.jpg" alt="Wedges and icons of a circular infographic"><figcaption>wedges and icons</figcaption></figure><figure><img src="grounding/assets/dlvl_ex_vertical.jpg" alt="Rotated text labels on infographic cards"><figcaption>rotated text</figcaption></figure><div class="cycdots"></div></div>
+    </div>
+    <div class="probcol casc" style="animation-delay:.2s">
+      <div class="mot prob"><h4>Every domain has its own words</h4><p>fixed label sets can’t keep up</p></div>
+      <div class="cyc" data-interval="3200" style="height:46vh"><figure class="on"><img src="grounding/assets/dlvl_ex_app.jpg" alt="A banking app labelled status-bar, account-summary-card, quick-action-icons"><figcaption>banking app</figcaption></figure><figure><img src="grounding/assets/dlvl_ex_exam.jpg" alt="An exam paper labelled multiple-choice-question, short-answer-question"><figcaption>exam paper</figcaption></figure><figure><img src="grounding/assets/dlvl_task_B.png" alt="An insurance policy with generic and insurance-specific labels"><figcaption>insurance policy</figcaption></figure><div class="cycdots"></div></div>
+    </div>
+    <div class="probcol casc" style="animation-delay:.35s">
+      <div class="mot prob"><h4>A page is a tree, not a list</h4><p>flat boxes throw that away</p></div>
+      <div class="cyc" data-interval="3200" style="height:46vh"><figure class="on"><img src="grounding/assets/dlvl_task_C_page.png" alt="A newspaper front page segmented region by region"><figcaption>newspaper</figcaption></figure><figure><img src="grounding/assets/dlvl_page_telugu.jpg" alt="A Telugu feature article with nested story regions"><figcaption>feature article</figcaption></figure><figure><img src="grounding/assets/dlvl_page_menu.jpg" alt="A restaurant menu with sections and item groups"><figcaption>menu</figcaption></figure><div class="cycdots"></div></div>
+    </div>
+  </div>
+  <div class="footer"><span class="act">Paper 3</span><span>Motivation</span></div>
+</section>
+
+<!-- ====== L3b · WHAT WE NEED ====== -->
+<section class="slide" style="--accent:var(--dlvl)">
+  <div class="kicker">Paper 3 · So what would it take?</div>
+  <h2>What a layout model needs</h2>
+  <div class="vc" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.4vw;align-items:stretch">
+    <div class="card casc needcard" style="animation-delay:.05s"><div class="needicon"><svg viewBox="0 0 60 60" style="height:6vh"><path d="M12 36 q-4 -18 14 -22 q14 -4 22 6 q10 12 -2 22 q-14 10 -28 2 q-6 -3 -6 -8 z" fill="#0E7C61" opacity=".85"/></svg></div><h3>Masks</h3><p class="small">any shape a region has</p></div>
+    <div class="card casc needcard" style="animation-delay:.2s"><div class="needicon"><svg viewBox="0 0 60 60" style="height:6vh"><path d="M8 22 h26 l14 12 -14 12 h-26 z" fill="none" stroke="#0E7C61" stroke-width="4" stroke-linejoin="round"/><circle cx="16" cy="34" r="3.5" fill="#0E7C61"/></svg></div><h3>Open-set labels</h3><p class="small">the prompt names the classes</p></div>
+    <div class="card casc needcard" style="animation-delay:.35s"><div class="needicon"><svg viewBox="0 0 60 60" style="height:6vh"><rect x="22" y="6" width="16" height="12" rx="3" fill="#0E7C61"/><rect x="6" y="40" width="16" height="12" rx="3" fill="#54ab92"/><rect x="38" y="40" width="16" height="12" rx="3" fill="#54ab92"/><path d="M30 18 v10 M14 28 h32 M14 28 v12 M46 28 v12" stroke="#7d8b99" stroke-width="3" fill="none"/></svg></div><h3>The page as a tree</h3><p class="small">every region, and how they nest</p></div>
+  </div>
+  <p class="frag" style="text-align:center;font-size:2.6vh;margin-top:2vh">…in <b>one model you can prompt</b>. Sound familiar?</p>
+  <div class="footer"><span class="act">Paper 3</span><span>Requirements</span></div>
+</section>
+
 <!-- ====== L2 · SAM FOR DOCUMENTS (one-shot) ====== -->
 <section class="slide" style="--accent:var(--dlvl)">
   <div class="kicker">Paper 3 · From a question to the whole page</div>
@@ -1735,21 +1793,6 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   <div class="footer"><span class="act">Paper 3</span><span>SAM for documents</span></div>
 </section>
 
-<!-- ====== L3 · WHY NOT TODAY'S TOOLS ====== -->
-<section class="slide" style="--accent:var(--dlvl)">
-  <div class="kicker">Paper 3 · Why today’s layout tools can’t</div>
-  <h2>Why today’s layout tools fall short</h2>
-  <div class="vc" style="display:flex;flex-direction:column;gap:1.6vh;justify-content:center">
-    <div class="cols" style="grid-template-columns:1fr 1fr 1fr;align-items:stretch;gap:1.2vw">
-      <div class="mot prob casc" style="animation-delay:.05s"><h4>Real pages are messy</h4><p>curved seals, wedge charts, wrapped text — <b>a rectangle cannot trace them</b></p></div>
-      <div class="mot prob casc" style="animation-delay:.2s"><h4>Every domain has its own words</h4><p>a passport has an <span class="term">mrz_block</span> (its machine-readable zone) — <b>fixed label sets can’t keep up</b></p></div>
-      <div class="mot prob casc" style="animation-delay:.35s"><h4>A page is a tree, not a list</h4><p>articles hold headlines — <b>flat boxes throw that away</b></p></div>
-    </div>
-    <figure class="fig frag" style="min-height:0"><img src="grounding/assets/dlvl_teaser.png" alt="DocLayout-VL teaser" style="max-height:38vh"></figure>
-  </div>
-  <div class="footer"><span class="act">Paper 3</span><span>Motivation</span></div>
-</section>
-
 <!-- ====== L4 · TASKS A+B ====== -->
 <section class="slide" style="--accent:var(--dlvl)">
   <div class="kicker">Paper 3 · What it does</div>
@@ -1821,89 +1864,6 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   <div class="footer"><span class="act">Paper 3</span><span>Serialization</span></div>
 </section>
 
-<!-- ====== L7b · WORKFLOW ANIMATION ====== -->
-<section class="slide" style="--accent:var(--dlvl)">
-  <div class="kicker">Paper 3 · One pass, end to end</div>
-  <h2>How it works, <span class="k">step by step</span></h2>
-  <div class="svgbox" style="flex:1;min-height:0">
-  <svg viewBox="0 0 1020 330" style="width:97%" aria-label="Page and prompt in; the model writes a tagged tree, and every tag becomes a mask">
-    <defs>
-      <marker id="arrW" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#8a97a5"/></marker>
-    </defs>
-
-    <!-- 1 · page + prompt -->
-    <text x="14" y="18" font-size="12.5" font-weight="800" fill="#8a97a5">1 · PAGE + PROMPT</text>
-    <rect x="14" y="30" width="126" height="166" rx="8" fill="#fff" stroke="#c9d4de" stroke-width="2"/>
-    <rect x="28" y="44" width="98" height="13" rx="3" fill="#33424f"/>
-    <rect x="28" y="66" width="98" height="6" rx="3" fill="#d5dee6"/><rect x="28" y="78" width="98" height="6" rx="3" fill="#d5dee6"/>
-    <rect x="28" y="96" width="46" height="40" rx="3" fill="#eef2f6" stroke="#dde5ec"/>
-    <rect x="80" y="96" width="46" height="6" rx="3" fill="#d5dee6"/><rect x="80" y="108" width="46" height="6" rx="3" fill="#d5dee6"/><rect x="80" y="120" width="46" height="6" rx="3" fill="#d5dee6"/>
-    <rect x="28" y="148" width="98" height="6" rx="3" fill="#d5dee6"/><rect x="28" y="160" width="70" height="6" rx="3" fill="#d5dee6"/>
-    <rect x="14" y="206" width="126" height="42" rx="10" fill="#e9f2ef" stroke="#0E7C61" stroke-width="2"/>
-    <text x="77" y="223" text-anchor="middle" font-size="11.5" fill="#1d4437">“give the full</text>
-    <text x="77" y="239" text-anchor="middle" font-size="11.5" fill="#1d4437">layout parse”</text>
-
-    <!-- 2 · the model -->
-    <path d="M148 112 h32" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrW)"/>
-    <rect x="186" y="84" width="92" height="56" rx="12" fill="#0E7C61"/>
-    <text x="232" y="118" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">VLM</text>
-
-    <!-- 3 · tagged sequence (frag) -->
-    <g class="frag">
-      <text x="302" y="18" font-size="12.5" font-weight="800" fill="#8a97a5">2 · IT WRITES A TAGGED TREE</text>
-      <path d="M286 112 h26" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrW)"/>
-      <rect x="318" y="30" width="248" height="166" rx="10" fill="#0d2740"/>
-      <g font-family="Menlo,monospace" font-size="13" fill="#dfe9f5">
-        <text x="334" y="56">&lt;article&gt;</text>
-        <text x="352" y="80">headline<tspan fill="#b9f0dc" font-weight="700"> [LAY]</tspan></text>
-        <text x="352" y="104">byline<tspan fill="#b9f0dc" font-weight="700"> [LAY]</tspan></text>
-        <text x="352" y="128">figure<tspan fill="#b9f0dc" font-weight="700"> [LAY]</tspan></text>
-        <text x="352" y="152">caption<tspan fill="#b9f0dc" font-weight="700"> [LAY]</tspan></text>
-        <text x="334" y="176">&lt;/article&gt;<tspan fill="#b9f0dc" font-weight="700"> [LAY]</tspan></text>
-      </g>
-      
-    </g>
-
-    <!-- 4 · HGC (frag) -->
-    <g class="frag">
-      <text x="600" y="18" font-size="12.5" font-weight="800" fill="#8a97a5">3 · TREE CONTEXT</text>
-      <path d="M574 112 h26" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrW)"/>
-      <circle class="pop s1" cx="676" cy="56" r="14" fill="#0E7C61"/><text x="676" y="61" text-anchor="middle" font-size="9.5" font-weight="700" fill="#fff">art</text>
-      <path class="draw" style="--len:200" d="M676 70 v16 M676 86 h-56 v14 M676 86 h-18 v14 M676 86 h18 v14 M676 86 h56 v14" stroke="#9db4ab" stroke-width="2" fill="none"/>
-      <g text-anchor="middle" font-size="8.5" font-weight="700" fill="#1d4437">
-        <circle class="pop s2" cx="620" cy="112" r="12" fill="#8cc5b3"/><text x="620" y="116">head</text>
-        <circle class="pop s3" cx="658" cy="112" r="12" fill="#8cc5b3"/><text x="658" y="116">by</text>
-        <circle class="pop s4" cx="694" cy="112" r="12" fill="#8cc5b3"/><text x="694" y="116">fig</text>
-        <circle class="pop s5" cx="732" cy="112" r="12" fill="#8cc5b3"/><text x="732" y="116">cap</text>
-      </g>
-      <path class="draw" style="--len:120" d="M694 126 q20 22 38 -2" stroke="#0E7C61" stroke-width="2.5" fill="none"/>
-      <text x="676" y="168" text-anchor="middle" font-size="12" fill="#0E7C61" font-weight="700">caption ↔ its figure</text>
-      <text x="676" y="186" text-anchor="middle" font-size="12" fill="#5b6b7a">parent · children · siblings only</text>
-    </g>
-
-    <!-- 5 · masks (frag) -->
-    <g class="frag">
-      <text x="806" y="18" font-size="12.5" font-weight="800" fill="#8a97a5">4 · ONE MASK PER TAG</text>
-      <path d="M760 112 h30" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrW)"/>
-      <rect x="806" y="30" width="126" height="166" rx="8" fill="#fff" stroke="#c9d4de" stroke-width="2"/>
-      <rect class="pop s1" x="820" y="44" width="98" height="13" rx="3" fill="#0E7C61" opacity=".85"/>
-      <rect class="pop s2" x="820" y="66" width="98" height="18" rx="3" fill="#54ab92" opacity=".75"/>
-      <rect class="pop s3" x="820" y="96" width="46" height="40" rx="3" fill="#8cc5b3" opacity=".9"/>
-      <rect class="pop s4" x="872" y="96" width="46" height="30" rx="3" fill="#b5dcce" opacity=".9"/>
-      <rect class="pop s5" x="820" y="148" width="98" height="18" rx="3" fill="#54ab92" opacity=".6"/>
-      <text x="869" y="216" text-anchor="middle" font-size="12.5" fill="#5b6b7a">pixel-accurate, and still a tree</text>
-    </g>
-
-    <!-- closing line -->
-    <g class="frag">
-      <rect x="14" y="268" width="990" height="48" rx="12" fill="#e9f2ef" stroke="#0E7C61" stroke-width="2"/>
-      <text x="509" y="298" text-anchor="middle" font-size="16" font-weight="700" fill="#1d4437">No detector, no class list — prompt in, structure out.</text>
-    </g>
-  </svg>
-  </div>
-  <div class="footer"><span class="act">Paper 3</span><span>Workflow</span></div>
-</section>
-
 <!-- ====== L8 · ARCHITECTURE ====== -->
 <section class="slide" style="--accent:var(--dlvl)">
   <div class="kicker">Paper 3 · Architecture</div>
@@ -1913,15 +1873,26 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   <div class="footer"><span class="act">Paper 3</span><span>Architecture</span></div>
 </section>
 
+<!-- ====== L8h · WHAT HGC BUYS ====== -->
+<section class="slide" style="--accent:var(--dlvl)">
+  <div class="kicker">Paper 3 · HGC</div>
+  <h2>Why attention should <span class="k">follow the tree</span></h2>
+  <div class="cols vc" style="grid-template-columns:1.45fr .55fr;gap:1.6vw;align-items:center">
+    <div class="cyc" data-interval="4500" style="height:64vh"><figure class="on"><img src="grounding/assets/dlvl_hier_a.jpg" alt="A Telugu feature article: its tree, the HGC attention mask, and the segmented page"><figcaption>feature article</figcaption></figure><figure><img src="grounding/assets/dlvl_hier_b.jpg" alt="A restaurant menu: its tree, the HGC attention mask, and the segmented page"><figcaption>restaurant menu</figcaption></figure><figure><img src="grounding/assets/dlvl_hier_c.jpg" alt="A government gazette: its tree, the HGC attention mask, and the segmented page"><figcaption>gazette</figcaption></figure><div class="cycdots"></div></div>
+    <div style="display:flex;flex-direction:column;gap:1.6vh">
+      <div class="card"><p class="small">Each <span class="tok l">[LAY]</span> attends only to its <b>parent, children and siblings</b> — the coloured blocks in the mask.</p></div>
+      <div class="card"><p class="small">So a headline stays with <i>its</i> article, an item with <i>its</i> menu section — regions of different branches never merge.</p></div>
+      <div class="stat frag"><div class="v" style="font-size:3.6vh">58.3 → 77.5</div><div class="l">hierarchical-track Open mIoU, without → with HGC</div></div>
+    </div>
+  </div>
+  <div class="footer"><span class="act">Paper 3</span><span>HGC</span></div>
+</section>
+
 <!-- ====== L9 · INTERACTIVE ====== -->
 <section class="slide iframe-slide" style="--accent:var(--dlvl)">
   <div class="kicker">Paper 3 · Watch it run</div>
   <h2 style="font-size:3.4vh">The model in action</h2>
   <div class="ifwrap"><iframe data-src="grounding/interactive/doclayoutvl.html" loading="lazy" title="DocLayout-VL interactive walkthrough"></iframe></div>
-  <div class="ifbar">
-    <span class="small"><b>Watch:</b> the tags are written first; then every [LAY] state is refined along the tree and turned into a mask. <kbd>Space</kbd> pause · <kbd>R</kbd> restart · <kbd>F</kbd> fit</span>
-    <a href="grounding/interactive/doclayoutvl.html" target="_blank">open standalone ↗</a>
-  </div>
   <div class="footer"><span class="act">Paper 3</span><span>Interactive architecture</span></div>
 </section>
 
@@ -1961,32 +1932,24 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
 <section class="slide" style="--accent:var(--dlvl)">
   <div class="kicker">Paper 3 · Training strategy</div>
   <h2>A three-stage curriculum</h2>
-  <div class="vc" style="display:flex;flex-direction:column;gap:2.6vh">
-  <div class="svgbox">
-  <svg viewBox="0 0 940 200" style="width:94%">
-    <path class="draw" style="--len:900" d="M40 100 h860" stroke="#c9d4de" stroke-width="3" fill="none"/>
-    <g text-anchor="middle">
-      <circle class="pop s1" cx="170" cy="100" r="10" fill="#0E7C61"/>
-      <rect x="60" y="20" width="220" height="56" rx="10" fill="#fff" stroke="#0E7C61" stroke-width="2"/>
-      <text x="170" y="43" font-size="15" font-weight="700" fill="#16222e">1 · flat layouts</text>
-      <text x="170" y="63" font-size="12.5" fill="#5b6b7a">HGC with full attention — no tree yet</text>
-      <text x="170" y="135" font-size="12.5" fill="#5b6b7a">learn to see regions</text>
-      <circle class="pop s2" cx="470" cy="100" r="10" fill="#0E7C61"/>
-      <rect x="360" y="20" width="220" height="56" rx="10" fill="#fff" stroke="#0E7C61" stroke-width="2"/>
-      <text x="470" y="43" font-size="15" font-weight="700" fill="#16222e">2 · hierarchical</text>
-      <text x="470" y="63" font-size="12.5" fill="#5b6b7a">switch to tree-sparse attention</text>
-      <text x="470" y="135" font-size="12.5" fill="#5b6b7a">learn structure</text>
-      <circle class="pop s3" cx="770" cy="100" r="10" fill="#0E7C61"/>
-      <rect x="650" y="20" width="240" height="56" rx="10" fill="#fff" stroke="#0E7C61" stroke-width="2"/>
-      <text x="770" y="43" font-size="15" font-weight="700" fill="#16222e">3 · instruction tuning</text>
-      <text x="770" y="63" font-size="12.5" fill="#5b6b7a">promptability</text>
-      <text x="770" y="135" font-size="12.5" fill="#5b6b7a">learn to be asked</text>
-    </g>
-  </svg>
+  <div class="vc" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.4vw;align-items:stretch">
+    <div class="card casc stagec" style="animation-delay:.05s">
+      <div class="stg">1 · flat layouts <span>FlatLay-25M</span></div>
+      <figure><img src="grounding/assets/dlvl_ex_exam.jpg" alt="Flat open-set labels on an exam paper"></figure>
+      <p class="small">learn to see regions · HGC with full attention</p>
+    </div>
+    <div class="card casc stagec" style="animation-delay:.2s">
+      <div class="stg">2 · hierarchical <span>HierLay-40M</span></div>
+      <figure><img src="grounding/assets/dlvl_hier_a.jpg" alt="A layout tree with its tree-shaped attention mask"></figure>
+      <p class="small">learn structure · HGC switches to tree attention</p>
+    </div>
+    <div class="card casc stagec" style="animation-delay:.35s">
+      <div class="stg">3 · instructions <span>PromptLay-15M</span></div>
+      <figure><img src="grounding/assets/dlvl_ex_prompt.jpg" alt="A prompted request: segment only the Hindi text regions"></figure>
+      <p class="small">learn to be asked · “segment only the Hindi text”</p>
+    </div>
   </div>
-  <p class="small" style="text-align:center">The data splits mirror the stages: FlatLay-25M → HierLay-40M → PromptLay-15M — 25M flat regions, 40M tree regions, 15M prompt-grounded regions: the 80M masks.</p>
-  <p class="small" style="text-align:center;margin-top:-1.2vh"><b>The receipt:</b> train the three jointly instead and the overall score drops 79.4 → 76.3, hierarchy 77.5 → 68.7.</p>
-  </div>
+  <p class="small frag" style="text-align:center;margin-top:1.2vh">Train the three jointly instead: overall 79.4 → 76.3, hierarchy 77.5 → 68.7.</p>
   <div class="footer"><span class="act">Paper 3</span><span>Curriculum</span></div>
 </section>
 
@@ -2045,7 +2008,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
         <path d="M732 242.5 v-127.0" stroke="#b42318" stroke-width="2" marker-end="url(#arr8)" stroke-dasharray="6 4"/>
         <defs><marker id="arr8" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#b42318"/></marker></defs>
       </svg>
-      <p class="small" style="text-align:center;margin-top:.4vh"><b>Both — but architecture wins.</b> Four times the data moves box-only 28.4 → 32.5. HGC adds +11 to +13 at every data scale. Full model on a <b>quarter</b> of the data (63.5) beats box-only on all of it (32.5).</p>
+      <p class="small" style="text-align:center;margin-top:.4vh"><b>Both — but architecture wins.</b></p>
     </div>
   </div>
   <div class="footer"><span class="act">Paper 3</span><span>Architecture vs data</span></div>
@@ -2056,6 +2019,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   <div class="time">Paper 3 of 3</div>
   <h2>DocLayout-VL</h2>
   <p>A Foundational Model for <b>Hierarchical</b>, <b>Open-Set</b> and <b>Promptable</b> Document Layout Segmentation · <b>ECCV 2026</b></p>
+  <div class="venuelogo"><img src="grounding/assets/logo_eccv.png" alt="ECCV 2026"></div>
   <div class="team"><figure class="person"><span class="ph"><span class="ini">VK</span><img src="team/Kesav.jpg" alt="Venkata Kesav Venna" loading="lazy" onerror="this.remove()"></span><figcaption>Venkata Kesav Venna<sup>*</sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">SB</span><img src="team/Srihari.jpg" alt="Srihari Bandarupalli" loading="lazy" onerror="this.remove()"></span><figcaption>Srihari Bandarupalli<sup>*</sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">AS</span><img src="team/Anirudh.jpg" alt="Anirudh Srinivasan" loading="lazy" onerror="this.remove()"></span><figcaption>Anirudh Srinivasan<sup>*</sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">RR</span><img src="team/Raghuveer.jpg" alt="Raghuveer R" loading="lazy" onerror="this.remove()"></span><figcaption>Raghuveer R<sup></sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">SM</span><img src="team/SaiMadhu.jpg" alt="Sai Madhusudan Gunda" loading="lazy" onerror="this.remove()"></span><figcaption>Sai Madhusudan Gunda<sup></sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">RK</span><img src="team/RaviKiran.jpg" alt="Ravi Kiran Sarvadevabhatla" loading="lazy" onerror="this.remove()"></span><figcaption>Ravi Kiran Sarvadevabhatla<sup></sup></figcaption></figure></div>
   <div class="teamfoot">* equal contribution &nbsp;·&nbsp; BharatGen · IIIT Hyderabad &nbsp;·&nbsp; doclayoutvl.github.io</div>
 </section>
@@ -2066,105 +2030,48 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
 <section class="slide" style="--accent:var(--blue)">
   <div class="kicker">Stepping back</div>
   <h2>Three papers — <span class="k">one recipe</span></h2>
-  <div class="vc">
-  <div class="recipe">The VLM's <b>hidden state becomes the pointer</b>.</div>
-  <div class="vc" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.2vw">
-    <div class="card casc" style="animation-delay:.05s;border-top:6px solid var(--m3);display:flex;flex-direction:column;gap:.6vh">
-      <h3 style="color:var(--m3)">M3Grounder · CVPR'26</h3>
-      <p class="small">grounds <b>answer spans</b></p>
-      <p style="margin:.4vh 0"><span class="tok">[GROUND]</span> → 3 granularity heads</p>
-      <p class="small">priors: don't bleed · nest</p>
-      <svg viewBox="0 0 200 56" style="width:96%;margin:1.6vh auto"><rect x="8" y="4" width="184" height="48" rx="9" fill="#eaf1f8"/><rect x="20" y="20" width="58" height="16" rx="5" fill="#F59222"/><rect x="86" y="20" width="32" height="16" rx="5" fill="#b9cee2"/><rect x="126" y="20" width="58" height="16" rx="5" fill="#F59222"/></svg>
-      <div class="stat" style="padding:1vh"><div class="v" style="font-size:3.2vh;color:var(--m3)">79.0 vs 43.4</div><div class="l">F1<sub>g</sub> vs best zero-shot</div></div>
-    </div>
-    <div class="card casc" style="animation-delay:.2s;border-top:6px solid var(--docog);display:flex;flex-direction:column;gap:.6vh">
-      <h3 style="color:var(--docog)">DoCoG · ECCV'26 Spotlight</h3>
-      <p class="small">grounds <b>every reasoning step</b></p>
-      <p style="margin:.4vh 0"><span class="tok g">[GND]</span> → GIM keeps them consistent</p>
-      <p class="small">priors: stay anchored under DPO</p>
-      <svg viewBox="0 0 200 56" style="width:96%;margin:1.6vh auto"><g fill="#f1eafd"><rect x="8" y="2" width="184" height="14" rx="4"/><rect x="8" y="20" width="184" height="14" rx="4"/><rect x="8" y="38" width="184" height="14" rx="4"/></g><g fill="#7C3AED"><circle cx="176" cy="9" r="5.5"/><circle cx="176" cy="27" r="5.5"/><circle cx="176" cy="45" r="5.5"/></g></svg>
-      <div class="stat" style="padding:1vh"><div class="v" style="font-size:3.2vh;color:var(--docog)">81.9 vs 4.8</div><div class="l">GQ<sub>fa</sub> vs GPT-5</div></div>
-    </div>
-    <div class="card casc" style="animation-delay:.35s;border-top:6px solid var(--dlvl);display:flex;flex-direction:column;gap:.6vh">
-      <h3 style="color:var(--dlvl)">DocLayout-VL · ECCV'26</h3>
-      <p class="small">grounds <b>the whole page</b></p>
-      <p style="margin:.4vh 0"><span class="tok l">[LAY]</span> → tree-sparse attention</p>
-      <p class="small">priors: contain · don't overlap</p>
-      <svg viewBox="0 0 200 56" style="width:96%;margin:1.6vh auto"><circle cx="100" cy="11" r="8" fill="#0E7C61"/><path d="M100 19 v9 M100 28 h-56 v9 M100 28 h56 v9 M100 28 v9" stroke="#9db4ab" stroke-width="2" fill="none"/><g fill="#54ab92"><circle cx="44" cy="44" r="8"/><circle cx="100" cy="44" r="8"/><circle cx="156" cy="44" r="8"/></g></svg>
-      <div class="stat" style="padding:1vh"><div class="v" style="font-size:3.2vh;color:var(--dlvl)">79.4 vs 37.2</div><div class="l">OS vs Gemini 3 Pro</div></div>
-    </div>
-  </div>
-  <p class="small frag" style="margin-top:1vh;text-align:center">Interaction and losses grow with the structure they must respect: <b>independent spans → consistent steps → full tree</b>. <span class="tok">[GROUND]</span> · <span class="tok g">[GND]</span> · <span class="tok l">[LAY]</span> — one pointer, three names. REPLICA has no pointer: it made the pages two of the three learnt from.</p>
-  </div>
-  <div class="footer"><span class="act">Synthesis</span><span>One recipe</span></div>
-</section>
-
-<!-- ====== FINAL · THE LOOP CLOSES ====== -->
-<section class="slide" style="--accent:var(--replica)">
-  <div class="kicker">Where the four systems meet</div>
-  <h2>What flows between the four systems</h2>
   <div class="svgbox vc" style="flex:1;min-height:0">
-  <svg viewBox="0 0 1000 400" style="width:92%" aria-label="REPLICA's Fid-HTML feeds the M3Grounder and DoCoG data engines; DocLayout-VL reuses the recipe; next, DocLayout-VL could replace REPLICA's segmentation ensemble">
-    <defs>
-      <marker id="aG3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#B7791F"/></marker>
-      <marker id="aGr3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#0E7C61"/></marker>
-    </defs>
-    <rect x="30" y="100" width="270" height="160" rx="18" fill="#fff" stroke="#B7791F" stroke-width="3"/>
-    <rect x="30" y="100" width="270" height="10" rx="5" fill="#B7791F"/>
-    <text x="165" y="162" text-anchor="middle" font-size="30" font-weight="800" fill="#B7791F">REPLICA</text>
-    <text x="165" y="208" text-anchor="middle" font-size="22" font-weight="800" fill="#1E3A5F">→ Fid-HTML</text>
-
-    <rect x="670" y="40" width="310" height="76" rx="14" fill="#fff" stroke="#05539C" stroke-width="2.5"/>
-    <text x="825" y="74" text-anchor="middle" font-size="22" font-weight="800" fill="#05539C">M3Grounder</text>
-    <text x="825" y="98" text-anchor="middle" font-size="14" fill="#5b6b7a">140K docs → QA</text>
-    <rect x="670" y="142" width="310" height="76" rx="14" fill="#fff" stroke="#7C3AED" stroke-width="2.5"/>
-    <text x="825" y="176" text-anchor="middle" font-size="22" font-weight="800" fill="#7C3AED">DoCoG</text>
-    <text x="825" y="200" text-anchor="middle" font-size="14" fill="#5b6b7a">175K pages → step-wise QA</text>
-    <rect x="670" y="244" width="310" height="76" rx="14" fill="#fff" stroke="#0E7C61" stroke-width="2.5"/>
-    <text x="825" y="278" text-anchor="middle" font-size="22" font-weight="800" fill="#0E7C61">DocLayout-VL</text>
-    <text x="825" y="302" text-anchor="middle" font-size="14" fill="#5b6b7a">same recipe, own engine</text>
-
-    <text x="470" y="64" text-anchor="middle" font-size="16" font-weight="800" fill="#B7791F">QA that cites element IDs</text>
-    <path d="M305 140 C 440 140, 540 80, 664 78" fill="none" stroke="#B7791F" stroke-width="4" marker-end="url(#aG3)"/>
-    <path d="M305 180 C 440 180, 540 180, 664 180" fill="none" stroke="#B7791F" stroke-width="4" marker-end="url(#aG3)"/>
-    <path d="M305 220 C 440 220, 540 282, 664 282" fill="none" stroke="#B7791F" stroke-width="2.5" stroke-dasharray="8 6" marker-end="url(#aG3)"/>
-
-    <path class="frag" d="M664 316 C 560 368, 420 368, 305 262" fill="none" stroke="#0E7C61" stroke-width="3" stroke-dasharray="9 6" marker-end="url(#aGr3)"/>
-    <text class="frag" x="494" y="388" text-anchor="middle" font-size="15" font-weight="800" fill="#0E7C61">next: one model replaces REPLICA’s segmentation ensemble</text>
+  <svg viewBox="0 0 980 320" style="width:94%" aria-label="Three abstracted architectures; in each, the VLM's hidden state at a special token is the prompt for SAM">
+    <text x="437" y="14" text-anchor="middle" font-size="13" font-weight="800" fill="#16222e">hidden state at a special token</text>
+    <text x="805" y="14" text-anchor="middle" font-size="13" font-weight="800" fill="#16222e">… is SAM’s prompt</text>
+    <text x="10" y="56" font-size="17" font-weight="800" fill="#05539C">M3Grounder</text><text x="10" y="78" font-size="12.5" fill="#5b6b7a">answer spans</text><rect x="210" y="30" width="120" height="56" rx="10" fill="#f3f5f8" stroke="#c9d1d9" stroke-width="2"/><text x="270" y="64" text-anchor="middle" font-size="15" font-weight="700" fill="#8a97a5">VLM</text><rect x="372" y="38" width="130" height="40" rx="9" fill="#05539C"/><text x="437" y="64" text-anchor="middle" font-size="13.5" font-family="Menlo,monospace" font-weight="700" fill="#fff">[GROUND]</text><path d="M330 58 h38" stroke="#05539C" stroke-width="4" marker-end="url(#aR_M3)"/><rect x="546" y="30" width="150" height="56" rx="10" fill="#f3f5f8" stroke="#c9d1d9" stroke-width="2"/><text x="621" y="64" text-anchor="middle" font-size="14" font-weight="700" fill="#8a97a5">3 MLP heads</text><path d="M502 58 h40" stroke="#05539C" stroke-width="4" marker-end="url(#aR_M3)"/><path d="M696 58 h40" stroke="#05539C" stroke-width="4" marker-end="url(#aR_M3)"/><rect x="740" y="30" width="130" height="56" rx="10" fill="#fff" stroke="#05539C" stroke-width="2.5"/><text x="805" y="64" text-anchor="middle" font-size="15" font-weight="800" fill="#05539C">SAM</text><path d="M870 58 h28" stroke="#05539C" stroke-width="4" marker-end="url(#aR_M3)"/><path d="M906 42 q12 -14 30 -10 q20 5 22 18 q2 12 -12 17 q-20 8 -36 0 q-12 -8 -4 -25 z" fill="#05539C" opacity=".85"/><defs><marker id="aR_M3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#05539C"/></marker></defs><text x="10" y="156" font-size="17" font-weight="800" fill="#7C3AED">DoCoG</text><text x="10" y="178" font-size="12.5" fill="#5b6b7a">every reasoning step</text><rect x="210" y="130" width="120" height="56" rx="10" fill="#f3f5f8" stroke="#c9d1d9" stroke-width="2"/><text x="270" y="164" text-anchor="middle" font-size="15" font-weight="700" fill="#8a97a5">VLM</text><rect x="372" y="138" width="130" height="40" rx="9" fill="#7C3AED"/><text x="437" y="164" text-anchor="middle" font-size="13.5" font-family="Menlo,monospace" font-weight="700" fill="#fff">[GND] × K</text><path d="M330 158 h38" stroke="#7C3AED" stroke-width="4" marker-end="url(#aR_Do)"/><rect x="546" y="130" width="150" height="56" rx="10" fill="#f3f5f8" stroke="#c9d1d9" stroke-width="2"/><text x="621" y="164" text-anchor="middle" font-size="14" font-weight="700" fill="#8a97a5">GIM</text><path d="M502 158 h40" stroke="#7C3AED" stroke-width="4" marker-end="url(#aR_Do)"/><path d="M696 158 h40" stroke="#7C3AED" stroke-width="4" marker-end="url(#aR_Do)"/><rect x="740" y="130" width="130" height="56" rx="10" fill="#fff" stroke="#7C3AED" stroke-width="2.5"/><text x="805" y="164" text-anchor="middle" font-size="15" font-weight="800" fill="#7C3AED">SAM</text><path d="M870 158 h28" stroke="#7C3AED" stroke-width="4" marker-end="url(#aR_Do)"/><path d="M906 142 q12 -14 30 -10 q20 5 22 18 q2 12 -12 17 q-20 8 -36 0 q-12 -8 -4 -25 z" fill="#7C3AED" opacity=".85"/><defs><marker id="aR_Do" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#7C3AED"/></marker></defs><text x="10" y="256" font-size="17" font-weight="800" fill="#0E7C61">DocLayout-VL</text><text x="10" y="278" font-size="12.5" fill="#5b6b7a">every node of a tree</text><rect x="210" y="230" width="120" height="56" rx="10" fill="#f3f5f8" stroke="#c9d1d9" stroke-width="2"/><text x="270" y="264" text-anchor="middle" font-size="15" font-weight="700" fill="#8a97a5">VLM</text><rect x="372" y="238" width="130" height="40" rx="9" fill="#0E7C61"/><text x="437" y="264" text-anchor="middle" font-size="13.5" font-family="Menlo,monospace" font-weight="700" fill="#fff">[LAY] / node</text><path d="M330 258 h38" stroke="#0E7C61" stroke-width="4" marker-end="url(#aR_DL)"/><rect x="546" y="230" width="150" height="56" rx="10" fill="#f3f5f8" stroke="#c9d1d9" stroke-width="2"/><text x="621" y="264" text-anchor="middle" font-size="14" font-weight="700" fill="#8a97a5">HGC</text><path d="M502 258 h40" stroke="#0E7C61" stroke-width="4" marker-end="url(#aR_DL)"/><path d="M696 258 h40" stroke="#0E7C61" stroke-width="4" marker-end="url(#aR_DL)"/><rect x="740" y="230" width="130" height="56" rx="10" fill="#fff" stroke="#0E7C61" stroke-width="2.5"/><text x="805" y="264" text-anchor="middle" font-size="15" font-weight="800" fill="#0E7C61">SAM</text><path d="M870 258 h28" stroke="#0E7C61" stroke-width="4" marker-end="url(#aR_DL)"/><path d="M906 242 q12 -14 30 -10 q20 5 22 18 q2 12 -12 17 q-20 8 -36 0 q-12 -8 -4 -25 z" fill="#0E7C61" opacity=".85"/><defs><marker id="aR_DL" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#0E7C61"/></marker></defs>
   </svg>
   </div>
-  <p class="small" style="text-align:center;color:var(--muted)">Solid arrows: data that trained the model · dashed: the idea reused, or not yet built</p>
+  <p class="frag" style="text-align:center;font-size:2.6vh;margin-top:.6vh">What changes is how the pointers talk: <b>not at all</b> → <b>across a chain</b> → <b>along a tree</b>.</p>
+  <div class="footer"><span class="act">Synthesis</span><span>One recipe</span></div>
 </section>
 
 <!-- ====== S1b · WHAT MADE IT POSSIBLE ====== -->
 <section class="slide" style="--accent:var(--blue)">
   <div class="kicker">Stepping back</div>
   <h2>What made this possible</h2>
-  <div class="vc" style="display:grid;grid-template-columns:1fr 1.15fr 1fr;gap:1.4vw;align-items:stretch">
-    <div class="card casc" style="animation-delay:.05s;border-top:6px solid var(--orange)">
-      <h3 style="color:#8a4b00">Data engines</h3>
-      <p class="small">Reconstruct the page first, then generate QA that cites element IDs; masks come from segmenters, never from a model writing coordinates.</p>
-      <div style="display:flex;flex-direction:column;gap:.5vh;margin-top:1vh;font-size:1.85vh">
-        <div><b>2M</b> grounded QA · M3Grounder</div>
-        <div><b>1.5M</b> step-wise QA + <b>20K</b> preference pairs · DoCoG</div>
-        <div><b>80M</b> masks on <b>2.5M</b> pages · DocLayout-VL</div>
+  <div class="vc" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.4vw;align-items:stretch">
+    <div class="card casc zoomcard" style="animation-delay:.05s;border-top:6px solid var(--orange)">
+      <div class="zbig">Data engines</div>
+      <div class="zsub">reconstruct first, then cite element IDs — masks never typed as coordinates</div>
+      <div class="zdetail frag">
+        <div><b>2M</b> grounded QA</div><div><b>1.5M</b> step-wise QA + <b>20K</b> pairs</div><div><b>80M</b> masks on <b>2.5M</b> pages</div>
       </div>
-      <p class="small" style="margin-top:1vh;color:var(--muted)">Every benchmark human-verified.</p>
     </div>
-    <div class="card casc" style="animation-delay:.2s;border-top:6px solid var(--blue)">
-      <h3>Design choices</h3>
-      <p class="small">The same 8B backbone, three stages:</p>
-      <table class="abl" style="font-size:1.7vh;margin-top:.6vh"><thead><tr><th></th><th>zero-shot</th><th>+ our data</th><th>+ our model</th></tr></thead><tbody><tr><td>M3Grounder · F1<sub>g</sub></td><td>12.8</td><td>60.6</td><td><b>79.0</b></td></tr><tr><td>DoCoG · GQ<sub>fa</sub></td><td>5.5</td><td>61.9</td><td><b>81.9</b></td></tr><tr><td>DocLayout-VL · OS</td><td>31.6</td><td>45.8</td><td><b>79.4</b></td></tr></tbody></table>
-      <p class="small" style="margin-top:.8vh">Data brings the backbone into the task; the architecture — pointer tokens, document priors, GIM, HGC, the anchor — closes the rest.</p>
+    <div class="card casc zoomcard" style="animation-delay:.2s;border-top:6px solid var(--blue)">
+      <div class="zbig">Compute</div>
+      <div class="zsub">full fine-tuning of 8B backbones, DeepSpeed ZeRO-3</div>
+      <div class="zdetail frag">
+        <div class="gpurow"><span>M3Grounder</span><svg viewBox="0 0 208 52" style="width:100%"><rect x="0" y="0" width="10" height="10" rx="2" fill="#05539C"/><rect x="13" y="0" width="10" height="10" rx="2" fill="#05539C"/><rect x="26" y="0" width="10" height="10" rx="2" fill="#05539C"/><rect x="39" y="0" width="10" height="10" rx="2" fill="#05539C"/><rect x="52" y="0" width="10" height="10" rx="2" fill="#05539C"/><rect x="65" y="0" width="10" height="10" rx="2" fill="#05539C"/><rect x="78" y="0" width="10" height="10" rx="2" fill="#05539C"/><rect x="91" y="0" width="10" height="10" rx="2" fill="#05539C"/><rect x="104" y="0" width="10" height="10" rx="2" fill="#05539C"/><rect x="117" y="0" width="10" height="10" rx="2" fill="#05539C"/><rect x="130" y="0" width="10" height="10" rx="2" fill="#05539C"/><rect x="143" y="0" width="10" height="10" rx="2" fill="#05539C"/><rect x="156" y="0" width="10" height="10" rx="2" fill="#05539C"/><rect x="169" y="0" width="10" height="10" rx="2" fill="#05539C"/><rect x="182" y="0" width="10" height="10" rx="2" fill="#05539C"/><rect x="195" y="0" width="10" height="10" rx="2" fill="#05539C"/><rect x="0" y="13" width="10" height="10" rx="2" fill="#05539C"/><rect x="13" y="13" width="10" height="10" rx="2" fill="#05539C"/><rect x="26" y="13" width="10" height="10" rx="2" fill="#05539C"/><rect x="39" y="13" width="10" height="10" rx="2" fill="#05539C"/><rect x="52" y="13" width="10" height="10" rx="2" fill="#05539C"/><rect x="65" y="13" width="10" height="10" rx="2" fill="#05539C"/><rect x="78" y="13" width="10" height="10" rx="2" fill="#05539C"/><rect x="91" y="13" width="10" height="10" rx="2" fill="#05539C"/><rect x="104" y="13" width="10" height="10" rx="2" fill="#05539C"/><rect x="117" y="13" width="10" height="10" rx="2" fill="#05539C"/><rect x="130" y="13" width="10" height="10" rx="2" fill="#05539C"/><rect x="143" y="13" width="10" height="10" rx="2" fill="#05539C"/><rect x="156" y="13" width="10" height="10" rx="2" fill="#05539C"/><rect x="169" y="13" width="10" height="10" rx="2" fill="#05539C"/><rect x="182" y="13" width="10" height="10" rx="2" fill="#05539C"/><rect x="195" y="13" width="10" height="10" rx="2" fill="#05539C"/><rect x="0" y="26" width="10" height="10" rx="2" fill="#05539C"/><rect x="13" y="26" width="10" height="10" rx="2" fill="#05539C"/><rect x="26" y="26" width="10" height="10" rx="2" fill="#05539C"/><rect x="39" y="26" width="10" height="10" rx="2" fill="#05539C"/><rect x="52" y="26" width="10" height="10" rx="2" fill="#05539C"/><rect x="65" y="26" width="10" height="10" rx="2" fill="#05539C"/><rect x="78" y="26" width="10" height="10" rx="2" fill="#05539C"/><rect x="91" y="26" width="10" height="10" rx="2" fill="#05539C"/><rect x="104" y="26" width="10" height="10" rx="2" fill="#05539C"/><rect x="117" y="26" width="10" height="10" rx="2" fill="#05539C"/><rect x="130" y="26" width="10" height="10" rx="2" fill="#05539C"/><rect x="143" y="26" width="10" height="10" rx="2" fill="#05539C"/><rect x="156" y="26" width="10" height="10" rx="2" fill="#05539C"/><rect x="169" y="26" width="10" height="10" rx="2" fill="#05539C"/><rect x="182" y="26" width="10" height="10" rx="2" fill="#05539C"/><rect x="195" y="26" width="10" height="10" rx="2" fill="#05539C"/><rect x="0" y="39" width="10" height="10" rx="2" fill="#05539C"/><rect x="13" y="39" width="10" height="10" rx="2" fill="#05539C"/><rect x="26" y="39" width="10" height="10" rx="2" fill="#05539C"/><rect x="39" y="39" width="10" height="10" rx="2" fill="#05539C"/><rect x="52" y="39" width="10" height="10" rx="2" fill="#05539C"/><rect x="65" y="39" width="10" height="10" rx="2" fill="#05539C"/><rect x="78" y="39" width="10" height="10" rx="2" fill="#05539C"/><rect x="91" y="39" width="10" height="10" rx="2" fill="#05539C"/><rect x="104" y="39" width="10" height="10" rx="2" fill="#05539C"/><rect x="117" y="39" width="10" height="10" rx="2" fill="#05539C"/><rect x="130" y="39" width="10" height="10" rx="2" fill="#05539C"/><rect x="143" y="39" width="10" height="10" rx="2" fill="#05539C"/><rect x="156" y="39" width="10" height="10" rx="2" fill="#05539C"/><rect x="169" y="39" width="10" height="10" rx="2" fill="#05539C"/><rect x="182" y="39" width="10" height="10" rx="2" fill="#05539C"/><rect x="195" y="39" width="10" height="10" rx="2" fill="#05539C"/></svg><em>64 × H100 · batch 128</em></div>
+        <div class="gpurow"><span>DoCoG</span><svg viewBox="0 0 208 26" style="width:100%"><rect x="0" y="0" width="10" height="10" rx="2" fill="#7C3AED"/><rect x="13" y="0" width="10" height="10" rx="2" fill="#7C3AED"/><rect x="26" y="0" width="10" height="10" rx="2" fill="#7C3AED"/><rect x="39" y="0" width="10" height="10" rx="2" fill="#7C3AED"/><rect x="52" y="0" width="10" height="10" rx="2" fill="#7C3AED"/><rect x="65" y="0" width="10" height="10" rx="2" fill="#7C3AED"/><rect x="78" y="0" width="10" height="10" rx="2" fill="#7C3AED"/><rect x="91" y="0" width="10" height="10" rx="2" fill="#7C3AED"/><rect x="104" y="0" width="10" height="10" rx="2" fill="#7C3AED"/><rect x="117" y="0" width="10" height="10" rx="2" fill="#7C3AED"/><rect x="130" y="0" width="10" height="10" rx="2" fill="#7C3AED"/><rect x="143" y="0" width="10" height="10" rx="2" fill="#7C3AED"/><rect x="156" y="0" width="10" height="10" rx="2" fill="#7C3AED"/><rect x="169" y="0" width="10" height="10" rx="2" fill="#7C3AED"/><rect x="182" y="0" width="10" height="10" rx="2" fill="#7C3AED"/><rect x="195" y="0" width="10" height="10" rx="2" fill="#7C3AED"/><rect x="0" y="13" width="10" height="10" rx="2" fill="#7C3AED"/><rect x="13" y="13" width="10" height="10" rx="2" fill="#7C3AED"/><rect x="26" y="13" width="10" height="10" rx="2" fill="#7C3AED"/><rect x="39" y="13" width="10" height="10" rx="2" fill="#7C3AED"/><rect x="52" y="13" width="10" height="10" rx="2" fill="#7C3AED"/><rect x="65" y="13" width="10" height="10" rx="2" fill="#7C3AED"/><rect x="78" y="13" width="10" height="10" rx="2" fill="#7C3AED"/><rect x="91" y="13" width="10" height="10" rx="2" fill="#7C3AED"/><rect x="104" y="13" width="10" height="10" rx="2" fill="#7C3AED"/><rect x="117" y="13" width="10" height="10" rx="2" fill="#7C3AED"/><rect x="130" y="13" width="10" height="10" rx="2" fill="#7C3AED"/><rect x="143" y="13" width="10" height="10" rx="2" fill="#7C3AED"/><rect x="156" y="13" width="10" height="10" rx="2" fill="#7C3AED"/><rect x="169" y="13" width="10" height="10" rx="2" fill="#7C3AED"/><rect x="182" y="13" width="10" height="10" rx="2" fill="#7C3AED"/><rect x="195" y="13" width="10" height="10" rx="2" fill="#7C3AED"/></svg><em>32 × H100 · batch 256</em></div>
+        <div class="gpurow"><span>DocLayout-VL</span><svg viewBox="0 0 208 52" style="width:100%"><rect x="0" y="0" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="13" y="0" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="26" y="0" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="39" y="0" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="52" y="0" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="65" y="0" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="78" y="0" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="91" y="0" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="104" y="0" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="117" y="0" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="130" y="0" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="143" y="0" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="156" y="0" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="169" y="0" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="182" y="0" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="195" y="0" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="0" y="13" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="13" y="13" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="26" y="13" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="39" y="13" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="52" y="13" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="65" y="13" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="78" y="13" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="91" y="13" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="104" y="13" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="117" y="13" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="130" y="13" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="143" y="13" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="156" y="13" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="169" y="13" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="182" y="13" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="195" y="13" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="0" y="26" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="13" y="26" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="26" y="26" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="39" y="26" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="52" y="26" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="65" y="26" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="78" y="26" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="91" y="26" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="104" y="26" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="117" y="26" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="130" y="26" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="143" y="26" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="156" y="26" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="169" y="26" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="182" y="26" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="195" y="26" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="0" y="39" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="13" y="39" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="26" y="39" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="39" y="39" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="52" y="39" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="65" y="39" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="78" y="39" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="91" y="39" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="104" y="39" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="117" y="39" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="130" y="39" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="143" y="39" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="156" y="39" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="169" y="39" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="182" y="39" width="10" height="10" rx="2" fill="#0E7C61"/><rect x="195" y="39" width="10" height="10" rx="2" fill="#0E7C61"/></svg><em>64 × H100 · batch 128</em></div>
+      </div>
     </div>
-    <div class="card casc" style="animation-delay:.35s;border-top:6px solid var(--dlvl)">
-      <h3 style="color:var(--dlvl)">Training setup</h3>
-      <p class="small"><b>Full fine-tuning</b> of 8B backbones: with LoRA, grounding drops 16–18 points — the layers that write the pointer must move.</p>
-      <p class="small" style="margin-top:1vh">32–64 H100s per model, DeepSpeed ZeRO-3.</p>
-      <p class="small" style="margin-top:1vh;color:var(--muted)">Engines, corpora and training at <b>BharatGen</b>, with IIIT Hyderabad.</p>
+    <div class="card casc zoomcard" style="animation-delay:.35s;border-top:6px solid var(--dlvl)">
+      <div class="zbig">Data × model</div>
+      <div class="zsub">the same 8B backbone, three stages</div>
+      <div class="zdetail frag">
+        <table class="abl" style="font-size:1.7vh"><thead><tr><th></th><th>zero-shot</th><th>+ data</th><th>+ model</th></tr></thead><tbody><tr><td>M3Grounder</td><td>12.8</td><td>60.6</td><td><b>79.0</b></td></tr><tr><td>DoCoG</td><td>5.5</td><td>61.9</td><td><b>81.9</b></td></tr><tr><td>DocLayout-VL</td><td>31.6</td><td>45.8</td><td><b>79.4</b></td></tr></tbody></table>
+        <p class="small" style="margin-top:.6vh">Data brings the backbone into the task; the architecture closes the rest.</p>
+      </div>
     </div>
   </div>
-  <div class="footer"><span class="act">Synthesis</span><span>Data · design · training</span></div>
+  <div class="footer"><span class="act">Synthesis</span><span>Data · compute · design</span></div>
 </section>
 
 <!-- ====== S1c · DESIGN CHOICES AND THEIR RECEIPTS ====== -->
@@ -2211,35 +2118,17 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
 <!-- ====== S2 · THE FRONTIER ====== -->
 <section class="slide" style="--accent:var(--blue)">
   <div class="kicker">Where this takes the field</div>
-  <h2>Where this takes the field</h2>
-  <div class="svgbox vc" style="flex:1">
-  <svg viewBox="0 0 960 420" style="width:88%" aria-label="The capability frontier of document understanding, pushed along four axes">
-    <defs>
-      <marker id="arrF" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#8a97a5"/></marker>
-    </defs>
-    <g stroke="#c9d4de" stroke-width="2">
-      <line x1="480" y1="370" x2="480" y2="40"  marker-end="url(#arrF)"/>
-      <line x1="480" y1="370" x2="120" y2="180" marker-end="url(#arrF)"/>
-      <line x1="480" y1="370" x2="840" y2="180" marker-end="url(#arrF)"/>
-      <line x1="480" y1="370" x2="250" y2="396" marker-end="url(#arrF)"/>
-      <line x1="480" y1="370" x2="710" y2="396" marker-end="url(#arrF)"/>
-    </g>
-    <path class="frag pop" d="M480 92 L188 216 L266 390 L692 390 L774 216 Z" fill="#dbeafe" opacity=".35" stroke="#05539C" stroke-width="3" stroke-linejoin="round"/>
-    <path d="M480 332 L396 326 L336 380 L624 380 L566 328 Z" fill="#aab6c2" opacity=".7" stroke="#7d8b99" stroke-width="2"/>
-    <text x="480" y="366" text-anchor="middle" font-size="13.5" fill="#3d4a56" font-weight="700">frontier VLMs</text>
-    <g font-size="15" font-weight="700">
-      <text x="480" y="28" text-anchor="middle" fill="#7C3AED">grounded reasoning</text>
-      <text x="480" y="78" text-anchor="middle" font-size="13" fill="#7C3AED">DoCoG · every step grounded</text>
-      <text x="112" y="140" text-anchor="middle" fill="#05539C">grounded answers</text>
-      <text x="130" y="164" text-anchor="middle" font-size="13" fill="#05539C">M3Grounder · masks as evidence</text>
-      <text x="846" y="140" text-anchor="middle" fill="#0E7C61">whole-page structure</text>
-      <text x="826" y="164" text-anchor="middle" font-size="13" fill="#0E7C61">DocLayout-VL · the page as a tree</text>
-      <text x="236" y="414" text-anchor="middle" fill="#B7791F">faithful representation</text>
-      <text x="710" y="414" text-anchor="middle" fill="#8a97a5">…and the data to train it all</text>
-    </g>
+  <h2>Pushing the frontier outward</h2>
+  <div class="svgbox vc" style="flex:1;min-height:0">
+  <svg viewBox="0 0 960 440" style="width:86%" aria-label="Frontier VLMs form a small jagged blob near the centre; our models push outward on every axis">
+    <circle cx="480" cy="215" r="42.5" fill="none" stroke="#e3e8ee" stroke-width="1.2"/><circle cx="480" cy="215" r="85.0" fill="none" stroke="#e3e8ee" stroke-width="1.2"/><circle cx="480" cy="215" r="127.5" fill="none" stroke="#e3e8ee" stroke-width="1.2"/><circle cx="480" cy="215" r="170" fill="none" stroke="#e3e8ee" stroke-width="1.2"/><line x1="480" y1="215" x2="480.0" y2="45.0" stroke="#dde5ec" stroke-width="1.5"/><line x1="480" y1="215" x2="641.7" y2="162.5" stroke="#dde5ec" stroke-width="1.5"/><line x1="480" y1="215" x2="579.9" y2="352.5" stroke="#dde5ec" stroke-width="1.5"/><line x1="480" y1="215" x2="380.1" y2="352.5" stroke="#dde5ec" stroke-width="1.5"/><line x1="480" y1="215" x2="318.3" y2="162.5" stroke="#dde5ec" stroke-width="1.5"/>
+    <path class="growc" style="--d:.2s" d="M480.0 141.2 C490.5 147.9 495.6 179.9 496.9 191.8 C498.2 203.7 486.4 207.3 487.8 212.5 C489.1 217.7 500.2 214.2 505.1 223.2 C510.0 232.1 521.4 257.8 517.2 266.2 C513.0 274.5 495.9 268.5 480.0 273.3 C464.1 278.0 435.5 300.1 422.0 294.8 C408.6 289.4 411.8 261.8 399.1 241.3 C386.4 220.7 340.2 186.4 346.0 171.5 C351.8 156.5 411.6 156.6 433.9 151.6 C456.3 146.6 469.5 134.5 480.0 141.2 Z" fill="#7d8b99" fill-opacity=".30" stroke="#7d8b99" stroke-width="2.5" stroke-linejoin="round"/>
+    <g class="frag"><path class="growc" d="M480.0 80.7 C499.4 81.6 514.2 122.3 536.3 137.5 C558.3 152.8 605.7 153.8 612.4 172.0 C619.1 190.1 585.3 221.0 576.5 246.4 C567.6 271.7 575.4 312.6 559.3 324.2 C543.3 335.8 507.5 314.7 480.0 316.2 C452.5 317.7 410.5 344.8 394.1 333.3 C377.6 321.7 390.2 274.3 381.4 247.0 C372.6 219.8 334.9 189.1 341.3 169.9 C347.7 150.8 396.8 147.1 419.9 132.3 C443.0 117.4 460.6 79.8 480.0 80.7 Z" fill="#05539C" fill-opacity=".16" stroke="#05539C" stroke-width="3.5" stroke-linejoin="round"/></g>
+    <text x="480.0" y="22.8" text-anchor="middle" font-size="15" font-weight="700" fill="#16222e">grounded answers</text><text x="667.5" y="159.1" text-anchor="start" font-size="15" font-weight="700" fill="#16222e">grounded reasoning</text><text x="595.9" y="379.5" text-anchor="start" font-size="15" font-weight="700" fill="#16222e">whole-page structure</text><text x="364.1" y="379.5" text-anchor="end" font-size="15" font-weight="700" fill="#16222e">faithful reconstruction</text><text x="292.5" y="159.1" text-anchor="end" font-size="15" font-weight="700" fill="#16222e">answer quality</text>
+    <g font-size="14" font-weight="700"><rect x="20" y="380" width="16" height="16" rx="4" fill="#7d8b99" fill-opacity=".5"/><text x="44" y="393" fill="#52616f">frontier VLMs</text>
+    <rect x="20" y="406" width="16" height="16" rx="4" fill="#05539C" fill-opacity=".5"/><text x="44" y="419" fill="#05539C">ours</text></g>
   </svg>
   </div>
-  <p class="small" style="text-align:center">Not four papers — <b>one push toward complete document understanding</b>: represent the page faithfully, then ground everything on it.</p>
   <div class="footer"><span class="act">Synthesis</span><span>The frontier</span></div>
 </section>
 

@@ -8,23 +8,22 @@ paper name.
 
 The story runs **REPLICA first**: the page has to be *representable* before it
 can be *queryable*. REPLICA produces FID-HTML, which is what two of the three
-grounding models are trained on; slide 21 is the bridge that says so, and slide 74 draws what actually flows
+grounding models are trained on; slide 21 is the bridge that says so, and the loop slide (`src/replica.closing.html`, now left out of the build via `INCLUDE_LOOP`) draws what actually flows
 between the four systems.
 
 | Slides | Part | |
 |---|---|---|
 | 1 | Title — *Grounding, Reasoning, and Structure with Multimodal Foundation Models* |  |
-| 2 | **REPLICA** title card with the team (same style as the other paper cards) | ICDAR 2026 Oral |
-| 3 | **REPLICA** — the ICDAR deck, hosted full-screen (its slides and build-ups; arrows step through it, then move on) |  |
-| 4 | Bridge — from rebuilding to grounding |  |
-| 5–8 | The grounding problem — boxes-as-text, the polygon surgery, where boxes break |  |
-| 9–24 | **M3Grounder** — requirements, why not chain two tools, related work (LISA), the Fid-HTML data engine | CVPR 2026 |
-| 25–41 | **DoCoG** — the uncheckable chain, the $27.50 bill, worked K=13 output, DPO, drift + anchor, sorted ablations | ECCV 2026 Spotlight |
-| 42–55 | **DocLayout-VL** — "SAM for documents", the tagged tree, architecture vs data on the hierarchy track | ECCV 2026 |
-| 56 | Three papers, one recipe |  |
-| 57 | What flows between the four systems |  |
-| 58–61 | What made it possible · design choices and evidence · the frontier · what we learned |  |
-| 62 | Thank you |  |
+| 2 | **REPLICA** title card with the team | ICDAR 2026 Oral |
+| 3 | **REPLICA** — the ICDAR deck, hosted full-screen |  |
+| 4 | Bridge — from rebuilding to grounding (Part 2 of 2) |  |
+| 5–8 | The grounding problem |  |
+| 9–26 | **M3Grounder** — chain-two-tools (OCR errors), losses, Fid-HTML recap and engines, benchmark, results, why not LISA | CVPR 2026 |
+| 27–40 | **DoCoG** — the $27.50 bill, why GIM, training data, why preference training, building the pairs, drift + anchor, ablations, both pills | ECCV 2026 Spotlight |
+| 41–55 | **DocLayout-VL** — three problems (carousels), what a layout model needs, SAM for documents, tasks, HGC examples, curriculum by data | ECCV 2026 |
+| 56 | Three papers, one recipe (abstracted architectures) |  |
+| 57–60 | What made this possible · design choices · the frontier · what we learned |  |
+| 61 | Thank you |  |
 
 **The REPLICA half** is `replica/slides.html`, the ICDAR deck, loaded in hosted
 mode (`?host=1`): it hides its own counter, progress bar and controls and drops

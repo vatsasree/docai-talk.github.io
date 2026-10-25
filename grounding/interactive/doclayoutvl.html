@@ -137,7 +137,7 @@
   }
 </style>
 </head>
-<body>
+<body class="nocap">
 
 <header id="topbar">
   <div id="title">Hierarchical Layout Understanding<small>an animated documentary walkthrough</small></div>
@@ -146,12 +146,12 @@
     <button class="btn" id="btnPlay" title="Play / Pause (Space)">▶ Play</button>
     <button class="btn" id="btnRestart" title="Restart (R)">⟲</button>
     <select class="btn" id="speed" title="Playback speed">
-      <option value="0.5" selected>0.5×</option>
-      <option value="1">1×</option>
+      <option value="0.5">0.5×</option>
+      <option value="1" selected>1×</option>
       <option value="1.5">1.5×</option>
       <option value="2">2×</option>
     </select>
-    <button class="btn" id="btnCC" aria-pressed="true" title="Narration captions">CC</button>
+    <button class="btn" id="btnCC" aria-pressed="false" title="Narration captions">CC</button>
     <button class="btn" id="btnZoomOut" title="Zoom out">−</button>
     <button class="btn" id="btnZoomIn" title="Zoom in">+</button>
     <button class="btn" id="btnFit" title="Fit to screen (F)">Fit</button>
@@ -617,7 +617,7 @@ viewport.addEventListener('pointerup',()=>{drag=null;viewport.classList.remove('
    3. Timeline engine
    ============================================================ */
 const REDUCED=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-const clock={t:0, playing:false, speed:0.5, last:null};
+const clock={t:0, playing:false, speed:1, last:null};
 const travelers=[];
 function addClass(sel,cls){document.querySelectorAll(sel).forEach(e=>e.classList.add(cls));}
 function rmClass(sel,cls){document.querySelectorAll(sel).forEach(e=>e.classList.remove(cls));}

@@ -156,6 +156,7 @@ def team_slide(key: str) -> str:
 # The loop slide (what flows between REPLICA and the grounding models) goes
 # right after the "one recipe" synthesis, before "What made this possible".
 LOOP_ANCHOR = '<!-- ====== S1b · WHAT MADE IT POSSIBLE ====== -->'
+INCLUDE_LOOP = False   # the loop slide (src/replica.closing.html) is out of the talk
 
 # The paper-title cards sit at the END of each paper's run now (the talk is
 # told as a story — the reveal is the punchline), so each team slide anchors
@@ -292,8 +293,9 @@ def main() -> None:
     if up_slides.count(LOOP_ANCHOR) != 1:
         die(f'closing slide: anchor {LOOP_ANCHOR!r} appears '
             f'{up_slides.count(LOOP_ANCHOR)}× (expected 1)')
-    up_slides = up_slides.replace(
-        LOOP_ANCHOR, rep_closing.rstrip('\n') + '\n\n' + LOOP_ANCHOR)
+    if INCLUDE_LOOP:
+        up_slides = up_slides.replace(
+            LOOP_ANCHOR, rep_closing.rstrip('\n') + '\n\n' + LOOP_ANCHOR)
 
     out = ('<!DOCTYPE html>' + head + '<style>' + up_css.rstrip('\n') + '\n\n'
            + rep_css.rstrip('\n') + '\n</style>\n</head>\n<body>\n'
