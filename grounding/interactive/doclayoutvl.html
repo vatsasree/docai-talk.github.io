@@ -151,7 +151,7 @@
       <option value="1.5">1.5×</option>
       <option value="2">2×</option>
     </select>
-    <button class="btn" id="btnCC" aria-pressed="false" title="Narration captions">CC</button>
+    <button class="btn" id="btnCC" aria-pressed="false" title="Narration captions" style="display:none">CC</button>
     <button class="btn" id="btnZoomOut" title="Zoom out">−</button>
     <button class="btn" id="btnZoomIn" title="Zoom in">+</button>
     <button class="btn" id="btnFit" title="Fit to screen (F)">Fit</button>
@@ -650,7 +650,7 @@ function tickTravelers(){
 }
 /* caption */
 const capEl=document.getElementById('caption'), capKick=document.getElementById('capKick'), capText=document.getElementById('capText');
-function caption(kick,txt){capKick.textContent=kick;capText.textContent=txt;capEl.classList.add('show');}
+function caption(kick,txt){ /* narration removed for the talk */ }
 function hideCaption(){capEl.classList.remove('show');}
 /* rail */
 const STAGES=[

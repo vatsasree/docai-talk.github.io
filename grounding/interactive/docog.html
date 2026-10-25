@@ -140,12 +140,12 @@ footer{position:fixed;left:0;right:0;bottom:0;padding:6px 18px;font-size:13px;co
   <div class="controls">
     <button class="ctl primary" id="btnPlay">▶ Play</button>
     <button class="ctl" id="btnRestart">↺ Restart</button>
-    <select class="ctl" id="speed"><option value="0.5" selected>0.5×</option><option value="1">1×</option><option value="1.5">1.5×</option><option value="2">2×</option></select>
+    <select class="ctl" id="speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="1.5">1.5×</option><option value="2">2×</option></select>
     <button class="ctl" id="zfit" title="Fit to screen">⛶ Fit</button>
     <button class="ctl primary" id="zfollow" title="Camera follows the active module">🎥 Auto-zoom</button>
   </div>
   <div id="rail"></div>
-  <div id="caption">Press Play — the model will answer the question and ground every step in the document.</div>
+  <div id="caption" style="display:none"></div>
 </header>
 
 <div id="viewport"><div id="stage">
@@ -411,7 +411,7 @@ const wirePaths={};document.querySelectorAll('.wire').forEach(w=>{
 let dyn=[];      // dynamically created nodes to remove on reset
 let cleanups=[]; // fns to undo on reset
 
-function caption(txt){const c=$('caption');c.textContent=txt;c.classList.add('hot');}
+function caption(txt){ /* narration removed for the talk */ }
 function badge(id){$(id).classList.add('pop');}
 function lit(id,on=true){$(id).classList.toggle('lit',on);}
 function show(id){$(id).classList.add('show');}
@@ -532,7 +532,7 @@ function travellerSq(pathId,color,dur,delay){
   requestAnimationFrame(step);
 }
 
-const engine={t:0,playing:false,paused:false,stopped:false,speed:0.5,idx:0,done:false,raf:null,last:0};
+const engine={t:0,playing:false,paused:false,stopped:false,speed:1,idx:0,done:false,raf:null,last:0};
 function tick(now){
   if(!engine.playing)return;
   if(!engine.paused){

@@ -147,7 +147,7 @@ footer{flex:0 0 var(--footH);display:flex;align-items:center;gap:14px;padding:0 
     <div id="legend"></div>
   </footer>
 </div>
-<div id="cap"><div id="capin"></div></div>
+<div id="cap" style="display:none"><div id="capin"></div></div>
 <script>
 "use strict";
 /* ============================================================================
@@ -930,7 +930,7 @@ function active(ids){
 }
 const capEl = document.getElementById("cap");
 const capIn = document.getElementById("capin");
-function say(html){ capIn.innerHTML = html; capEl.classList.add("show"); }
+function say(html){ /* narration removed for the talk */ }
 
 function paint(sel, cls){ document.querySelectorAll(sel).forEach(e=>e.classList.add(cls||"paint")); }
 function paintMark(panel, key){
