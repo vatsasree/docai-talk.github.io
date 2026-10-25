@@ -1324,52 +1324,6 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   <div class="footer"><span class="act">Paper 2</span><span>Why both</span></div>
 </section>
 
-<!-- ====== D3 · TEASER FLOWCHART ====== -->
-<section class="slide" style="--accent:var(--docog)">
-  <div class="kicker">Paper 2 · In one picture</div>
-  <h2>Grounded reasoning on a flowchart</h2>
-  <figure class="fig framed" style="flex:1;width:100%">
-    <img src="grounding/assets/docog_teaser_flow.png" alt="Grounded CoT on a medical flowchart" style="max-height:60vh;width:98%">
-    <figcaption>a medical triage flowchart — each step's <span class="tok g">[GND]</span> masks the exact node or connector it walks: cough → sputum → fever → throat pain.</figcaption>
-  </figure>
-  <div class="footer"><span class="act">Paper 2</span><span>Teaser</span></div>
-</section>
-
-<!-- ====== D4 · ARCHITECTURE FIG ====== -->
-<section class="slide" style="--accent:var(--docog)">
-  <div class="kicker">Paper 2 · Architecture</div>
-  <h2>Architecture</h2>
-  <figure class="fig framed" style="flex:1;width:100%"><img src="grounding/assets/docog_model.png" alt="DoCoG architecture" style="max-height:62vh;width:96%"></figure>
-  <p class="small" style="text-align:center;margin-top:.8vh">The VLM writes the steps, dropping a <span class="tok g">[GND]</span> per cited evidence · GIM — the Grounding Interaction Module — refines those token states against each other and against the image · the segmenter turns each one into a mask.</p>
-  <div class="footer"><span class="act">Paper 2</span><span>Architecture</span></div>
-</section>
-
-<!-- ====== D4b · READING ONE OUTPUT ====== -->
-<section class="slide" style="--accent:var(--docog)">
-  <div class="kicker">Paper 2 · Reading one output</div>
-  <h2>Where the masks come from, step by step</h2>
-  <div class="cols vc" style="grid-template-columns:1.25fr .75fr;align-items:start">
-    <div class="card" style="padding:1.6vh 2vh">
-      <p style="font-size:2.1vh;margin-bottom:1vh"><b>Q:</b> “Does the combined weight of the top three stock holdings exceed the allocation to the IT sector?” — two donut charts.</p>
-      <table class="abl">
-        <thead><tr><th style="text-align:left">step</th><th style="text-align:left">what it reads</th><th>[GND]</th></tr></thead>
-        <tbody>
-          <tr class="casc" style="animation-delay:.05s"><td>S₁</td><td style="text-align:left">the <i>Top Stock Holdings</i> chart: its title, the three labels (HDFC, Reliance, ICICI) and their three wedges</td><td><b>7</b></td></tr>
-          <tr class="casc" style="animation-delay:.2s"><td>S₂</td><td style="text-align:left">the three percentages it adds: 8.84 + 6.03 + 5.85 = 20.72</td><td><b>3</b></td></tr>
-          <tr class="casc" style="animation-delay:.35s"><td>S₃</td><td style="text-align:left">the <i>Sector Allocation</i> chart: its title, the IT label, its value 7.88</td><td><b>3</b></td></tr>
-          <tr class="casc" style="animation-delay:.5s"><td>S₄</td><td style="text-align:left;color:var(--muted)">compares 20.72 &gt; 7.88 — numbers already on the table</td><td style="color:var(--muted)">0</td></tr>
-          <tr class="casc ours" style="animation-delay:.65s"><td>S<sub>f</sub></td><td style="text-align:left">yes — 20.72% exceeds 7.88%</td><td>K = 13</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:1.1vh;justify-content:center">
-      <div class="card frag"><h3>One image pass</h3><p class="small">the segmenter encodes the page <b>once</b>; every one of the 13 masks is decoded from that</p></div>
-      <div class="card frag"><h3>Text and graphics in one step</h3><p class="small">S₁ grounds labels <i>and</i> wedges — a label and its wedge inform each other inside GIM</p></div>
-    </div>
-  </div>
-  <div class="footer"><span class="act">Paper 2</span><span>Worked example</span></div>
-</section>
-
 <!-- ====== D5 · INTERACTIVE ====== -->
 <section class="slide iframe-slide" style="--accent:var(--docog)">
   <div class="kicker">Paper 2 · Watch it run</div>
