@@ -564,7 +564,6 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
     <text x="428" y="55" text-anchor="middle" font-size="17" fill="#fff" font-weight="700">mask</text>
   </svg>
   <h1 style="margin-top:2vh">From <span style="color:#b42318">rebuilding</span> to <span class="k">grounding</span></h1>
-  <p class="sub">A million rebuilt pages are a million labelled pages. Part 2 teaches models to point at them — with masks, not boxes.</p>
   <div class="papers">
     <div class="paper"><h4>M3Grounder</h4><span>CVPR 2026</span></div>
     <div class="paper"><h4>DoCoG</h4><span>ECCV 2026 <b class="oral">Spotlight</b></span></div>
@@ -646,7 +645,6 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
         <rect x="288" y="118" width="262" height="44" rx="10" fill="#fff" stroke="#dde5ec" stroke-width="1.5"/>
         <text x="300" y="145" font-size="13.5" fill="#33424f">A: “the <tspan fill="#8a4b00" font-family="Menlo,monospace" font-size="12">MCV of 72.0 fL</tspan> <tspan fill="#8a4b00" font-family="Menlo,monospace" font-size="11" font-weight="700">[GROUND]</tspan>”</text>
       </svg>
-      <p class="small" style="margin-top:1vh;text-align:center">Would you act on “your MCV is abnormal” without seeing the line it read? Grounded QA: every claimed value is <b>linked to the exact pixels</b> it came from.</p>
     </div>
     <div style="display:flex;flex-direction:column;gap:1.4vh;justify-content:center">
       <div class="card frag"><h3>Verify at a glance</h3><p>one look, not a re-read</p></div>
@@ -673,7 +671,6 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
       <text x="526" y="54" text-anchor="middle" font-size="18" font-family="Menlo,monospace" fill="#ffd28a">&lt;box&gt;212, 88, 410, 236&lt;/box&gt;</text>
     </svg>
     </div>
-    <p class="small" style="text-align:center">Fine for a rectangle. How many numbers outline a <b>curved river</b>? A box takes four. The river:</p>
     <div class="svgbox frag">
     <svg viewBox="0 0 760 104" style="width:76%;max-width:980px">
       <path d="M14 58 q46 -40 104 -14 q52 24 112 2" fill="none" stroke="#05539C" stroke-width="12" stroke-linecap="round"/>
@@ -782,7 +779,6 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
       <div class="mot prob casc" style="animation-delay:.45s"><h4>Scope depends on the use</h4><p>cite a number · redact a row · chunk a section</p></div>
       <div class="mot sol casc" style="animation-delay:.55s"><h4>→ three nested granularities</h4><p>phrase, line, block — from one token</p></div>
     </div>
-    <p class="small frag" style="text-align:center">No model — and no dataset — did all three. So: the language model <b>decides what the evidence is</b>, a segmentation model <b>draws it</b> — one network, end to end, not a pipeline.</p>
   </div>
   <div class="footer"><span class="act">Paper 1</span><span>Requirements</span></div>
 </section>
@@ -1187,7 +1183,6 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
 <!-- ====== M13 · M3G PAPER CARD ====== -->
 <section class="slide divider" style="--accent:var(--m3)">
   <div class="time">Paper 1 of 3</div>
-  <div class="kicker">What you just saw is</div>
   <h2>M3Grounder</h2>
   <p>Mask-Based <b>Multi-Span</b> and <b>Multi-Granular</b> Grounding for Document QA · <b>CVPR 2026</b></p>
   <div class="team"><figure class="person"><span class="ph"><span class="ini">VK</span><img src="team/Kesav.jpg" alt="Venkata Kesav Venna" loading="lazy" onerror="this.remove()"></span><figcaption>Venkata Kesav Venna<sup>*</sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">SM</span><img src="team/SaiMadhu.jpg" alt="Sai Madhusudan Gunda" loading="lazy" onerror="this.remove()"></span><figcaption>Sai Madhusudan Gunda<sup>*</sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">JS</span><img src="team/Swaroopa.jpg" alt="Jyothi Swaroopa Jinka" loading="lazy" onerror="this.remove()"></span><figcaption>Jyothi Swaroopa Jinka<sup>†</sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">HS</span><img src="team/Hrithik.png" alt="Hrithik Sagar Rachakonda" loading="lazy" onerror="this.remove()"></span><figcaption>Hrithik Sagar Rachakonda<sup>†</sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">AS</span><img src="team/Anirudh.jpg" alt="Anirudh Srinivasan" loading="lazy" onerror="this.remove()"></span><figcaption>Anirudh Srinivasan<sup></sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">RK</span><img src="team/RaviKiran.jpg" alt="Ravi Kiran Sarvadevabhatla" loading="lazy" onerror="this.remove()"></span><figcaption>Ravi Kiran Sarvadevabhatla<sup></sup></figcaption></figure></div>
@@ -1738,7 +1733,6 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
 <!-- ====== D13 · DOCOG PAPER CARD ====== -->
 <section class="slide divider" style="--accent:var(--docog)">
   <div class="time">Paper 2 of 3</div>
-  <div class="kicker">What you just saw is</div>
   <h2>DoCoG</h2>
   <p>Mask-based <b>Multi-Type</b> Grounded <b>Chain-of-Thought</b> for Document QA · <b>ECCV 2026 Spotlight</b></p>
   <div class="team"><figure class="person"><span class="ph"><span class="ini">SM</span><img src="team/SaiMadhu.jpg" alt="Sai Madhusudan Gunda" loading="lazy" onerror="this.remove()"></span><figcaption>Sai Madhusudan Gunda<sup>*</sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">JS</span><img src="team/Swaroopa.jpg" alt="Jyothi Swaroopa Jinka" loading="lazy" onerror="this.remove()"></span><figcaption>Jyothi Swaroopa Jinka<sup>*</sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">HS</span><img src="team/Hrithik.png" alt="Hrithik Sagar Rachakonda" loading="lazy" onerror="this.remove()"></span><figcaption>Hrithik Sagar Rachakonda<sup>*</sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">AJ</span><img src="team/Aryan.jpg" alt="Aryan Jain" loading="lazy" onerror="this.remove()"></span><figcaption>Aryan Jain<sup>†</sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">VK</span><img src="team/Kesav.jpg" alt="Venkata Kesav Venna" loading="lazy" onerror="this.remove()"></span><figcaption>Venkata Kesav Venna<sup>†</sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">AS</span><img src="team/Anirudh.jpg" alt="Anirudh Srinivasan" loading="lazy" onerror="this.remove()"></span><figcaption>Anirudh Srinivasan<sup></sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">RK</span><img src="team/RaviKiran.jpg" alt="Ravi Kiran Sarvadevabhatla" loading="lazy" onerror="this.remove()"></span><figcaption>Ravi Kiran Sarvadevabhatla<sup></sup></figcaption></figure></div>
@@ -2174,7 +2168,6 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
 <!-- ====== L16 · DLVL PAPER CARD ====== -->
 <section class="slide divider" style="--accent:var(--dlvl)">
   <div class="time">Paper 3 of 3</div>
-  <div class="kicker">What you just saw is</div>
   <h2>DocLayout-VL</h2>
   <p>A Foundational Model for <b>Hierarchical</b>, <b>Open-Set</b> and <b>Promptable</b> Document Layout Segmentation · <b>ECCV 2026</b></p>
   <div class="team"><figure class="person"><span class="ph"><span class="ini">VK</span><img src="team/Kesav.jpg" alt="Venkata Kesav Venna" loading="lazy" onerror="this.remove()"></span><figcaption>Venkata Kesav Venna<sup>*</sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">SB</span><img src="team/Srihari.jpg" alt="Srihari Bandarupalli" loading="lazy" onerror="this.remove()"></span><figcaption>Srihari Bandarupalli<sup>*</sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">AS</span><img src="team/Anirudh.jpg" alt="Anirudh Srinivasan" loading="lazy" onerror="this.remove()"></span><figcaption>Anirudh Srinivasan<sup>*</sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">RR</span><img src="team/Raghuveer.jpg" alt="Raghuveer R" loading="lazy" onerror="this.remove()"></span><figcaption>Raghuveer R<sup></sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">SM</span><img src="team/SaiMadhu.jpg" alt="Sai Madhusudan Gunda" loading="lazy" onerror="this.remove()"></span><figcaption>Sai Madhusudan Gunda<sup></sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">RK</span><img src="team/RaviKiran.jpg" alt="Ravi Kiran Sarvadevabhatla" loading="lazy" onerror="this.remove()"></span><figcaption>Ravi Kiran Sarvadevabhatla<sup></sup></figcaption></figure></div>
