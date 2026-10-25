@@ -642,3 +642,23 @@
     if(lastIdx > subIdx) h.end(); else if(lastIdx >= 0 && lastIdx < subIdx) h.start();
   }).observe(sub, {attributes: true, attributeFilter: ['class']});
 })();
+
+/* ---------- image carousels (.cyc): auto-rotate while their slide is on screen ---------- */
+(function(){
+  document.querySelectorAll('.cyc').forEach(box => {
+    const figs = [...box.querySelectorAll('figure')];
+    const dots = box.querySelector('.cycdots');
+    if(dots) figs.forEach(() => dots.appendChild(document.createElement('i')));
+    let k = 0, timer = null;
+    const show = n => { k = (n + figs.length) % figs.length;
+      figs.forEach((f,i) => f.classList.toggle('on', i === k));
+      if(dots) [...dots.children].forEach((d,i) => d.classList.toggle('on', i === k)); };
+    show(0);
+    const slide = box.closest('.slide'), ms = +box.dataset.interval || 3600;
+    const sync = () => { const on = slide.classList.contains('on');
+      if(on && !timer) timer = setInterval(() => show(k + 1), ms);
+      if(!on && timer){ clearInterval(timer); timer = null; show(0); } };
+    new MutationObserver(sync).observe(slide, {attributes:true, attributeFilter:['class']});
+    sync();
+  });
+})();

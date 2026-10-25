@@ -308,3 +308,25 @@
 .lossimg.stack img{max-height:48%}
 .lossnum{margin-top:auto;font-size:1.9vh;color:var(--muted)}
 .lossnum b{color:var(--lc);font-size:2.6vh;margin-right:.6vw}
+
+/* ---- DoCoG: image carousel ---- */
+.cyc{position:relative;height:60vh;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.cyc figure{position:absolute;inset:0 0 4.4vh 0;margin:0;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transition:opacity .6s}
+.cyc figure.on{opacity:1}
+.cyc img{max-width:96%;max-height:calc(100% - 4vh);object-fit:contain}
+.cyc figcaption{font-size:1.9vh;font-weight:800;color:var(--docog);text-transform:uppercase;letter-spacing:.1em;margin-top:.6vh}
+.cycdots{position:absolute;left:0;right:0;bottom:1.4vh;display:flex;justify-content:center;gap:.8vw}
+.cycdots i{width:1.1vh;height:1.1vh;border-radius:50%;background:#d5dee6}
+.cycdots i.on{background:var(--docog)}
+/* ---- DoCoG: chain cards ---- */
+.chaincard .cstep{display:grid;grid-template-columns:2.6vw 1fr 2vw;align-items:center;font-size:1.95vh;line-height:1.5;padding:.5vh 0;border-bottom:1px solid #eef2f6}
+.chaincard .cstep:last-child{border-bottom:0}
+.chaincard .ck{font-weight:800;font-size:2.4vh;text-align:center}
+.chaincard .ck.ok{color:#0ca30c}.chaincard .ck.no{color:#d03b3b}
+.chaincard .why{color:#b42318;font-size:1.7vh;font-weight:700;margin-left:.4vw}
+/* ---- DoCoG: ablation plots shown one at a time ---- */
+.abswap{position:relative;flex:1;min-height:0}
+.abswap .chartcard{position:absolute;inset:0;transition:opacity .45s}
+.abswap .chartcard svg{width:100%;max-height:58vh}
+.abswap:has(.p2.show) .p1{opacity:0}
+.mchip{display:inline-block;color:#fff;border-radius:6px;padding:.1vh .8vh;margin-right:.4vw}
