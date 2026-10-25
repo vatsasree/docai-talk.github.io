@@ -1,51 +1,36 @@
 <!-- ====== FINAL · THE LOOP CLOSES ====== -->
 <section class="slide" style="--accent:var(--replica)">
   <div class="kicker">Where the four systems meet</div>
-  <h2>What actually flows around the loop</h2>
-  <div class="svgbox" style="flex:1;min-height:0;margin-top:.4vh">
-  <svg viewBox="0 0 1000 440" aria-label="REPLICA's Fid-HTML feeds the grounding models' data engines; shared segmenters and the DocLayout-VL parse flow back">
+  <h2>What flows between the four systems</h2>
+  <div class="svgbox vc" style="flex:1;min-height:0">
+  <svg viewBox="0 0 1000 400" style="width:92%" aria-label="REPLICA's Fid-HTML feeds the M3Grounder and DoCoG data engines; DocLayout-VL reuses the recipe; next, DocLayout-VL could replace REPLICA's segmentation ensemble">
     <defs>
       <marker id="aG3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#B7791F"/></marker>
       <marker id="aGr3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#0E7C61"/></marker>
     </defs>
+    <rect x="30" y="100" width="270" height="160" rx="18" fill="#fff" stroke="#B7791F" stroke-width="3"/>
+    <rect x="30" y="100" width="270" height="10" rx="5" fill="#B7791F"/>
+    <text x="165" y="162" text-anchor="middle" font-size="30" font-weight="800" fill="#B7791F">REPLICA</text>
+    <text x="165" y="208" text-anchor="middle" font-size="22" font-weight="800" fill="#1E3A5F">→ Fid-HTML</text>
 
-    <!-- REPLICA -->
-    <rect x="30" y="96" width="270" height="190" rx="18" fill="#fff" stroke="#B7791F" stroke-width="3"/>
-    <rect x="30" y="96" width="270" height="10" rx="5" fill="#B7791F"/>
-    <text x="165" y="146" text-anchor="middle" font-size="30" font-weight="800" fill="#B7791F">REPLICA</text>
-    <text x="165" y="174" text-anchor="middle" font-size="16" fill="#5b6b7a">rebuilds a page as</text>
-    <text x="165" y="206" text-anchor="middle" font-size="23" font-weight="800" fill="#1E3A5F">Fid-HTML</text>
-    <text x="165" y="232" text-anchor="middle" font-size="13" fill="#8a97a5">text · tree · order · geometry · style</text>
-    <text x="165" y="266" text-anchor="middle" font-size="12.5" fill="#5b6b7a">Segment: 2 detectors · Hi-SAM · 2 agents</text>
+    <rect x="670" y="40" width="310" height="76" rx="14" fill="#fff" stroke="#05539C" stroke-width="2.5"/>
+    <text x="825" y="74" text-anchor="middle" font-size="22" font-weight="800" fill="#05539C">M3Grounder</text>
+    <text x="825" y="98" text-anchor="middle" font-size="14" fill="#5b6b7a">140K docs → QA</text>
+    <rect x="670" y="142" width="310" height="76" rx="14" fill="#fff" stroke="#7C3AED" stroke-width="2.5"/>
+    <text x="825" y="176" text-anchor="middle" font-size="22" font-weight="800" fill="#7C3AED">DoCoG</text>
+    <text x="825" y="200" text-anchor="middle" font-size="14" fill="#5b6b7a">175K pages → step-wise QA</text>
+    <rect x="670" y="244" width="310" height="76" rx="14" fill="#fff" stroke="#0E7C61" stroke-width="2.5"/>
+    <text x="825" y="278" text-anchor="middle" font-size="22" font-weight="800" fill="#0E7C61">DocLayout-VL</text>
+    <text x="825" y="302" text-anchor="middle" font-size="14" fill="#5b6b7a">same recipe, own engine</text>
 
-    <!-- models -->
-    <rect x="670" y="40" width="310" height="80" rx="14" fill="#fff" stroke="#05539C" stroke-width="2.5"/>
-    <text x="825" y="72" text-anchor="middle" font-size="22" font-weight="800" fill="#05539C">M3Grounder</text>
-    <text x="825" y="98" text-anchor="middle" font-size="12.5" fill="#5b6b7a">140K docs via Fid-HTML → about half of 2M QA</text>
-    <rect x="670" y="140" width="310" height="80" rx="14" fill="#fff" stroke="#7C3AED" stroke-width="2.5"/>
-    <text x="825" y="172" text-anchor="middle" font-size="22" font-weight="800" fill="#7C3AED">DoCoG</text>
-    <text x="825" y="198" text-anchor="middle" font-size="12.5" fill="#5b6b7a">100K docs + 75K tables via Fid-HTML → CoT QA</text>
-    <rect x="670" y="240" width="310" height="80" rx="14" fill="#fff" stroke="#0E7C61" stroke-width="2.5"/>
-    <text x="825" y="272" text-anchor="middle" font-size="22" font-weight="800" fill="#0E7C61">DocLayout-VL</text>
-    <text x="825" y="298" text-anchor="middle" font-size="12.5" fill="#5b6b7a">same recipe, with a zero-shot VLM</text>
+    <text x="470" y="64" text-anchor="middle" font-size="16" font-weight="800" fill="#B7791F">QA that cites element IDs</text>
+    <path d="M305 140 C 440 140, 540 80, 664 78" fill="none" stroke="#B7791F" stroke-width="4" marker-end="url(#aG3)"/>
+    <path d="M305 180 C 440 180, 540 180, 664 180" fill="none" stroke="#B7791F" stroke-width="4" marker-end="url(#aG3)"/>
+    <path d="M305 220 C 440 220, 540 282, 664 282" fill="none" stroke="#B7791F" stroke-width="2.5" stroke-dasharray="8 6" marker-end="url(#aG3)"/>
 
-    <!-- forward edges -->
-    <text x="470" y="56" text-anchor="middle" font-size="16" font-weight="800" fill="#B7791F">the LLM writes QA citing element IDs</text>
-    <text x="430" y="76" text-anchor="middle" font-size="12.5" fill="#5b6b7a">engines add IDs → IDs map back to Hi-SAM masks, not coordinates</text>
-    <path d="M305 150 C 440 150, 540 86, 664 80" fill="none" stroke="#B7791F" stroke-width="4" marker-end="url(#aG3)"/>
-    <path d="M305 186 C 440 186, 540 180, 664 180" fill="none" stroke="#B7791F" stroke-width="4" marker-end="url(#aG3)"/>
-    <path d="M305 224 C 440 224, 540 280, 664 280" fill="none" stroke="#B7791F" stroke-width="2.5" stroke-dasharray="8 6" marker-end="url(#aG3)"/>
-    <text x="470" y="214" text-anchor="middle" font-size="12.5" fill="#8a97a5">the idea, not the engine</text>
-
-    <!-- return edge -->
-    <path d="M664 312 C 560 362, 420 362, 305 300" fill="none" stroke="#0E7C61" stroke-width="3" stroke-dasharray="9 6" marker-end="url(#aGr3)"/>
-    <text x="494" y="372" text-anchor="middle" font-size="14.5" font-weight="800" fill="#0E7C61">next: one model replaces the ensemble</text>
-    <text x="494" y="390" text-anchor="middle" font-size="12.5" fill="#5b6b7a">the tree REPLICA assembles from detectors + agents is what DocLayout-VL emits in one pass</text>
-
-    <!-- shared segmenters -->
-    <rect x="30" y="404" width="950" height="34" rx="10" fill="#f2f6fa" stroke="#dde5ec" stroke-width="2"/>
-    <text x="505" y="426" text-anchor="middle" font-size="12.5" fill="#33424f"><tspan font-weight="800">Shared segmenters:</tspan> Hi-SAM — text masks for REPLICA and both QA engines · SAM 3 — graphical masks in the DoCoG and DocLayout-VL data engines</text>
+    <path class="frag" d="M664 316 C 560 368, 420 368, 305 262" fill="none" stroke="#0E7C61" stroke-width="3" stroke-dasharray="9 6" marker-end="url(#aGr3)"/>
+    <text class="frag" x="494" y="388" text-anchor="middle" font-size="15" font-weight="800" fill="#0E7C61">next: one model replaces REPLICA’s segmentation ensemble</text>
   </svg>
   </div>
-  <div class="callout" style="margin-top:.6vh">Solid arrows are in the papers (DoCoG’s, in its supplement); the element IDs are added by the QA engines on top of Fid-HTML; the dashed return is the integration not yet shipped. And the models answer over the pages REPLICA represents — the <b>grounded document intelligence</b> REPLICA’s own paper lists as its application.</div>
+  <p class="small" style="text-align:center;color:var(--muted)">Solid arrows: data that trained the model · dashed: the idea reused, or not yet built</p>
 </section>

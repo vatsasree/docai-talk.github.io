@@ -1,6 +1,6 @@
 # Rebuilding the Page — and Grounding It
 
-A single 82-slide, ~1-hour research talk (research-lab visits), in one
+A single 79-slide, ~1-hour research talk (research-lab visits), in one
 self-contained `index.html`. Told as a **story**: each paper's section opens from a question
 and only names the paper at its end, where the title card carries the team.
 Before that reveal, charts and tables label our systems **"Ours"**, never the
@@ -8,7 +8,7 @@ paper name.
 
 The story runs **REPLICA first**: the page has to be *representable* before it
 can be *queryable*. REPLICA produces FID-HTML, which is what two of the three
-grounding models are trained on; slide 21 is the bridge that says so, and the loop slide (76) draws what actually flows
+grounding models are trained on; slide 21 is the bridge that says so, and slide 74 draws what actually flows
 between the four systems.
 
 | Slides | Part | |
@@ -17,13 +17,13 @@ between the four systems.
 | 2–20 | **REPLICA** (the ICDAR talk, ~15 min); 20 is the title card with the team | ICDAR 2026 Oral |
 | 21 | Bridge — from rebuilding to grounding | |
 | 22–25 | The grounding problem — boxes-as-text, the polygon surgery, where boxes break | |
-| 26–41 | **M3Grounder** — requirements, "why not chain two tools?", LISA, Direct-VLM vs Fid-HTML engine | CVPR 2026 |
-| 42–58 | **DoCoG** — the uncheckable chain, the $27.50 bill, worked K=13 output, DPO in two lines, drift + anchor, sorted ablations | ECCV 2026 Spotlight |
-| 59–74 | **DocLayout-VL** — "SAM for documents", the tagged tree, HGC, architecture vs data on the hierarchy track | ECCV 2026 |
-| 75 | Three papers, one recipe | |
-| 76 | The loop — which outputs trained which model, what flows back, what is next | |
-| 77–81 | What made it possible · design choices and evidence · where it still breaks · the frontier · lessons with receipts | |
-| 82 | Thank you | |
+| 26–41 | **M3Grounder** — requirements, why not chain two tools, related work (LISA), the Fid-HTML data engine | CVPR 2026 |
+| 42–58 | **DoCoG** — the uncheckable chain, the $27.50 bill, worked K=13 output, DPO, drift + anchor, sorted ablations | ECCV 2026 Spotlight |
+| 59–72 | **DocLayout-VL** — "SAM for documents", the tagged tree, architecture vs data on the hierarchy track | ECCV 2026 |
+| 73 | Three papers, one recipe | |
+| 74 | What flows between the four systems | |
+| 75–78 | What made it possible · design choices and evidence · the frontier · what we learned | |
+| 79 | Thank you | |
 
 Each paper's title card carries its team (build.py injects the grid at a
 `<!-- TEAM:key -->` placeholder). Photos go in `team/` — see

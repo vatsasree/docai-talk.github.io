@@ -1217,87 +1217,77 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
 <section class="slide" style="--accent:var(--m3)">
   <div class="kicker">Paper 1 · The obvious approach first</div>
   <h2>Why not just <span class="k">chain two tools</span>?</h2>
-  <div class="svgbox" style="flex:1;min-height:0">
-  <svg viewBox="0 0 1000 300" style="width:94%" aria-label="A two-stage pipeline: OCR extracts text, a string is picked, SAM segments it">
+  <div class="svgbox vc" style="flex:1;min-height:0">
+  <svg viewBox="0 0 1000 330" style="width:94%" aria-label="A two-stage pipeline: OCR reads the sign, a picker chooses a string, SAM segments it — and the picker chooses the wrong one">
     <defs>
       <marker id="arrTC" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#8a97a5"/></marker>
       <marker id="arrTCd" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#b42318"/></marker>
     </defs>
-
+    <!-- the question -->
+    <rect x="600" y="22" width="380" height="64" rx="12" fill="#fff" stroke="#c9d4de" stroke-width="2"/>
+    <text x="620" y="50" font-size="16" fill="#16222e"><tspan font-weight="800">Q:</tspan> “What does the café sell?”</text>
+    <text x="620" y="74" font-size="14" fill="#0E7C61"><tspan font-weight="800">A:</tspan> coffee and pastries</text>
     <!-- stage 1 -->
-    <text x="12" y="16" font-size="13.5" font-weight="800" fill="#8a97a5">STAGE 1 · read the text</text>
-    <g>
-      <rect x="12" y="28" width="150" height="104" rx="8" fill="#e8ded0" stroke="#c9b9a3" stroke-width="2"/>
-      <rect x="28" y="46" width="118" height="20" rx="3" fill="#6b5a46"/><text x="87" y="61" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">CAFE</text>
-      <rect x="28" y="70" width="118" height="22" rx="3" fill="#8a7560"/><text x="87" y="86" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">BOULEVARD</text>
-      <text x="87" y="106" text-anchor="middle" font-size="10" fill="#6b5a46">COFFEE · PASTRIES</text>
-      <text x="87" y="122" text-anchor="middle" font-size="10" fill="#6b5a46">OPEN DAILY</text>
+    <text x="12" y="18" font-size="13.5" font-weight="800" fill="#8a97a5">1 · OCR reads the sign</text>
+    <rect x="12" y="30" width="150" height="104" rx="8" fill="#e8ded0" stroke="#c9b9a3" stroke-width="2"/>
+    <rect x="28" y="46" width="118" height="20" rx="3" fill="#6b5a46"/><text x="87" y="61" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">CAFE</text>
+    <rect x="28" y="70" width="118" height="22" rx="3" fill="#8a7560"/><text x="87" y="86" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">BOULEVARD</text>
+    <text x="87" y="108" text-anchor="middle" font-size="10.5" fill="#6b5a46">COFFEE · PASTRIES</text>
+    <text x="87" y="124" text-anchor="middle" font-size="10" fill="#6b5a46">OPEN DAILY</text>
+    <path d="M170 82 h38" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrTC)"/>
+    <rect x="214" y="58" width="104" height="48" rx="10" fill="#fff" stroke="#dde5ec" stroke-width="2"/>
+    <text x="266" y="88" text-anchor="middle" font-size="15" font-weight="700" fill="#16222e">OCR</text>
+    <path d="M326 82 h38" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrTC)"/>
+    <rect x="370" y="30" width="150" height="104" rx="8" fill="#0d2740"/>
+    <g font-family="Menlo,monospace" font-size="12.5" fill="#dfe9f5">
+      <text x="386" y="54">CAFE</text><text x="386" y="76">BOULEVARD</text><text x="386" y="98">COFFEE</text><text x="386" y="120">PASTRIES</text>
     </g>
-    <path d="M170 80 h38" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrTC)"/>
-    <rect x="214" y="56" width="104" height="48" rx="10" fill="#fff" stroke="#dde5ec" stroke-width="2"/>
-    <text x="266" y="86" text-anchor="middle" font-size="15" font-weight="700" fill="#16222e">OCR</text>
-    <path d="M326 80 h38" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrTC)"/>
-    <rect x="370" y="30" width="150" height="100" rx="8" fill="#0d2740"/>
-    <g font-family="Menlo,monospace" font-size="12" fill="#dfe9f5">
-      <text x="386" y="52">CAFE</text>
-      <text x="386" y="72" fill="#ffd28a">BOULEVARD</text>
-      <text x="386" y="92">COFFEE</text>
-      <text x="386" y="112">PASTRIES …</text>
-    </g>
-
-    <!-- hand-off -->
-    <path d="M520 80 h40 q12 0 12 12 v62 q0 12 -12 12 h-112" stroke="#b42318" stroke-width="2.5" fill="none" stroke-dasharray="6 4" marker-end="url(#arrTCd)"/>
-    <text x="600" y="104" font-size="12.5" font-weight="700" fill="#b42318">pick a string</text>
-    <text x="600" y="121" font-size="12" fill="#b42318">by hand, or by another model</text>
-    <text x="600" y="138" font-size="11" fill="#8a97a5">(and turn it into a box — SAM has no text input)</text>
-
-    <!-- stage 2 -->
-    <text x="12" y="176" font-size="13.5" font-weight="800" fill="#8a97a5">STAGE 2 · segment that string</text>
-    <rect x="300" y="152" width="140" height="36" rx="18" fill="#fff3e0" stroke="#F59222" stroke-width="2.5"/>
-    <text x="370" y="176" text-anchor="middle" font-size="14" font-weight="800" font-family="Menlo,monospace" fill="#8a4b00">"BOULEVARD"</text>
-    <path d="M298 170 h-36" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrTC)"/>
-    <rect x="150" y="188" width="104" height="48" rx="10" fill="#fff" stroke="#dde5ec" stroke-width="2"/>
-    <text x="202" y="218" text-anchor="middle" font-size="15" font-weight="700" fill="#16222e">SAM</text>
-    <path d="M202 186 v-14" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrTC)"/>
-    <path d="M146 212 h-38" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrTC)"/>
-    <g>
-      <rect x="12" y="192" width="92" height="90" rx="8" fill="#e8ded0" stroke="#c9b9a3" stroke-width="2"/>
-      <rect x="22" y="204" width="72" height="14" rx="3" fill="#b3a492"/>
-      <rect x="22" y="222" width="72" height="18" rx="3" fill="#05539C"/>
-      <text x="58" y="235" text-anchor="middle" font-size="9.5" font-weight="800" fill="#fff">BOULEVARD</text>
-      <rect x="22" y="246" width="72" height="9" rx="3" fill="#cfc2b0"/>
-      <rect x="22" y="260" width="48" height="9" rx="3" fill="#cfc2b0"/>
-    </g>
-
-    <!-- what breaks -->
+    <!-- stage 2: a picker chooses a string -->
     <g class="frag">
-      <rect x="470" y="150" width="520" height="130" rx="12" fill="#fffcfc" stroke="#f0c9c9" stroke-width="2"/>
-      <text x="490" y="176" font-size="14.5" font-weight="800" fill="#b42318">⚠ Two models that never meet</text>
+      <rect x="380" y="61" width="104" height="21" rx="4" fill="none" stroke="#F59222" stroke-width="2.5"/>
+      <path d="M484 72 h70 q12 0 12 12 v96 q0 12 -12 12 h-92" stroke="#b42318" stroke-width="2.5" fill="none" stroke-dasharray="6 4" marker-end="url(#arrTCd)"/>
+      <text x="580" y="140" font-size="13.5" font-weight="800" fill="#b42318">2 · a picker chooses a string</text>
+      <text x="580" y="158" font-size="12.5" fill="#5b6b7a">a separate model — it never sees the pixels</text>
+      <rect x="320" y="176" width="140" height="34" rx="17" fill="#fff3e0" stroke="#F59222" stroke-width="2.5"/>
+      <text x="390" y="198" text-anchor="middle" font-size="14" font-weight="800" font-family="Menlo,monospace" fill="#8a4b00">"BOULEVARD"</text>
+      <path d="M318 193 h-40" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrTC)"/>
+      <rect x="170" y="169" width="102" height="48" rx="10" fill="#fff" stroke="#dde5ec" stroke-width="2"/>
+      <text x="221" y="191" text-anchor="middle" font-size="15" font-weight="700" fill="#16222e">SAM</text>
+      <text x="221" y="207" text-anchor="middle" font-size="10.5" fill="#8a97a5">needs a box first</text>
+      <path d="M166 193 h-26" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrTC)"/>
+      <rect x="12" y="150" width="122" height="104" rx="8" fill="#e8ded0" stroke="#c9b9a3" stroke-width="2"/>
+      <rect x="24" y="164" width="98" height="18" rx="3" fill="#b3a492"/>
+      <rect x="24" y="186" width="98" height="20" rx="3" fill="#05539C"/>
+      <text x="73" y="200" text-anchor="middle" font-size="11" font-weight="800" fill="#fff">BOULEVARD</text>
+      <text x="73" y="224" text-anchor="middle" font-size="9.5" fill="#6b5a46">COFFEE · PASTRIES</text>
+      <text x="12" y="276" font-size="13.5" font-weight="800" fill="#8a97a5">3 · SAM masks it</text>
+    </g>
+    <!-- the mistake -->
+    <g class="frag">
+      <circle cx="122" cy="166" r="17" fill="#b42318"/>
+      <path d="M114 158 l16 16 M130 158 l-16 16" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/>
+      <rect x="20" y="214" width="106" height="16" rx="3" fill="none" stroke="#0E7C61" stroke-width="2" stroke-dasharray="4 3"/>
+      <rect x="600" y="196" width="380" height="118" rx="12" fill="#fffcfc" stroke="#f0c9c9" stroke-width="2"/>
+      <text x="620" y="224" font-size="15" font-weight="800" fill="#b42318">✗ a confident mask on the wrong words</text>
       <g font-size="13.5" fill="#39485a">
-        <text x="490" y="202">· the prompt has to be a <tspan font-weight="700">string</tspan> — there is none for</text>
-        <text x="502" y="222">“the third wedge”, “this arrow”, “that row”</text>
-        <text x="490" y="248">· the picker is a separate step that can pick wrong,</text>
-        <text x="502" y="268">and the segmenter never sees the question</text>
+        <text x="620" y="252">· the picker chose the wrong string</text>
+        <text x="620" y="276">· no string exists for “the third wedge”</text>
+        <text x="620" y="300">· the two models never meet</text>
       </g>
     </g>
   </svg>
-  </div>
-  <div class="keyidea frag" style="--accent:var(--m3)">
-    <span class="tag">the key idea</span>
-    <p>Skip the string. The VLM already builds an internal representation of the evidence while it answers — <b>feed that straight to the segmenter as the prompt</b>. One model, learnt end to end, no tool-calling glue. This idea has a name — next slide.</p>
   </div>
   <div class="footer"><span class="act">Paper 1</span><span>Pipeline vs end-to-end</span></div>
 </section>
 
 <!-- ====== M3c · LISA ====== -->
 <section class="slide" style="--accent:var(--m3)">
-  <div class="kicker">Paper 1 · Credit where it is due</div>
-  <h2>What comes from <span class="k">LISA</span>, and what is new</h2>
-  <div class="cols vc" style="grid-template-columns:.9fr 1.1fr;align-items:stretch;gap:1.6vw">
+  <div class="kicker">Paper 1 · Related work</div>
+  <h2>Reasoning segmentation: <span class="k">LISA</span> and after</h2>
+  <div class="cols vc" style="grid-template-columns:.95fr 1.05fr;align-items:stretch;gap:1.6vw">
     <div class="card casc" style="animation-delay:.05s;border-top:5px solid #7d8b99">
       <h3 style="color:#52616f">LISA · Lai et al., CVPR 2024</h3>
-      <p class="small" style="margin-bottom:.8vh">Reasoning segmentation on <b>natural images</b>.</p>
-      <svg viewBox="0 0 420 96" style="width:100%">
+      <svg viewBox="0 0 420 110" style="width:100%;margin-top:1vh">
         <defs><marker id="arrLi" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#8a97a5"/></marker></defs>
         <rect x="4" y="26" width="92" height="44" rx="10" fill="#fff" stroke="#c9d4de" stroke-width="2"/><text x="50" y="53" text-anchor="middle" font-size="14" font-weight="700" fill="#33424f">LLM</text>
         <path d="M100 48 h26" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrLi)"/>
@@ -1306,23 +1296,23 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
         <rect x="242" y="26" width="92" height="44" rx="10" fill="#fff" stroke="#c9d4de" stroke-width="2"/><text x="288" y="46" text-anchor="middle" font-size="12.5" font-weight="700" fill="#33424f">SAM</text><text x="288" y="62" text-anchor="middle" font-size="11" fill="#5b6b7a">decoder</text>
         <path d="M338 48 h26" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrLi)"/>
         <path d="M374 36 q10 -14 24 -8 q14 8 10 20 q-8 14 -24 8 q-14 -8 -10 -20 z" fill="#7d8b99"/>
-        <text x="169" y="88" text-anchor="middle" font-size="11.5" fill="#5b6b7a">the token’s hidden state, projected, is the prompt</text>
+        <text x="210" y="98" text-anchor="middle" font-size="13" fill="#33424f">the token’s hidden state is the SAM prompt</text>
       </svg>
-      <p class="small" style="margin-top:.8vh">One token → one mask, trained end to end with text + mask losses. Followed by LISA++, GLaMM, PixelLM — all on natural scenes.</p>
-      <p class="small" style="margin-top:.6vh;color:var(--muted)">“SAM’s prompt interface can be driven not by human-provided points or boxes but by learned prompt embeddings derived from the VLM’s hidden states.”</p>
+      <p class="small" style="margin-top:1vh;text-align:center">one token → one mask · natural images</p>
     </div>
     <div class="card casc" style="animation-delay:.2s;border-top:5px solid var(--m3)">
-      <h3>What documents forced us to add</h3>
-      <div style="display:flex;flex-direction:column;gap:.7vh;font-size:1.9vh;line-height:1.4">
-        <div><b>Transfer fails.</b> These models “do not transfer well to documents, where interpretation depends on text layout, reading order, and the semantic structure of graphical elements.” So: a <b>document data engine</b>, 2M grounded QA, no hand-drawn masks. <span class="tiny">(LISA++ and GLaMM, even fine-tuned on our data, reach 25.4 / 35.2 F1 on GDQA-Bench — ours 79.0; supplement.)</span></div>
-        <div><b>Evidence is plural.</b> One answer, K pointers — K chosen by the model.</div>
-        <div><b>Evidence has scope.</b> Three nested masks per pointer: phrase ⊂ line ⊂ block.</div>
-        <div><b>Text has priors.</b> Don’t bleed off the text; finer masks nest in coarser ones — as losses.</div>
-        <div style="color:var(--muted)">…and the next two papers add pointers that <b>agree with each other</b> across the steps of a chain, pointers that <b>survive preference training</b>, and one pointer per node of a <b>tree</b>.</div>
-      </div>
+      <table class="abl" style="font-size:1.95vh">
+        <thead><tr><th style="text-align:left">work</th><th style="text-align:left">grounds with</th><th style="text-align:left">domain</th></tr></thead>
+        <tbody>
+          <tr><td>LISA</td><td style="text-align:left">one mask</td><td style="text-align:left">natural images</td></tr>
+          <tr><td>LISA++ · GLaMM · PixelLM</td><td style="text-align:left">several masks</td><td style="text-align:left">natural images</td></tr>
+          <tr class="ours"><td><b>Ours</b></td><td style="text-align:left"><b>K pointers × 3 nested masks</b></td><td style="text-align:left"><b>documents</b></td></tr>
+        </tbody>
+      </table>
+      <div class="stat frag" style="margin-top:1.6vh"><div class="v" style="font-size:3.4vh">25.4 · 35.2 · <span style="color:var(--m3)">79.0</span></div><div class="l">LISA++ · GLaMM · ours — grounding F1 on GDQA-Bench, both baselines fine-tuned on our data</div></div>
     </div>
   </div>
-  <div class="footer"><span class="act">Paper 1</span><span>LISA, and the difference</span></div>
+  <div class="footer"><span class="act">Paper 1</span><span>Related work</span></div>
 </section>
 
 <!-- ====== M4 · THE IDEA + ARCHITECTURE ====== -->
@@ -1355,7 +1345,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   <h2>Two document-specific losses</h2>
   <div class="cols vc" style="grid-template-columns:1fr 1fr;align-items:stretch">
     <div class="card" style="display:flex;flex-direction:column;gap:1vh">
-      <h3>Don’t spill off the text</h3>
+      <h3>Masks don’t spill</h3>
       <svg viewBox="0 0 520 190" style="width:100%">
         <g>
           <rect x="14" y="10" width="230" height="170" rx="10" fill="#fbfdff" stroke="#c9d4de" stroke-width="1.5"/>
@@ -1365,7 +1355,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
           <path d="M204 74 v28 M191 88 h26" stroke="#F59222" stroke-width="3"/>
           <rect x="30" y="74" width="120" height="28" rx="6" fill="#d5dee6"/>
           <path d="M24 70 q80 -18 158 6 q30 12 26 30 q-6 22 -60 16 q-90 4 -124 -14 q-12 -14 0 -38z" fill="#b42318" opacity=".42"/>
-          <text x="129" y="168" text-anchor="middle" font-size="13" font-weight="700" fill="#b42318">spills into the icon</text>
+          <text x="129" y="168" text-anchor="middle" font-size="13" font-weight="700" fill="#b42318">without the loss</text>
         </g>
         <g class="frag">
           <rect x="276" y="10" width="230" height="170" rx="10" fill="#fbfdff" stroke="#c9d4de" stroke-width="1.5"/>
@@ -1375,13 +1365,13 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
           <path d="M466 74 v28 M453 88 h26" stroke="#F59222" stroke-width="3"/>
           <rect x="292" y="74" width="120" height="28" rx="6" fill="#d5dee6"/>
           <rect x="288" y="70" width="128" height="36" rx="9" fill="#05539C" opacity=".55"/>
-          <text x="391" y="168" text-anchor="middle" font-size="13" font-weight="700" fill="#05539C">hugs the evidence</text>
+          <text x="391" y="168" text-anchor="middle" font-size="13" font-weight="700" fill="#05539C">with the loss</text>
         </g>
       </svg>
-      <p class="small" style="text-align:center">a <b>bleed-suppression</b> loss penalizes every bit of mask that lands off the text</p>
+      <p class="small" style="text-align:center"><b>bleed-suppression loss</b>: penalises mask outside the text</p>
     </div>
     <div class="card" style="display:flex;flex-direction:column;gap:1vh">
-      <h3>The three masks must nest</h3>
+      <h3>Masks nest</h3>
       <svg viewBox="0 0 520 190" style="width:100%">
         <rect x="110" y="16" width="300" height="158" rx="14" fill="#eaf1f8" stroke="#b9cfe4" stroke-width="1.5" stroke-dasharray="7 5"/>
         <rect x="146" y="62" width="212" height="82" rx="10" fill="#cfe0f2" stroke="#8fb4d6" stroke-width="2" stroke-dasharray="7 5"/>
@@ -1395,10 +1385,10 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
           <text x="120" y="36">block</text><text x="156" y="56">line</text><text x="188" y="82">phrase</text>
         </g>
       </svg>
-      <p class="small" style="text-align:center">an <b>enclosure</b> loss makes phrase ⊂ line ⊂ block — the coarser mask is the finer one’s ground truth</p>
+      <p class="small" style="text-align:center"><b>enclosure loss</b>: phrase ⊂ line ⊂ block</p>
     </div>
   </div>
-  <p class="small frag" style="text-align:center;margin-top:1vh">Both are trained jointly with the usual text + segmentation losses — together they are worth <b>+5 F1</b> on grounding.</p>
+  <p class="small frag" style="text-align:center;margin-top:1vh">Together: <b>+5 F1</b> on grounding.</p>
   <div class="footer"><span class="act">Paper 1</span><span>Document priors</span></div>
 </section>
 
@@ -1469,17 +1459,47 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
 <section class="slide" style="--accent:var(--m3)">
   <div class="kicker">Paper 1 · Data engine · the design choice</div>
   <h2>Why Fid-HTML + LLM makes better QA</h2>
-  <div class="vc" style="display:grid;grid-template-columns:repeat(4,1fr);gap:1.1vw;align-items:stretch">
-    <div class="card casc" style="animation-delay:.05s"><h3>1 · Task decomposition</h3><p class="small">perception first, reasoning second — errors stop cascading</p></div>
-    <div class="card casc" style="animation-delay:.15s"><h3>2 · Structure is explicit</h3><p class="small">tables, hierarchy, coordinates are in the markup, not inferred</p></div>
-    <div class="card casc" style="animation-delay:.25s"><h3>3 · Exact text</h3><p class="small">numbers, dates, symbols arrive as tokens, not pixels</p></div>
-    <div class="card casc" style="animation-delay:.35s"><h3>4 · Whole-document view</h3><p class="small">the LLM attends across distant sections at once</p></div>
-    <div class="card casc" style="animation-delay:.45s"><h3>5 · Design semantics kept</h3><p class="small">bold, size, colour, alignment still carry meaning</p></div>
-    <div class="card casc" style="animation-delay:.55s"><h3>6 · Matches LLM priors</h3><p class="small">models already read HTML, DOM trees, tables</p></div>
-    <div class="card casc" style="animation-delay:.65s;border:2px solid var(--m3)"><h3>7 · Evidence is addressable</h3><p class="small">every answer links to a span, an element, a box — by ID</p></div>
-    <div class="keyidea casc" style="animation-delay:.75s;--accent:var(--m3)"><span class="tag">so</span><p>2M grounded QA pairs, and <b>not one coordinate hallucinated</b>.</p></div>
+  <div class="svgbox vc" style="flex:1;min-height:0">
+  <svg viewBox="0 0 1000 360" style="width:96%" aria-label="A Fid-HTML snippet; four properties light up one at a time">
+    <rect x="20" y="30" width="590" height="290" rx="14" fill="#0d2740"/>
+    <text x="40" y="22" font-size="13" font-weight="800" fill="#8a97a5">what the LLM reads — Fid-HTML</text>
+    <g font-size="14" fill="#dfe9f5"><text x="40" y="70" xml:space="preserve" style="font-family:Menlo,Consolas,'Courier New',monospace">&lt;h1 id="e12" style="font-size:22px"&gt;Govt Circular&lt;/h1&gt;</text><text x="40" y="106" xml:space="preserve" style="font-family:Menlo,Consolas,'Courier New',monospace">&lt;table id="e40" style="left:88px; top:412px"&gt;</text><text x="40" y="142" xml:space="preserve" style="font-family:Menlo,Consolas,'Courier New',monospace">  &lt;tr id="e46"&gt;</text><text x="40" y="178" xml:space="preserve" style="font-family:Menlo,Consolas,'Courier New',monospace">    &lt;td&gt;Last date&lt;/td&gt;</text><text x="40" y="214" xml:space="preserve" style="font-family:Menlo,Consolas,'Courier New',monospace">    &lt;td id="e47" style="font-weight:700"&gt;15 March 2024&lt;/td&gt;</text><text x="40" y="250" xml:space="preserve" style="font-family:Menlo,Consolas,'Courier New',monospace">  &lt;/tr&gt;</text><text x="40" y="286" xml:space="preserve" style="font-family:Menlo,Consolas,'Courier New',monospace">&lt;/table&gt;</text></g>
+    <g class="frag">
+      <rect x="38" y="89" width="55" height="24" rx="4" fill="#05539C" fill-opacity=".28" stroke="#05539C" stroke-width="2"/><rect x="55" y="125" width="29" height="24" rx="4" fill="#05539C" fill-opacity=".28" stroke="#05539C" stroke-width="2"/>
+      <path d="M612 101 C 626 101, 626 64, 640 64" fill="none" stroke="#05539C" stroke-width="2.5"/>
+      <circle cx="612" cy="101" r="4" fill="#05539C"/>
+      <rect x="640" y="34" width="340" height="60" rx="12" fill="#fff" stroke="#05539C" stroke-width="2.5"/>
+      <text x="660" y="60" font-size="17" font-weight="800" fill="#05539C">Explicit structure</text>
+      <text x="660" y="82" font-size="14" fill="#39485a">rows and cells, not inferred</text>
+    </g>
+    <g class="frag">
+      <rect x="173" y="89" width="240" height="24" rx="4" fill="#7C3AED" fill-opacity=".28" stroke="#7C3AED" stroke-width="2"/><rect x="181" y="197" width="198" height="24" rx="4" fill="#7C3AED" fill-opacity=".28" stroke="#7C3AED" stroke-width="2"/>
+      <path d="M612 115 C 626 115, 626 148, 640 148" fill="none" stroke="#7C3AED" stroke-width="2.5"/>
+      <circle cx="612" cy="115" r="4" fill="#7C3AED"/>
+      <rect x="640" y="118" width="340" height="60" rx="12" fill="#fff" stroke="#7C3AED" stroke-width="2.5"/>
+      <text x="660" y="144" font-size="17" font-weight="800" fill="#7C3AED">Position and style</text>
+      <text x="660" y="166" font-size="14" fill="#39485a">placement, bold, size are kept</text>
+    </g>
+    <g class="frag">
+      <rect x="384" y="197" width="114" height="24" rx="4" fill="#F59222" fill-opacity=".28" stroke="#F59222" stroke-width="2"/>
+      <path d="M612 209 C 626 209, 626 232, 640 232" fill="none" stroke="#F59222" stroke-width="2.5"/>
+      <circle cx="612" cy="209" r="4" fill="#F59222"/>
+      <rect x="640" y="202" width="340" height="60" rx="12" fill="#fff" stroke="#F59222" stroke-width="2.5"/>
+      <text x="660" y="228" font-size="17" font-weight="800" fill="#F59222">Exact text</text>
+      <text x="660" y="250" font-size="14" fill="#39485a">dates and numbers arrive as tokens</text>
+    </g>
+    <g class="frag">
+      <rect x="105" y="197" width="71" height="24" rx="4" fill="#0E7C61" fill-opacity=".28" stroke="#0E7C61" stroke-width="2"/>
+      <path d="M612 223 C 626 223, 626 316, 640 316" fill="none" stroke="#0E7C61" stroke-width="2.5"/>
+      <circle cx="612" cy="223" r="4" fill="#0E7C61"/>
+      <rect x="640" y="286" width="340" height="60" rx="12" fill="#fff" stroke="#0E7C61" stroke-width="2.5"/>
+      <text x="660" y="312" font-size="17" font-weight="800" fill="#0E7C61">Addressable evidence</text>
+      <text x="660" y="334" font-size="14" fill="#39485a">the answer cites e47 — its mask</text>
+    </g>
+  </svg>
   </div>
-  <div class="footer"><span class="act">Paper 1</span><span>Seven reasons</span></div>
+  <div class="keyidea frag" style="--accent:var(--m3)"><span class="tag">so</span><p>Perception first, reasoning second — and HTML is what LLMs already read. <b>2M grounded QA, no coordinate written by a model.</b></p></div>
+  <div class="footer"><span class="act">Paper 1</span><span>Why Fid-HTML</span></div>
 </section>
 
 <!-- ====== M8 · DATA ENGINES 2+3 ====== -->
@@ -1717,7 +1737,6 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
     <div style="display:flex;flex-direction:column;gap:1.1vh;justify-content:center">
       <div class="card frag"><h3>One image pass</h3><p class="small">the segmenter encodes the page <b>once</b>; every one of the 13 masks is decoded from that</p></div>
       <div class="card frag"><h3>Text and graphics in one step</h3><p class="small">S₁ grounds labels <i>and</i> wedges — a label and its wedge inform each other inside GIM</p></div>
-      <div class="stat frag"><div class="v" style="font-size:3.4vh">+15% · +23%</div><div class="l">latency · memory over the bare backbone — the VLM without GIM or segmenter (580 vs 505 ms, 1×H100, supplement)</div></div>
     </div>
   </div>
   <div class="footer"><span class="act">Paper 2</span><span>Worked example</span></div>
@@ -2130,7 +2149,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
 <section class="slide" style="--accent:var(--dlvl)">
   <div class="kicker">Paper 3 · From a question to the whole page</div>
   <h2><span class="k">SAM for documents</span></h2>
-  <p class="small" style="margin:-.2vh 0 .4vh">So far: evidence for an answer, then for every step. Now no question at all — segment <b>every region</b> of the page and how they nest; that is <b>layout</b>. <i>Open-set</i>: the prompt supplies the labels. <i>Promptable</i>: ask for any region in words.</p>
+  <p class="small" style="margin:-.2vh 0 .4vh"><b>Layout</b>: every region, and how they nest. <i>Open-set</i>: the prompt supplies the labels. <i>Promptable</i>: ask for any region in words.</p>
   <div class="svgbox" style="flex:1;min-height:0">
   <svg viewBox="0 0 1000 412" style="width:95%" aria-label="SAM segments an object from one click; ours segments every region of a page from one prompt, as a tree">
     <defs>
@@ -2214,7 +2233,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
       <text x="928" y="156" text-anchor="middle" font-size="11.5" font-weight="700" fill="#0E7C61">+ the tree</text>
     </g>
 
-    <text x="753" y="236" text-anchor="middle" font-size="16" fill="#16222e">→ <tspan font-weight="700">every region — and how they nest</tspan></text>
+    <text x="753" y="236" text-anchor="middle" font-size="16" fill="#16222e">→ <tspan font-weight="700">every region</tspan></text>
 
     <g font-size="12.5" font-weight="700" text-anchor="middle">
       <rect x="543" y="254" width="104" height="26" rx="13" fill="#e9f2ef" stroke="#9db4ab"/><text x="595" y="271" fill="#1d4437">promptable</text>
@@ -2226,8 +2245,8 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
     <!-- closing bar -->
     <g class="frag">
       <rect x="8" y="330" width="984" height="66" rx="14" fill="#fff" stroke="#0E7C61" stroke-width="2"/>
-      <text x="500" y="358" text-anchor="middle" font-size="17" fill="#16222e">Same recipe — <tspan font-weight="700">promptable task · one model · an engine for the data</tspan>.</text>
-      <text x="500" y="382" text-anchor="middle" font-size="17" fill="#0E7C61" font-weight="700">The one thing documents add: a page is a tree, not a pile of objects.</text>
+      <text x="500" y="358" text-anchor="middle" font-size="17" fill="#16222e">Same recipe — <tspan font-weight="700">promptable task · one model · data engine</tspan>.</text>
+      <text x="500" y="382" text-anchor="middle" font-size="17" fill="#0E7C61" font-weight="700">One addition: a page is a tree, not a pile of objects.</text>
     </g>
   </svg>
   </div>
@@ -2302,7 +2321,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
         &nbsp;&nbsp;paragraph<span class="tok l">[LAY]</span><br>
         &lt;/section&gt;<span class="tok l">[LAY]</span>
       </div>
-      <p class="small" style="margin-top:1.2vh">The generated sequence <b>is</b> the hierarchy: leaves as <i>label</i><span class="tok l">[LAY]</span>, parents closed by <i>&lt;/tag&gt;</i><span class="tok l">[LAY]</span>. One <span class="tok l">[LAY]</span> ↔ one region; the labels come from the prompt’s vocabulary. A parent’s <span class="tok l">[LAY]</span> closes its tag, after its children — so a parent gets its own mask, not the union of theirs.</p>
+      <p class="small" style="margin-top:1.2vh">The sequence <b>is</b> the hierarchy: <i>label</i><span class="tok l">[LAY]</span> per leaf; <i>&lt;/tag&gt;</i><span class="tok l">[LAY]</span> closes a parent after its children — its own mask, not the union of theirs.</p>
     </div>
     <div class="svgbox frag" style="align-self:center">
       <svg viewBox="0 0 320 150" style="width:88%">
@@ -2313,7 +2332,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
           <circle cx="160" cy="92" r="14" fill="#54ab92"/><text x="160" y="96">para</text>
           <circle cx="260" cy="92" r="14" fill="#54ab92"/><text x="260" y="96">para</text>
         </g>
-        <text x="160" y="140" text-anchor="middle" font-size="12.5" fill="#5b6b7a">one [LAY] per node → one mask per node</text>
+        <text x="160" y="140" text-anchor="middle" font-size="12.5" fill="#5b6b7a">one node → one [LAY] → one mask</text>
       </svg>
     </div>
   </div>
@@ -2360,7 +2379,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
         <text x="352" y="152">caption<tspan fill="#b9f0dc" font-weight="700"> [LAY]</tspan></text>
         <text x="334" y="176">&lt;/article&gt;<tspan fill="#b9f0dc" font-weight="700"> [LAY]</tspan></text>
       </g>
-      <text x="442" y="216" text-anchor="middle" font-size="12.5" fill="#5b6b7a">one tag per region — the sequence <tspan font-weight="700">is</tspan> the tree</text>
+      
     </g>
 
     <!-- 4 · HGC (frag) -->
@@ -2396,7 +2415,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
     <!-- closing line -->
     <g class="frag">
       <rect x="14" y="268" width="990" height="48" rx="12" fill="#e9f2ef" stroke="#0E7C61" stroke-width="2"/>
-      <text x="509" y="298" text-anchor="middle" font-size="16" font-weight="700" fill="#1d4437">No detector, no class list — one prompt in, structure out.</text>
+      <text x="509" y="298" text-anchor="middle" font-size="16" font-weight="700" fill="#1d4437">No detector, no class list — prompt in, structure out.</text>
     </g>
   </svg>
   </div>
@@ -2408,7 +2427,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   <div class="kicker">Paper 3 · Architecture</div>
   <h2>Architecture</h2>
   <figure class="fig framed" style="flex:1;width:100%;min-height:0"><img src="grounding/assets/dlvl_arch.png" alt="DocLayout-VL architecture" style="max-height:66vh"></figure>
-  <p class="small" style="text-align:center;margin-top:.6vh">The VLM writes the tagged tree. Only the <span class="tok l">[LAY]</span> hidden states go through HGC, which attends along that tree; the segmenter turns each refined state into a mask.</p>
+  <p class="small" style="text-align:center;margin-top:.6vh">The VLM writes the tagged tree. Only the <span class="tok l">[LAY]</span> hidden states go through HGC (Hierarchical Grounding Contextualizer), which attends along that tree; the segmenter turns each refined state into a mask.</p>
   <div class="footer"><span class="act">Paper 3</span><span>Architecture</span></div>
 </section>
 
@@ -2422,56 +2441,6 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
     <a href="grounding/interactive/doclayoutvl.html" target="_blank">open standalone ↗</a>
   </div>
   <div class="footer"><span class="act">Paper 3</span><span>Interactive architecture</span></div>
-</section>
-
-<!-- ====== L10 · WHY HGC ====== -->
-<section class="slide" style="--accent:var(--dlvl)">
-  <div class="kicker">Paper 3 · The new piece</div>
-  <h2>Why should attention <span class="k">follow the tree</span>?</h2>
-  <p class="small" style="margin-bottom:.4vh">A node’s meaning lives in its <b>neighbourhood</b>: a headline belongs to <i>its</i> article, a caption to <i>its</i> figure.</p>
-  <div class="cols vc" style="grid-template-columns:1.25fr .75fr">
-    <div class="card svgbox" style="padding:2vh">
-      <svg viewBox="0 0 660 330" style="width:100%" aria-label="A layout tree and the sparse attention mask it induces">
-        <text x="120" y="24" text-anchor="middle" font-size="13.5" fill="#5b6b7a" font-weight="700">the tree the model just wrote</text>
-        <circle cx="120" cy="54" r="13" fill="#0E7C61"/><text x="120" y="58" text-anchor="middle" font-size="9.5" fill="#fff" font-weight="700">page</text>
-        <path d="M120 67 v14 M120 81 h-60 v16 M120 81 h60 v16" stroke="#7d8b99" stroke-width="2" fill="none"/>
-        <circle cx="60" cy="112" r="13" fill="#54ab92"/><text x="60" y="116" text-anchor="middle" font-size="9.5" fill="#fff" font-weight="700">s₁</text>
-        <circle cx="180" cy="112" r="13" fill="#54ab92"/><text x="180" y="116" text-anchor="middle" font-size="9.5" fill="#fff" font-weight="700">s₂</text>
-        <path d="M60 125 v12 M60 137 h-28 v14 M60 137 h28 v14" stroke="#7d8b99" stroke-width="1.6" fill="none"/>
-        <path d="M180 125 v12 M180 137 h-28 v14 M180 137 h28 v14" stroke="#7d8b99" stroke-width="1.6" fill="none"/>
-        <g text-anchor="middle" font-size="8.5" font-weight="700">
-          <circle cx="32" cy="162" r="11" fill="#8cc5b3"/><text x="32" y="166" fill="#1d4437">h₁</text>
-          <circle cx="88" cy="162" r="11" fill="#8cc5b3"/><text x="88" y="166" fill="#1d4437">p₁</text>
-          <circle cx="152" cy="162" r="11" fill="#8cc5b3"/><text x="152" y="166" fill="#1d4437">h₂</text>
-          <circle cx="208" cy="162" r="11" fill="#8cc5b3"/><text x="208" y="166" fill="#1d4437">p₂</text>
-        </g>
-        <text x="120" y="208" text-anchor="middle" font-size="12.5" fill="#5b6b7a">two articles, two leaves each</text>
-        <path d="M250 150 h54" stroke="#8a97a5" stroke-width="3" marker-end="url(#arrHgc)"/>
-        <defs><marker id="arrHgc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#8a97a5"/></marker></defs>
-        <text x="486" y="24" text-anchor="middle" font-size="13.5" fill="#5b6b7a" font-weight="700">the attention it allows</text>
-        <g font-size="12" fill="#3d5f55" text-anchor="middle" font-weight="700">
-          <text x="372" y="70">s₁</text><text x="372" y="108">h₁</text><text x="372" y="146">p₁</text><text x="372" y="184">s₂</text><text x="372" y="222">h₂</text><text x="372" y="260">p₂</text>
-          <text x="406" y="48">s₁</text><text x="444" y="48">h₁</text><text x="482" y="48">p₁</text><text x="520" y="48">s₂</text><text x="558" y="48">h₂</text><text x="596" y="48">p₂</text>
-        </g>
-        <g>
-          <rect x="390" y="56" width="32" height="32" rx="5" fill="#0E7C61"/><rect x="428" y="56" width="32" height="32" rx="5" fill="#0E7C61"/><rect x="466" y="56" width="32" height="32" rx="5" fill="#0E7C61"/><rect x="504" y="56" width="32" height="32" rx="5" fill="#0E7C61"/><rect x="542" y="56" width="32" height="32" rx="5" fill="#eef2f6"/><rect x="580" y="56" width="32" height="32" rx="5" fill="#eef2f6"/>
-          <rect x="390" y="94" width="32" height="32" rx="5" fill="#0E7C61"/><rect x="428" y="94" width="32" height="32" rx="5" fill="#0E7C61"/><rect x="466" y="94" width="32" height="32" rx="5" fill="#0E7C61"/><rect x="504" y="94" width="32" height="32" rx="5" fill="#eef2f6"/><rect x="542" y="94" width="32" height="32" rx="5" fill="#eef2f6"/><rect x="580" y="94" width="32" height="32" rx="5" fill="#eef2f6"/>
-          <rect x="390" y="132" width="32" height="32" rx="5" fill="#0E7C61"/><rect x="428" y="132" width="32" height="32" rx="5" fill="#0E7C61"/><rect x="466" y="132" width="32" height="32" rx="5" fill="#0E7C61"/><rect x="504" y="132" width="32" height="32" rx="5" fill="#eef2f6"/><rect x="542" y="132" width="32" height="32" rx="5" fill="#eef2f6"/><rect x="580" y="132" width="32" height="32" rx="5" fill="#eef2f6"/>
-          <rect x="390" y="170" width="32" height="32" rx="5" fill="#0E7C61"/><rect x="428" y="170" width="32" height="32" rx="5" fill="#eef2f6"/><rect x="466" y="170" width="32" height="32" rx="5" fill="#eef2f6"/><rect x="504" y="170" width="32" height="32" rx="5" fill="#0E7C61"/><rect x="542" y="170" width="32" height="32" rx="5" fill="#0E7C61"/><rect x="580" y="170" width="32" height="32" rx="5" fill="#0E7C61"/>
-          <rect x="390" y="208" width="32" height="32" rx="5" fill="#eef2f6"/><rect x="428" y="208" width="32" height="32" rx="5" fill="#eef2f6"/><rect x="466" y="208" width="32" height="32" rx="5" fill="#eef2f6"/><rect x="504" y="208" width="32" height="32" rx="5" fill="#0E7C61"/><rect x="542" y="208" width="32" height="32" rx="5" fill="#0E7C61"/><rect x="580" y="208" width="32" height="32" rx="5" fill="#0E7C61"/>
-          <rect x="390" y="246" width="32" height="32" rx="5" fill="#eef2f6"/><rect x="428" y="246" width="32" height="32" rx="5" fill="#eef2f6"/><rect x="466" y="246" width="32" height="32" rx="5" fill="#eef2f6"/><rect x="504" y="246" width="32" height="32" rx="5" fill="#0E7C61"/><rect x="542" y="246" width="32" height="32" rx="5" fill="#0E7C61"/><rect x="580" y="246" width="32" height="32" rx="5" fill="#0E7C61"/>
-        </g>
-        <text x="486" y="306" text-anchor="middle" font-size="12.5" fill="#16222e">each [LAY] attends to parent, children, siblings — nothing else</text>
-        <text x="486" y="324" text-anchor="middle" font-size="11.5" fill="#b42318" font-weight="700">h₁ never hears from h₂ — no cross-article interference</text>
-      </svg>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:1.1vh;justify-content:center">
-      <div class="keyidea" style="--accent:var(--dlvl)"><span class="tag">HGC · Hierarchical Grounding Contextualizer</span>
-        <p><b>Structure becomes locality.</b> After the tree is written, a small transformer refines only the [LAY] states, with attention shaped like the tree the model just wrote; the refined states prompt the segmenter.</p></div>
-      <div class="stat frag"><div class="v bad" style="font-size:3.8vh">77.5 → 58.3</div><div class="l">Open mIoU on the hierarchical track, without HGC</div></div>
-    </div>
-  </div>
-  <div class="footer"><span class="act">Paper 3</span><span>HGC · why a tree</span></div>
 </section>
 
 <!-- ====== L11 · LOSSES ====== -->
@@ -2545,7 +2514,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   <h2>Results</h2>
   <div class="cols vc" style="grid-template-columns:1.25fr .75fr">
     <div class="chartcard">
-      <h3>HOPLay-Docs-Bench · Overall Score</h3><p class="sub">HOPLay = Hierarchical, Open-set, Promptable Layout · mean over four tracks: flat open-set · hierarchical parse · curved boundaries · prompts · 0–100</p>
+      <h3>HOPLay-Docs-Bench · Overall Score</h3><p class="sub">HOPLay = Hierarchical, Open-set, Promptable Layout · mean over four tracks · 0–100</p>
       <svg viewBox="0 0 640 260" role="img" aria-label="Overall score bars">
         <g stroke="#e1e0d9" stroke-width="1"><line x1="215" y1="14" x2="215" y2="226"/><line x1="320" y1="14" x2="320" y2="226"/><line x1="425" y1="14" x2="425" y2="226"/><line x1="530" y1="14" x2="530" y2="226"/><line x1="635" y1="14" x2="635" y2="226"/></g>
         <g font-size="13" fill="#898781" text-anchor="middle"><text x="215" y="246">0</text><text x="320" y="246">25</text><text x="425" y="246">50</text><text x="530" y="246">75</text><text x="628" y="246">100</text></g>
@@ -2563,9 +2532,9 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
       </svg>
     </div>
     <div style="display:flex;flex-direction:column;gap:1.1vh;justify-content:center">
-      <div class="stat"><div class="v" style="font-size:4vh">6.9 vs 77.5</div><div class="l">Open mIoU on the hierarchical track — Gemini 3 Pro vs ours</div></div>
-      <div class="card frag"><h3>Zero-shot on classic benchmarks</h3><p class="small">PubLayNet 96.5 · M6Docs 76.9 · IndicDLP 77.5 mAP — never trained on these, competitive with per-dataset detectors</p></div>
-      <div class="card"><h3>Not a judge artifact</h3><p class="small">The prompt track re-scored by two other LLM judges: the 17-model ranking barely moves (rank correlation 0.97 / 0.96); ours first under all three.</p></div>
+      <div class="stat"><div class="v" style="font-size:4vh">6.9 vs 77.5</div><div class="l">hierarchical-track Open mIoU · Gemini 3 Pro vs ours</div></div>
+      <div class="card frag"><h3>Zero-shot on classic benchmarks</h3><p class="small">PubLayNet 96.5 · M6Docs 76.9 · IndicDLP 77.5 mAP — competitive with per-dataset detectors</p></div>
+      <div class="card"><h3>Not a judge artifact</h3><p class="small">Prompt track, two other LLM judges: 17-model ranking barely moves (rank correlation 0.97 / 0.96); ours first under all three.</p></div>
     </div>
   </div>
   <div class="footer"><span class="act">Paper 3</span><span>Main results</span></div>
@@ -2577,7 +2546,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   <h2>What matters more — <span class="k">architecture</span>, or <span class="k">scale of data</span>?</h2>
   <div class="vc" style="display:flex;flex:1;align-items:center;justify-content:center">
     <div class="chartcard frag" style="width:76%">
-      <h3>Hierarchy quality vs training-data fraction (Qwen3-VL-8B backbone)</h3><p class="sub">Open mIoU on the hierarchical track · components added one at a time, at 25%, 50% and 100% of the data</p>
+      <h3>Hierarchy quality vs training-data fraction (Qwen3-VL-8B backbone)</h3><p class="sub">Open mIoU, hierarchical track · one component added at a time · 25%, 50%, 100% data</p>
       <svg viewBox="0 0 784 370" role="img" aria-label="Slopegraph: configurations at 25, 50 and 100 percent of the data">
         <text x="640" y="30" font-size="13.5" fill="#b42318" font-weight="700">the gap never closes</text>
         <g stroke="#e1e0d9" stroke-width="1"><line x1="140" y1="40" x2="140" y2="340"/><line x1="320" y1="40" x2="320" y2="340"/><line x1="500" y1="40" x2="500" y2="340"/></g>
@@ -2594,17 +2563,10 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
         <path d="M732 242.5 v-127.0" stroke="#b42318" stroke-width="2" marker-end="url(#arr8)" stroke-dasharray="6 4"/>
         <defs><marker id="arr8" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#b42318"/></marker></defs>
       </svg>
-      <p class="small" style="text-align:center;margin-top:.4vh"><b>Both — but architecture wins.</b> Four times the data moves the box-only model 28.4 → 32.5. Adding HGC is worth +11 to +13 at every data scale. The full model on a <b>quarter</b> of the data (63.5) beats the box-only model on all of it (32.5).</p>
+      <p class="small" style="text-align:center;margin-top:.4vh"><b>Both — but architecture wins.</b> Four times the data moves box-only 28.4 → 32.5. HGC adds +11 to +13 at every data scale. Full model on a <b>quarter</b> of the data (63.5) beats box-only on all of it (32.5).</p>
     </div>
   </div>
   <div class="footer"><span class="act">Paper 3</span><span>Architecture vs data</span></div>
-</section>
-
-<!-- ====== L15 · SAM FOR DOCS CLOSER ====== -->
-<section class="slide" style="--accent:var(--dlvl)">
-  <div class="kicker">Paper 3 · So, the question from the start</div>
-  <figure class="fig" style="flex:1;min-height:0"><img src="grounding/assets/dlvl_samfordocs.png" alt="Segment Anything for Documents is here — DocLayout-VL" style="max-height:80vh"></figure>
-  <div class="footer"><span class="act">Paper 3</span><span>SAM for documents — answered</span></div>
 </section>
 
 <!-- ====== L16 · DLVL PAPER CARD ====== -->
@@ -2624,7 +2586,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   <div class="kicker">Stepping back</div>
   <h2>Three papers — <span class="k">one recipe</span></h2>
   <div class="vc">
-  <div class="recipe">The shared recipe, now visible: the VLM's <b>hidden state becomes the pointer</b>.</div>
+  <div class="recipe">The VLM's <b>hidden state becomes the pointer</b>.</div>
   <div class="vc" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.2vw">
     <div class="card casc" style="animation-delay:.05s;border-top:6px solid var(--m3);display:flex;flex-direction:column;gap:.6vh">
       <h3 style="color:var(--m3)">M3Grounder · CVPR'26</h3>
@@ -2651,7 +2613,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
       <div class="stat" style="padding:1vh"><div class="v" style="font-size:3.2vh;color:var(--dlvl)">79.4 vs 37.2</div><div class="l">OS vs Gemini 3 Pro</div></div>
     </div>
   </div>
-  <p class="small frag" style="margin-top:1vh;text-align:center">The interaction grows with the structure it must respect — <b>independent spans → consistent steps → a full tree</b> — and the losses grow the same way. <span class="tok">[GROUND]</span> · <span class="tok g">[GND]</span> · <span class="tok l">[LAY]</span> — one pointer, three names. REPLICA has no pointer: it made the pages two of the three learnt from — next slide.</p>
+  <p class="small frag" style="margin-top:1vh;text-align:center">Interaction and losses grow with the structure they must respect: <b>independent spans → consistent steps → full tree</b>. <span class="tok">[GROUND]</span> · <span class="tok g">[GND]</span> · <span class="tok l">[LAY]</span> — one pointer, three names. REPLICA has no pointer: it made the pages two of the three learnt from.</p>
   </div>
   <div class="footer"><span class="act">Synthesis</span><span>One recipe</span></div>
 </section>
@@ -2659,89 +2621,69 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
 <!-- ====== FINAL · THE LOOP CLOSES ====== -->
 <section class="slide" style="--accent:var(--replica)">
   <div class="kicker">Where the four systems meet</div>
-  <h2>What actually flows around the loop</h2>
-  <div class="svgbox" style="flex:1;min-height:0;margin-top:.4vh">
-  <svg viewBox="0 0 1000 440" aria-label="REPLICA's Fid-HTML feeds the grounding models' data engines; shared segmenters and the DocLayout-VL parse flow back">
+  <h2>What flows between the four systems</h2>
+  <div class="svgbox vc" style="flex:1;min-height:0">
+  <svg viewBox="0 0 1000 400" style="width:92%" aria-label="REPLICA's Fid-HTML feeds the M3Grounder and DoCoG data engines; DocLayout-VL reuses the recipe; next, DocLayout-VL could replace REPLICA's segmentation ensemble">
     <defs>
       <marker id="aG3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#B7791F"/></marker>
       <marker id="aGr3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#0E7C61"/></marker>
     </defs>
+    <rect x="30" y="100" width="270" height="160" rx="18" fill="#fff" stroke="#B7791F" stroke-width="3"/>
+    <rect x="30" y="100" width="270" height="10" rx="5" fill="#B7791F"/>
+    <text x="165" y="162" text-anchor="middle" font-size="30" font-weight="800" fill="#B7791F">REPLICA</text>
+    <text x="165" y="208" text-anchor="middle" font-size="22" font-weight="800" fill="#1E3A5F">→ Fid-HTML</text>
 
-    <!-- REPLICA -->
-    <rect x="30" y="96" width="270" height="190" rx="18" fill="#fff" stroke="#B7791F" stroke-width="3"/>
-    <rect x="30" y="96" width="270" height="10" rx="5" fill="#B7791F"/>
-    <text x="165" y="146" text-anchor="middle" font-size="30" font-weight="800" fill="#B7791F">REPLICA</text>
-    <text x="165" y="174" text-anchor="middle" font-size="16" fill="#5b6b7a">rebuilds a page as</text>
-    <text x="165" y="206" text-anchor="middle" font-size="23" font-weight="800" fill="#1E3A5F">Fid-HTML</text>
-    <text x="165" y="232" text-anchor="middle" font-size="13" fill="#8a97a5">text · tree · order · geometry · style</text>
-    <text x="165" y="266" text-anchor="middle" font-size="12.5" fill="#5b6b7a">Segment: 2 detectors · Hi-SAM · 2 agents</text>
+    <rect x="670" y="40" width="310" height="76" rx="14" fill="#fff" stroke="#05539C" stroke-width="2.5"/>
+    <text x="825" y="74" text-anchor="middle" font-size="22" font-weight="800" fill="#05539C">M3Grounder</text>
+    <text x="825" y="98" text-anchor="middle" font-size="14" fill="#5b6b7a">140K docs → QA</text>
+    <rect x="670" y="142" width="310" height="76" rx="14" fill="#fff" stroke="#7C3AED" stroke-width="2.5"/>
+    <text x="825" y="176" text-anchor="middle" font-size="22" font-weight="800" fill="#7C3AED">DoCoG</text>
+    <text x="825" y="200" text-anchor="middle" font-size="14" fill="#5b6b7a">175K pages → step-wise QA</text>
+    <rect x="670" y="244" width="310" height="76" rx="14" fill="#fff" stroke="#0E7C61" stroke-width="2.5"/>
+    <text x="825" y="278" text-anchor="middle" font-size="22" font-weight="800" fill="#0E7C61">DocLayout-VL</text>
+    <text x="825" y="302" text-anchor="middle" font-size="14" fill="#5b6b7a">same recipe, own engine</text>
 
-    <!-- models -->
-    <rect x="670" y="40" width="310" height="80" rx="14" fill="#fff" stroke="#05539C" stroke-width="2.5"/>
-    <text x="825" y="72" text-anchor="middle" font-size="22" font-weight="800" fill="#05539C">M3Grounder</text>
-    <text x="825" y="98" text-anchor="middle" font-size="12.5" fill="#5b6b7a">140K docs via Fid-HTML → about half of 2M QA</text>
-    <rect x="670" y="140" width="310" height="80" rx="14" fill="#fff" stroke="#7C3AED" stroke-width="2.5"/>
-    <text x="825" y="172" text-anchor="middle" font-size="22" font-weight="800" fill="#7C3AED">DoCoG</text>
-    <text x="825" y="198" text-anchor="middle" font-size="12.5" fill="#5b6b7a">100K docs + 75K tables via Fid-HTML → CoT QA</text>
-    <rect x="670" y="240" width="310" height="80" rx="14" fill="#fff" stroke="#0E7C61" stroke-width="2.5"/>
-    <text x="825" y="272" text-anchor="middle" font-size="22" font-weight="800" fill="#0E7C61">DocLayout-VL</text>
-    <text x="825" y="298" text-anchor="middle" font-size="12.5" fill="#5b6b7a">same recipe, with a zero-shot VLM</text>
+    <text x="470" y="64" text-anchor="middle" font-size="16" font-weight="800" fill="#B7791F">QA that cites element IDs</text>
+    <path d="M305 140 C 440 140, 540 80, 664 78" fill="none" stroke="#B7791F" stroke-width="4" marker-end="url(#aG3)"/>
+    <path d="M305 180 C 440 180, 540 180, 664 180" fill="none" stroke="#B7791F" stroke-width="4" marker-end="url(#aG3)"/>
+    <path d="M305 220 C 440 220, 540 282, 664 282" fill="none" stroke="#B7791F" stroke-width="2.5" stroke-dasharray="8 6" marker-end="url(#aG3)"/>
 
-    <!-- forward edges -->
-    <text x="470" y="56" text-anchor="middle" font-size="16" font-weight="800" fill="#B7791F">the LLM writes QA citing element IDs</text>
-    <text x="430" y="76" text-anchor="middle" font-size="12.5" fill="#5b6b7a">engines add IDs → IDs map back to Hi-SAM masks, not coordinates</text>
-    <path d="M305 150 C 440 150, 540 86, 664 80" fill="none" stroke="#B7791F" stroke-width="4" marker-end="url(#aG3)"/>
-    <path d="M305 186 C 440 186, 540 180, 664 180" fill="none" stroke="#B7791F" stroke-width="4" marker-end="url(#aG3)"/>
-    <path d="M305 224 C 440 224, 540 280, 664 280" fill="none" stroke="#B7791F" stroke-width="2.5" stroke-dasharray="8 6" marker-end="url(#aG3)"/>
-    <text x="470" y="214" text-anchor="middle" font-size="12.5" fill="#8a97a5">the idea, not the engine</text>
-
-    <!-- return edge -->
-    <path d="M664 312 C 560 362, 420 362, 305 300" fill="none" stroke="#0E7C61" stroke-width="3" stroke-dasharray="9 6" marker-end="url(#aGr3)"/>
-    <text x="494" y="372" text-anchor="middle" font-size="14.5" font-weight="800" fill="#0E7C61">next: one model replaces the ensemble</text>
-    <text x="494" y="390" text-anchor="middle" font-size="12.5" fill="#5b6b7a">the tree REPLICA assembles from detectors + agents is what DocLayout-VL emits in one pass</text>
-
-    <!-- shared segmenters -->
-    <rect x="30" y="404" width="950" height="34" rx="10" fill="#f2f6fa" stroke="#dde5ec" stroke-width="2"/>
-    <text x="505" y="426" text-anchor="middle" font-size="12.5" fill="#33424f"><tspan font-weight="800">Shared segmenters:</tspan> Hi-SAM — text masks for REPLICA and both QA engines · SAM 3 — graphical masks in the DoCoG and DocLayout-VL data engines</text>
+    <path class="frag" d="M664 316 C 560 368, 420 368, 305 262" fill="none" stroke="#0E7C61" stroke-width="3" stroke-dasharray="9 6" marker-end="url(#aGr3)"/>
+    <text class="frag" x="494" y="388" text-anchor="middle" font-size="15" font-weight="800" fill="#0E7C61">next: one model replaces REPLICA’s segmentation ensemble</text>
   </svg>
   </div>
-  <div class="callout" style="margin-top:.6vh">Solid arrows are in the papers (DoCoG’s, in its supplement); the element IDs are added by the QA engines on top of Fid-HTML; the dashed return is the integration not yet shipped. And the models answer over the pages REPLICA represents — the <b>grounded document intelligence</b> REPLICA’s own paper lists as its application.</div>
+  <p class="small" style="text-align:center;color:var(--muted)">Solid arrows: data that trained the model · dashed: the idea reused, or not yet built</p>
 </section>
 
 <!-- ====== S1b · WHAT MADE IT POSSIBLE ====== -->
 <section class="slide" style="--accent:var(--blue)">
   <div class="kicker">Stepping back</div>
   <h2>What made this possible</h2>
-  <div class="vc" style="display:grid;grid-template-columns:1.15fr .95fr .9fr;gap:1.3vw;align-items:stretch">
+  <div class="vc" style="display:grid;grid-template-columns:1fr 1.15fr 1fr;gap:1.4vw;align-items:stretch">
     <div class="card casc" style="animation-delay:.05s;border-top:6px solid var(--orange)">
-      <h3 style="color:#8a4b00">Data — the backbone</h3>
-      <p class="small" style="margin-bottom:.6vh">Four engines. <b>No training mask drawn by hand.</b></p>
-      <div style="display:flex;flex-direction:column;gap:.45vh;font-size:1.8vh">
-        <div><b>5K</b> pages · 22 languages · expert-annotated — VFDR-Bench</div>
-        <div><b>200K</b> docs · <b>2M</b> grounded QA — Fid-HTML → IDs → masks</div>
-        <div><b>325K</b> docs · <b>1.5M</b> step-wise QA · <b>20K</b> preference pairs</div>
-        <div><b>2.5M</b> pages · <b>80M</b> masks · 40 languages</div>
+      <h3 style="color:#8a4b00">Data engines</h3>
+      <p class="small">Reconstruct the page first, then generate QA that cites element IDs; masks come from segmenters, never from a model writing coordinates.</p>
+      <div style="display:flex;flex-direction:column;gap:.5vh;margin-top:1vh;font-size:1.85vh">
+        <div><b>2M</b> grounded QA · M3Grounder</div>
+        <div><b>1.5M</b> step-wise QA + <b>20K</b> preference pairs · DoCoG</div>
+        <div><b>80M</b> masks on <b>2.5M</b> pages · DocLayout-VL</div>
       </div>
-      <table class="abl" style="font-size:1.6vh;margin-top:.8vh"><thead><tr><th>same 8B backbone</th><th>zero-shot</th><th>+ our data</th><th>+ our model</th></tr></thead><tbody><tr><td>M3Grounder · F1<sub>g</sub></td><td>12.8</td><td>60.6</td><td><b>79.0</b></td></tr><tr><td>DoCoG · GQ<sub>fa</sub></td><td>5.5</td><td>61.9</td><td><b>81.9</b></td></tr><tr><td>DocLayout-VL · OS</td><td>31.6</td><td>45.8</td><td><b>79.4</b></td></tr></tbody></table>
-      <p class="small" style="margin-top:.6vh">Our data lifts a stock 8B backbone by 14 to 56 points; our architecture adds the rest — 18 on spans, 20 on steps, 34 on the whole page. Verified by construction, LLM judges, then by hand — 33,500 DoCoG masks; 30 annotators on GDQA-Bench; VFDR fully expert-annotated.</p>
+      <p class="small" style="margin-top:1vh;color:var(--muted)">Every benchmark human-verified.</p>
     </div>
     <div class="card casc" style="animation-delay:.2s;border-top:6px solid var(--blue)">
-      <h3>Compute — what it bought</h3>
-      <div style="display:flex;flex-direction:column;gap:.45vh;font-size:1.8vh">
-        <div><b>64 × H100</b> — M3Grounder</div>
-        <div><b>32 × H100</b> — DoCoG</div>
-        <div><b>64 × H100</b> — DocLayout-VL</div>
-        <div>full fine-tuning, on 32–64 H100s each</div>
-      </div>
-      <p class="small" style="margin-top:.7vh"><b>Full fine-tuning, every time.</b> LoRA loses 16–18 points of grounding — the parameters that write the pointer must all move.</p>
+      <h3>Design choices</h3>
+      <p class="small">The same 8B backbone, three stages:</p>
+      <table class="abl" style="font-size:1.7vh;margin-top:.6vh"><thead><tr><th></th><th>zero-shot</th><th>+ our data</th><th>+ our model</th></tr></thead><tbody><tr><td>M3Grounder · F1<sub>g</sub></td><td>12.8</td><td>60.6</td><td><b>79.0</b></td></tr><tr><td>DoCoG · GQ<sub>fa</sub></td><td>5.5</td><td>61.9</td><td><b>81.9</b></td></tr><tr><td>DocLayout-VL · OS</td><td>31.6</td><td>45.8</td><td><b>79.4</b></td></tr></tbody></table>
+      <p class="small" style="margin-top:.8vh">Data brings the backbone into the task; the architecture — pointer tokens, document priors, GIM, HGC, the anchor — closes the rest.</p>
     </div>
     <div class="card casc" style="animation-delay:.35s;border-top:6px solid var(--dlvl)">
-      <h3 style="color:var(--dlvl)">One place</h3>
-      <p class="small">The reconstruction engine, the multilingual document corpus and the GPUs sat under one roof at <b>BharatGen</b> — so the data could be made in-house, at whatever scale each model needed.</p>
-      <p class="small" style="margin-top:.7vh">That is how systems built here, at 8–9B parameters, beat frontier VLMs on every one of these benchmarks.</p>
+      <h3 style="color:var(--dlvl)">Training setup</h3>
+      <p class="small"><b>Full fine-tuning</b> of 8B backbones: with LoRA, grounding drops 16–18 points — the layers that write the pointer must move.</p>
+      <p class="small" style="margin-top:1vh">32–64 H100s per model, DeepSpeed ZeRO-3.</p>
+      <p class="small" style="margin-top:1vh;color:var(--muted)">Engines, corpora and training at <b>BharatGen</b>, with IIIT Hyderabad.</p>
     </div>
   </div>
-  <div class="footer"><span class="act">Synthesis</span><span>Data · compute · place</span></div>
+  <div class="footer"><span class="act">Synthesis</span><span>Data · design · training</span></div>
 </section>
 
 <!-- ====== S1c · DESIGN CHOICES AND THEIR RECEIPTS ====== -->
@@ -2781,39 +2723,8 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
       </table>
     </div>
   </div>
-  <p class="small frag" style="text-align:center;margin-top:.8vh">None of these is a trick. Each is a document prior or a training constraint that natural-image grounders never needed — and each one is measured.</p>
+  <p class="small frag" style="text-align:center;margin-top:.8vh">No tricks: document priors and training constraints natural-image grounders never needed — each measured.</p>
   <div class="footer"><span class="act">Synthesis</span><span>Design choices</span></div>
-</section>
-
-<!-- ====== S1d · WHERE IT STILL BREAKS ====== -->
-<section class="slide" style="--accent:var(--blue)">
-  <div class="kicker">Stepping back · honestly</div>
-  <h2>Where it still breaks</h2>
-  <div class="vc" style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:1.1vw;align-items:stretch">
-    <div class="card casc" style="animation-delay:.05s;border-top:6px solid var(--replica)">
-      <h3 style="color:var(--replica)">REPLICA</h3>
-      <p class="small"><b>One page at a time</b> (as in Part 1): tables and figures that span pages fragment.</p>
-      <p class="small" style="margin-top:.6vh">Bold, italic and colour come back; the <b>font itself</b> is not identified.</p>
-    </div>
-    <div class="card casc" style="animation-delay:.2s;border-top:6px solid var(--m3)">
-      <h3 style="color:var(--m3)">M3Grounder</h3>
-      <p class="small"><b>Grounds the answer, not the reasoning.</b> The evidence behind intermediate steps stays hidden.</p>
-      <p class="small" style="margin-top:.6vh">That gap is what DoCoG was built to close.</p>
-    </div>
-    <div class="card casc" style="animation-delay:.35s;border-top:6px solid var(--docog)">
-      <h3 style="color:var(--docog)">DoCoG</h3>
-      <p class="small"><b>Dense pages.</b> Questions needing more than 30 evidence regions:</p>
-      <div class="stat" style="padding:.8vh;margin-top:.6vh"><div class="v" style="font-size:3vh;color:#b42318">25% → 52%</div><div class="l">of the benchmark → of the errors</div></div>
-      <p class="small" style="margin-top:.6vh">Answers hold; masks degrade as the sequence grows.</p>
-    </div>
-    <div class="card casc" style="animation-delay:.5s;border-top:6px solid var(--dlvl)">
-      <h3 style="color:var(--dlvl)">DocLayout-VL</h3>
-      <p class="small"><b>Single page, long trees.</b> Element-dense pages serialize into long sequences — slower, and generation can slip.</p>
-      <p class="small" style="margin-top:.6vh">Cross-page structure is not modelled.</p>
-    </div>
-  </div>
-  <p class="small" style="text-align:center;margin-top:.8vh">Each of these is written down in the papers — and each is the next thing to build.</p>
-  <div class="footer"><span class="act">Synthesis</span><span>Limits</span></div>
 </section>
 
 <!-- ====== S2 · THE FRONTIER ====== -->
@@ -2855,25 +2766,25 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
 <section class="slide" style="--accent:var(--blue)">
   <div class="kicker">Lessons</div>
   <h2>What we learned</h2>
-  <div class="vc" style="display:flex;flex-direction:column;gap:2.2vh;justify-content:center;width:58%;margin:0 auto;flex:1">
-    <div class="card casc" style="animation-delay:.05s;display:flex;gap:1.6vw;align-items:center;padding:2.2vh 2vw">
-      <svg viewBox="0 0 44 44" style="width:4.6vh;flex:0 0 auto"><rect x="4" y="8" width="36" height="28" rx="4" fill="none" stroke="#b42318" stroke-width="2" stroke-dasharray="4 3"/><path d="M12 30 q-4 -10 4 -14 q8 -5 16 0 q8 4 2 12 q-6 8 -14 6 q-6 -1 -8 -4 z" fill="#05539C"/></svg>
-      <div><h3 style="font-size:3vh;margin:0">Masks are a good addition &mdash; and they let us leverage prompting</h3><p class="small" style="margin:.4vh 0 0">on curved regions, boxes 39.7 → masks 87.9; a token’s hidden state is the prompt, so the model is promptable</p></div>
+  <div class="vc" style="display:grid;grid-template-columns:1fr 1fr;gap:2.4vh 1.8vw;width:80%;margin:auto">
+    <div class="card casc" style="animation-delay:.05s;border-left:7px solid var(--m3);padding:2.6vh 2.2vw;display:flex;flex-direction:column;gap:2.2vh">
+      <h3 style="font-size:3.2vh;margin:0;line-height:1.2;color:var(--ink)">Point with masks, not boxes</h3>
+      <div><div style="font-size:5.2vh;font-weight:800;color:var(--m3);line-height:1">39.7 → 87.9</div><div class="small" style="margin-top:.6vh;color:var(--muted)">curved regions · box regression → our masks (Open mIoU)</div></div>
     </div>
-    <div class="card casc" style="animation-delay:.2s;display:flex;gap:1.6vw;align-items:center;padding:2.2vh 2vw">
-      <svg viewBox="0 0 44 44" style="width:4.6vh;flex:0 0 auto"><g fill="#05539C"><rect x="8" y="7" width="28" height="7.5" rx="3.75"/><rect x="8" y="18" width="28" height="7.5" rx="3.75" opacity=".72"/><rect x="8" y="29" width="28" height="7.5" rx="3.75" opacity=".45"/></g></svg>
-      <div><h3 style="font-size:3vh;margin:0">Data scale really matters&hellip;</h3><p class="small" style="margin:.4vh 0 0">zero-shot → trained on our data: grounding 5.5 → 61.9 (DoCoG), 12.8 → 60.6 (M3Grounder)</p></div>
+    <div class="card casc" style="animation-delay:.2s;border-left:7px solid var(--orange);padding:2.6vh 2.2vw;display:flex;flex-direction:column;gap:2.2vh">
+      <h3 style="font-size:3.2vh;margin:0;line-height:1.2;color:var(--ink)">Build the data before the model</h3>
+      <div><div style="font-size:5.2vh;font-weight:800;color:var(--orange);line-height:1">5.5 → 61.9</div><div class="small" style="margin-top:.6vh;color:var(--muted)">DoCoG grounding · zero-shot → the same backbone on our data</div></div>
     </div>
-    <div class="card casc" style="animation-delay:.35s;display:flex;gap:1.6vw;align-items:center;padding:2.2vh 2vw">
-      <svg viewBox="0 0 44 44" style="width:4.6vh;flex:0 0 auto"><g fill="#05539C"><rect x="16" y="6" width="12" height="12" rx="2.5"/><rect x="7" y="26" width="12" height="12" rx="2.5" opacity=".8"/><rect x="25" y="26" width="12" height="12" rx="2.5" opacity=".8"/></g><path d="M22 18 v4 M22 22 h-9 v4 M22 22 h9 v4" stroke="#7d8b99" stroke-width="2" fill="none"/></svg>
-      <div><h3 style="font-size:3vh;margin:0">&hellip;and architecture matters just as much</h3><p class="small" style="margin:.4vh 0 0">our data → our model: 61.9 → 81.9; a quarter of the data with the full architecture beats all of it with boxes</p></div>
+    <div class="card casc" style="animation-delay:.35s;border-left:7px solid var(--docog);padding:2.6vh 2.2vw;display:flex;flex-direction:column;gap:2.2vh">
+      <h3 style="font-size:3.2vh;margin:0;line-height:1.2;color:var(--ink)">Then the architecture does the rest</h3>
+      <div><div style="font-size:5.2vh;font-weight:800;color:var(--docog);line-height:1">61.9 → 81.9</div><div class="small" style="margin-top:.6vh;color:var(--muted)">the same data · fine-tuned backbone → our model</div></div>
     </div>
-    <div class="card casc" style="animation-delay:.5s;display:flex;gap:1.6vw;align-items:center;padding:2.2vh 2vw">
-      <svg viewBox="0 0 44 44" style="width:4.6vh;flex:0 0 auto"><rect x="6" y="24" width="8" height="14" rx="2" fill="#7d8b99"/><rect x="18" y="14" width="8" height="24" rx="2" fill="#7d8b99"/><rect x="30" y="6" width="8" height="32" rx="2" fill="#F59222"/></svg>
-      <div><h3 style="font-size:3vh;margin:0">Benchmark not just answers but also grounding &mdash; for trust</h3><p class="small" style="margin:.4vh 0 0">GPT-5 answers 82.9 and grounds 4.8 — an answer-only benchmark would never have shown it</p></div>
+    <div class="card casc" style="animation-delay:.5s;border-left:7px solid #b42318;padding:2.6vh 2.2vw;display:flex;flex-direction:column;gap:2.2vh">
+      <h3 style="font-size:3.2vh;margin:0;line-height:1.2;color:var(--ink)">Measure grounding, not just answers</h3>
+      <div><div style="font-size:5.2vh;font-weight:800;color:#b42318;line-height:1">82.9 · 4.8</div><div class="small" style="margin-top:.6vh;color:var(--muted)">GPT-5 · answer quality · grounding on DoCoG-Bench</div></div>
     </div>
   </div>
-  <div class="footer"><span class="act">Synthesis</span><span>Takeaways</span></div>
+  <div class="footer"><span class="act">Synthesis</span><span>Lessons</span></div>
 </section>
 
 <!-- ====== 47 · THANKS ====== -->
