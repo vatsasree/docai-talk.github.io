@@ -3960,6 +3960,7 @@
   
     /* hosted inside the docai talk: the parent deck owns the counter, progress and controls */
     html.hosted .counter, html.hosted #progress, html.hosted #bar { display: none !important; }
+    html.hosted { --bg: #f6f8fa; --line: #dde5ec; }
 </style>
 </head>
 
@@ -6226,7 +6227,7 @@
          thank-you slide is dropped (the parent deck has its own). */
       if (/[?&]host=1/.test(location.search)) {
         document.documentElement.classList.add("hosted");
-        const FIRST = 0, LAST = slides.length - 2;
+        const FIRST = 1, LAST = slides.length - 2;   // the parent deck shows its own REPLICA title card
         const baseNext = next, basePrev = prev;
         const atEnd = () => cur > LAST || (cur === LAST && frag >= fragCount(cur));
         const atStart = () => cur <= FIRST && frag <= 0;
