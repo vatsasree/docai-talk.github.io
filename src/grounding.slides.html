@@ -11,11 +11,6 @@
   </svg>
   <h1 style="margin-top:2vh">From <span style="color:#b42318">rebuilding</span> to <span class="k">grounding</span></h1>
   <p class="sub">A million rebuilt pages are a million labelled pages. Part 2 teaches models to point at them — with masks, not boxes.</p>
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.2vw;width:84vw;margin-top:2.4vh;text-align:left">
-    <div class="card casc" style="animation-delay:.05s;padding:1.5vh 1.5vw"><h3 style="color:#b42318">What to watch</h3><p class="small">How the pointers talk to each other: <b>not at all</b> → <b>across the steps</b> of a chain → <b>along a tree</b>. One recipe, three papers.</p></div>
-    <div class="card casc" style="animation-delay:.2s;padding:1.5vh 1.5vw"><h3 style="color:var(--blue)">Where the data comes from</h3><p class="small">Every rebuilt element carries an ID, so a text-only model can cite it. <b>No hand-drawn masks</b> anywhere in Part 2.</p></div>
-    <div class="card casc" style="animation-delay:.35s;padding:1.5vh 1.5vw"><h3 style="color:var(--dlvl)">One question to hold</h3><p class="small">SAM segments any object in a photo from one click. <b>Is there a SAM for documents?</b> The last paper answers it.</p></div>
-  </div>
   <div class="papers">
     <div class="paper"><h4>M3Grounder</h4><span>CVPR 2026</span></div>
     <div class="paper"><h4>DoCoG</h4><span>ECCV 2026 <b class="oral">Spotlight</b></span></div>
@@ -140,10 +135,6 @@
       <div class="mot prob frag"><h4>Too many tokens</h4><p>hundreds of coordinates per span</p></div>
       <div class="mot prob frag"><h4>Nothing ties them to the page</h4><p>just more next-token predictions — they can be <b>hallucinated</b></p></div>
       <div class="mot prob frag"><h4>Evidence is plural</h4><p>real answers cite several places at once — and each has its own shape; K boxes are still K rectangles</p></div>
-    </div>
-    <div class="keyidea frag" style="--accent:var(--intro)">
-      <span class="tag">so — divide and conquer?</span>
-      <p>Let a language model <b>decide what the evidence is</b> and a segmentation model <b>draw it</b>. The whole question is how the two talk — hold it.</p>
     </div>
   </div>
   <div class="footer"><span class="act">The problem</span><span>Boxes via the vocabulary</span></div>

@@ -533,51 +533,6 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   </div>
 </section>
 
-<!-- ====== 2 · WHERE WE STAND ====== -->
-<section class="slide" style="--accent:var(--replica)">
-  <div class="kicker">Before we start</div>
-  <h2>Our models vs <span class="k">frontier VLMs</span></h2>
-  <p class="small" style="margin-bottom:.2vh"><b>Grounding</b> — the model shows, in pixels, <i>where on the page</i> its answer came from. All four benchmarks are ours; frontier models answer with boxes, which we rasterise and score against our masks.</p>
-  <div class="vc" style="display:flex;flex-direction:column;gap:1.4vh;justify-content:center">
-    <div class="chartcard" style="padding:2.6vh 3vh">
-      <svg viewBox="0 0 980 340" style="width:100%;max-height:54vh" role="img" aria-label="Ours versus the best frontier VLM on four benchmarks">
-        <g font-size="19" fill="#16222e">
-          <text x="4" y="32" font-weight="700">Page reconstruction</text>
-          <text x="4" y="52" font-size="14.5" fill="#8a97a5">VFDR-Bench · rebuild a page (0–1)</text>
-          <rect class="draw" style="--len:340" x="300" y="16" width="212" height="22" rx="5" fill="#c3ceda"/>
-          <text x="524" y="33" font-size="17" fill="#5b6b7a">GPT-5 &nbsp;0.58</text>
-          <rect class="draw" style="--len:340" x="300" y="46" width="314" height="22" rx="5" fill="#B7791F"/>
-          <text x="626" y="63" font-size="17" font-weight="800" fill="#B7791F">Ours &nbsp;0.86</text>
-
-          <text x="4" y="114" font-weight="700">Grounded answers</text>
-          <text x="4" y="134" font-size="14.5" fill="#8a97a5">GDQA-Bench · point at the answer</text>
-          <rect class="draw" style="--len:340" x="300" y="98" width="158" height="22" rx="5" fill="#c3ceda"/>
-          <text x="470" y="115" font-size="17" fill="#5b6b7a">Gemini 2.5 Pro &nbsp;43.4</text>
-          <rect class="draw" style="--len:340" x="300" y="128" width="289" height="22" rx="5" fill="#05539C"/>
-          <text x="601" y="145" font-size="17" font-weight="800" fill="#05539C">Ours &nbsp;79.0</text>
-
-          <text x="4" y="196" font-weight="700">Grounded reasoning</text>
-          <text x="4" y="216" font-size="14.5" fill="#8a97a5">DoCoG-Bench · point at every step</text>
-          <rect class="draw" style="--len:340" x="300" y="180" width="18" height="22" rx="5" fill="#c3ceda"/>
-          <text x="330" y="197" font-size="17" fill="#5b6b7a">GPT-5 &nbsp;4.8</text>
-          <rect class="draw" style="--len:340" x="300" y="210" width="299" height="22" rx="5" fill="#7C3AED"/>
-          <text x="611" y="227" font-size="17" font-weight="800" fill="#7C3AED">Ours &nbsp;81.9</text>
-
-          <text x="4" y="278" font-weight="700">Whole-page layout</text>
-          <text x="4" y="298" font-size="14.5" fill="#8a97a5">HOPLay-Bench · parse the whole page</text>
-          <rect class="draw" style="--len:340" x="300" y="262" width="136" height="22" rx="5" fill="#c3ceda"/>
-          <text x="448" y="279" font-size="17" fill="#5b6b7a">Gemini 3 Pro &nbsp;37.2</text>
-          <rect class="draw" style="--len:340" x="300" y="292" width="290" height="22" rx="5" fill="#0E7C61"/>
-          <text x="602" y="309" font-size="17" font-weight="800" fill="#0E7C61">Ours &nbsp;79.4</text>
-        </g>
-      </svg>
-    </div>
-    <p style="text-align:center;font-size:2.5vh;margin:0">GPT-5 answers our reasoning questions almost as well as we do — <b>82.9 vs 85.8</b>. Asked to show <i>where</i>, it scores <b style="color:#b42318">4.8</b>. This hour is about the other 95.</p>
-    <p class="small" style="text-align:center;margin:0">Four benchmarks, four of our models — all <b>8–9B parameters</b>. The rest of the talk is <b>how</b>.</p>
-  </div>
-  <div class="footer"><span class="act">Overview</span><span>Where we stand</span></div>
-</section>
-
 <!-- ====== R1 · WHAT IS VFDR (ladder) ====== -->
 <section class="slide" id="ladderSlide" style="--accent:var(--replica)">
   <div class="kicker">Part 1 · REPLICA · The question</div>
@@ -981,7 +936,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
     <text x="669" y="312" text-anchor="middle" font-size="19" fill="#5b6b7a">the highest-fidelity text representation of that page</text>
   </svg>
   </div>
-  <div class="callout" style="margin-top:.8vh">Complete on all four axes, a page is no longer a reconstruction — it is <b>labelled data</b>. Millions, with no hand annotation.<br><span class="small" style="color:var(--muted)">The labels: each element’s text, tag, place in the tree and geometry — with an ID. That is what two of the next three systems train on; the third borrows the recipe.</span></div>
+  <div class="callout" style="margin-top:.8vh">Complete on all four axes, a page is no longer a reconstruction — it is <b>labelled data</b>. Millions, with no hand annotation.</div>
   <div class="footer"><span class="act">REPLICA</span><span>Handoff</span></div>
 </section>
 
@@ -1008,11 +963,6 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   </svg>
   <h1 style="margin-top:2vh">From <span style="color:#b42318">rebuilding</span> to <span class="k">grounding</span></h1>
   <p class="sub">A million rebuilt pages are a million labelled pages. Part 2 teaches models to point at them — with masks, not boxes.</p>
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.2vw;width:84vw;margin-top:2.4vh;text-align:left">
-    <div class="card casc" style="animation-delay:.05s;padding:1.5vh 1.5vw"><h3 style="color:#b42318">What to watch</h3><p class="small">How the pointers talk to each other: <b>not at all</b> → <b>across the steps</b> of a chain → <b>along a tree</b>. One recipe, three papers.</p></div>
-    <div class="card casc" style="animation-delay:.2s;padding:1.5vh 1.5vw"><h3 style="color:var(--blue)">Where the data comes from</h3><p class="small">Every rebuilt element carries an ID, so a text-only model can cite it. <b>No hand-drawn masks</b> anywhere in Part 2.</p></div>
-    <div class="card casc" style="animation-delay:.35s;padding:1.5vh 1.5vw"><h3 style="color:var(--dlvl)">One question to hold</h3><p class="small">SAM segments any object in a photo from one click. <b>Is there a SAM for documents?</b> The last paper answers it.</p></div>
-  </div>
   <div class="papers">
     <div class="paper"><h4>M3Grounder</h4><span>CVPR 2026</span></div>
     <div class="paper"><h4>DoCoG</h4><span>ECCV 2026 <b class="oral">Spotlight</b></span></div>
@@ -1137,10 +1087,6 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
       <div class="mot prob frag"><h4>Too many tokens</h4><p>hundreds of coordinates per span</p></div>
       <div class="mot prob frag"><h4>Nothing ties them to the page</h4><p>just more next-token predictions — they can be <b>hallucinated</b></p></div>
       <div class="mot prob frag"><h4>Evidence is plural</h4><p>real answers cite several places at once — and each has its own shape; K boxes are still K rectangles</p></div>
-    </div>
-    <div class="keyidea frag" style="--accent:var(--intro)">
-      <span class="tag">so — divide and conquer?</span>
-      <p>Let a language model <b>decide what the evidence is</b> and a segmentation model <b>draw it</b>. The whole question is how the two talk — hold it.</p>
     </div>
   </div>
   <div class="footer"><span class="act">The problem</span><span>Boxes via the vocabulary</span></div>
