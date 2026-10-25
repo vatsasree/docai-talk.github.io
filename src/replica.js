@@ -606,3 +606,39 @@
 
   sync();
 })();
+
+/* ---------- the hosted REPLICA deck ----------
+   One slide of this deck is the ICDAR REPLICA deck in an iframe. While it is on
+   screen, the deck's keys step through it first; only when it is at its first or
+   last step does the key move this deck. Entering it backwards opens it at its end. */
+(function(){
+  const sub = document.querySelector('.slide.subdeck'); if(!sub) return;
+  const fr = sub.querySelector('iframe');
+  const all = [...document.querySelectorAll('.slide')];
+  const subIdx = all.indexOf(sub);
+  let lastIdx = -1;
+  const host = () => { try { return fr.contentWindow && fr.contentWindow.__replicaHost; } catch(e){ return null; } };
+  const onIdx = () => all.findIndex(s => s.classList.contains('on'));
+  window.addEventListener('keydown', e => {
+    lastIdx = onIdx();
+    if(!sub.classList.contains('on')) return;
+    const k = e.key; let dir = 0;
+    if(k==='ArrowRight'||k===' '||k==='Spacebar'||k==='PageDown') dir = 1;
+    else if(k==='ArrowLeft'||k==='PageUp') dir = -1;
+    else return;
+    const h = host(); if(!h) return;
+    if(dir > 0 ? h.next() : h.prev()){ e.preventDefault(); e.stopImmediatePropagation(); }
+  }, true);
+  // a click or key inside the hosted deck reached its edge: move this deck on
+  window.addEventListener('message', e => {
+    const d = e.data; if(!d || d.type !== 'replica-host') return;
+    window.focus();
+    document.dispatchEvent(new KeyboardEvent('keydown', {key: d.dir > 0 ? 'ArrowRight' : 'ArrowLeft', bubbles: true}));
+  });
+  // entering from a later slide opens the hosted deck at its last step
+  new MutationObserver(() => {
+    if(!sub.classList.contains('on')) return;
+    const h = host(); if(!h) return;
+    if(lastIdx > subIdx) h.end(); else if(lastIdx >= 0 && lastIdx < subIdx) h.start();
+  }).observe(sub, {attributes: true, attributeFilter: ['class']});
+})();

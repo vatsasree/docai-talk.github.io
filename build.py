@@ -283,11 +283,11 @@ def main() -> None:
             die(f'team {key}: placeholder {ph!r} appears {up_slides.count(ph)}× '
                 f'in src/grounding.slides.html (expected 1)')
         up_slides = up_slides.replace(ph, team_block(key))
+    # the REPLICA half is the hosted ICDAR deck, which carries its own authors;
+    # a team grid is injected only if a placeholder is present
     ph = '<!-- TEAM:replica -->'
-    if rep_slides.count(ph) != 1:
-        die(f'team replica: placeholder {ph!r} appears {rep_slides.count(ph)}× '
-            f'in src/replica.slides.html (expected 1)')
-    rep_slides = rep_slides.replace(ph, team_block('replica'))
+    if rep_slides.count(ph) == 1:
+        rep_slides = rep_slides.replace(ph, team_block('replica'))
 
     if up_slides.count(LOOP_ANCHOR) != 1:
         die(f'closing slide: anchor {LOOP_ANCHOR!r} appears '

@@ -141,6 +141,17 @@
     body.embed-mode section.embed-target > .section-head,
     body.embed-mode section.embed-target .section-head { display: none !important; }
     body.embed-mode .pdemo-wrap { margin: 0 !important; }
+    /* On a slide the presenter narrates each beat, so the on-screen caption and
+       the story ribbon are redundant — and they cost the canvas ~120px of the
+       height the diagrams need. They stay on the project page, where there is
+       no presenter to read them aloud. */
+    body.embed-mode .pdemo-story,
+    body.embed-mode .pdemo-caption { display: none !important; }
+    /* full-bleed demo embed: drop the card chrome + usage hint and let the
+       canvas take every vertical pixel the slide gives the iframe */
+    body.embed-mode .pdemo-hint { display: none !important; }
+    body.embed-mode .pdemo-wrap { border: 0 !important; border-radius: 0 !important; box-shadow: none !important; background: transparent !important; }
+    body.embed-mode .pdemo-canvas { height: clamp(480px, calc(100vh - 235px), 1600px); }
     body.embed-mode .reveal { opacity: 1 !important; transform: none !important; }
     /* the long prose paragraph above the Fid-HTML figure is redundant on a slide */
     body.embed-mode section#fidhtml .abstract-body { display: none !important; }
@@ -148,6 +159,33 @@
        controls the measure, and tables need every pixel to stay legible */
     body.embed-mode .container { max-width: none !important; padding: 0 16px !important; }
     body.embed-mode .table-scroll { box-shadow: none !important; }
+
+    /* ---- embedded teaser: one fixed page height, never a scrollbar ----
+       On a slide the presenter has only left/right keys, so nothing may sit
+       below the fold. The four reconstructions have very different aspect
+       ratios (Qwen is 0.57, Marker 0.78), so letting each image set its own
+       height made the page taller than the slide for some methods and shorter
+       for others — scrolling on one click, reflowing on the next.
+       Both panes now share one fixed image box and the image is contained
+       inside it, so the layout is identical whichever method is selected. */
+    body.embed-mode .teaser-compare { align-items: stretch; }
+    body.embed-mode .teaser-compare .teaser-panel { display: flex; flex-direction: column; min-width: 0; }
+    body.embed-mode .teaser-compare .frame,
+    body.embed-mode .teaser-compare .teaser-output {
+      flex: 1 1 auto; display: flex; align-items: center; justify-content: center;
+      min-height: 0; background: var(--bg-elev);
+    }
+    body.embed-mode .teaser-compare .teaser-output { border: 0; box-shadow: none; padding: 0; }
+    /* 100vh here is the iframe height, which the slide sets to its own box —
+       so the pages grow to fill whatever the slide can give them, and the
+       reserved 150px is the pills row, the two panel labels, the padding, and
+       enough slack that a different font metric can never push it into scroll. */
+    body.embed-mode .teaser-compare .frame { height: calc(100vh - 150px); min-height: 240px; }
+    body.embed-mode .teaser-compare .frame img {
+      width: auto; height: auto; max-width: 100%; max-height: 100%;
+      object-fit: contain; display: block;
+    }
+    body.embed-mode .teaser-output .frame { min-height: 0; }
 
     /* ---- presentation styling for the embedded results table ----
        Readable at projector distance: heavier category bands, colour-graded
@@ -551,6 +589,11 @@
     .rs-chip .rs-flag { margin-left: auto; font-size: 11px; }
     .rs-chip.bad { border-color: #e0574a; }
     .rs-chip.good { border-color: #1f9d7c; }
+    /* dense variant: 18-chip full-coverage strips on small canvases */
+    .ro-strip.dense .rs-chip { font-size: 9px; padding: 1px 7px; gap: 5px; border-left-width: 4px; border-radius: 6px; }
+    .ro-strip.dense .rs-chip .rs-n { font-size: 8px; }
+    .ro-strip.dense .rs-chip .rs-flag { font-size: 9.5px; }
+    .ro-strip.dense .rs-scan { height: 18px; }
     .rs-scan { position: absolute; left: -4px; right: -4px; height: 26px; border-radius: 8px; background: color-mix(in srgb, var(--accent) 14%, transparent);
       border: 1.5px solid var(--accent); opacity: 0; transition: top .45s ease, opacity .3s; z-index: -1; }
     /* page-overlay panel: real page + real-bbox overlays (SoM / labels / groups) */
@@ -564,6 +607,34 @@
       color: #fff; padding: 1px 7px; border-radius: 4px; white-space: nowrap; box-shadow: 0 1px 4px rgba(0,0,0,.25); }
     .pv-union { position: absolute; border: 2.5px dashed var(--accent); border-radius: 8px; opacity: 0; transition: opacity .45s; }
     .pv-union.show { opacity: 1; }
+    /* article-group label chip pinned to the top-left of each group outline */
+    .pv-glab { left: 10px; font-size: 9.5px; padding: 2px 8px; letter-spacing: .03em; text-transform: uppercase;
+      border-radius: 5px; color: #fff; white-space: nowrap; }
+    /* ---- explicit layout-tree card (Stage 1 finale): Document → Article →
+       region leaves, colors + numbers matching the marks on the page ---- */
+    .pv-tree { position: absolute; right: 8px; top: 34px; bottom: 8px; width: 41.5%; overflow-y: auto;
+      background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+      padding: 10px 12px 8px; pointer-events: auto; box-shadow: var(--shadow-sm); z-index: 3; }
+    .pvt-title { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; font-weight: 800;
+      text-transform: uppercase; letter-spacing: .05em; color: var(--accent);
+      display: flex; align-items: center; gap: 7px; margin-bottom: 8px; }
+    .pvt-root { font-weight: 800; font-size: 13.5px; color: var(--text);
+      display: flex; align-items: center; gap: 8px; margin-bottom: 2px; }
+    .pvt-root i { color: var(--text-3); }
+    .pvt-artwrap { margin: 5px 0 5px 7px; padding-left: 12px; border-left: 2px solid var(--gc); }
+    .pvt-art { font-weight: 800; font-size: 12.5px; color: var(--gc);
+      display: flex; align-items: center; gap: 7px; margin-bottom: 2px; }
+    .pvt-dot { width: 9px; height: 9px; border-radius: 3px; background: var(--gc); flex: 0 0 auto; }
+    .pvt-leaf { margin-left: 16px; font-size: 11.5px; color: var(--text-2);
+      display: flex; align-items: center; gap: 7px; padding: 1px 0; position: relative; }
+    .pvt-leaf::before { content: ""; position: absolute; left: -12px; top: 50%; width: 8px; height: 0;
+      border-top: 1.5px solid var(--gc); opacity: .55; }
+    .pvt-leaf i { width: 13px; text-align: center; color: var(--gc); font-size: 10px; }
+    .pvt-n { margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 9px; font-weight: 800;
+      background: var(--gc); color: #fff; border-radius: 4px; padding: 1px 5px; }
+    .pvt-more { margin: 7px 0 0 7px; font-size: 10.5px; font-style: italic; color: var(--text-3); }
+    .pvt-n0 { opacity: 0; transform: translateX(8px); transition: opacity .3s, transform .3s; }
+    .pvt-n0.in { opacity: 1; transform: none; }
     /* background peel-and-merge (4B) */
     .peel-card { position: absolute; border-radius: 9px; overflow: hidden; background: #fff;
       border: 1.5px solid var(--border-strong); box-shadow: var(--shadow-lg); z-index: 5;
@@ -709,6 +780,14 @@
     .ro-svg .ro-path.ghost { stroke-dasharray: 2 2; stroke-opacity: .45; stroke-width: .6; }
     .ro-svg .ro-node { fill: var(--vc); stroke: #fff; stroke-width: .5; }
     .ro-svg .ro-num { fill: #fff; font: 700 2.6px 'JetBrains Mono', ui-monospace, monospace; text-anchor: middle; dominant-baseline: central; }
+    /* story-flow rendering of the CORRECT order: solid arrows inside one
+       article, light dashed hops between stories, numbers on block corners */
+    .ro-svg .ro-flow { fill: none; stroke: var(--vc); stroke-width: .95; stroke-linecap: round; }
+    .ro-svg .ro-hop { fill: none; stroke: var(--vc); stroke-width: .85; stroke-dasharray: 2.8 2.1; stroke-linecap: round; opacity: .8; }
+    /* white casing drawn under every flow/hop line so it stays legible over
+       the busy newsprint behind it */
+    .ro-svg .ro-casing { fill: none; stroke: #fff; stroke-width: 1.9; stroke-linecap: round; opacity: .6; }
+    .ro-svg .ro-seq { fill: color-mix(in srgb, var(--vc) 7%, transparent); stroke: var(--vc); stroke-width: .9; }
     .ro-fig .ro-imgfallback { position: absolute; inset: 0; }
 
     .ro-ribbon {
@@ -861,6 +940,10 @@
       font-size: 12.5px; border-bottom: 2px solid var(--border-strong); z-index: 2;
     }
     table.data td:first-child, table.data th:first-child { text-align: left; font-weight: 600; }
+    /* the four axes read as four blocks, not ten loose columns */
+    table.data th.axg { font-size: 12.5px; letter-spacing: .04em; }
+    table.data th.axsep, table.data td.axsep { border-left: 2.5px solid var(--border-strong); }
+    table.data thead tr.grp th.axg { background: var(--bg-alt); }
     table.data td.td-group { vertical-align: middle; text-align: left; font-weight: 700; color: var(--text); background: var(--bg-alt); border-right: 1px solid var(--border); }
     /* ablation chart ⇄ table hover link */
     #ablationTable tbody tr { transition: background .12s; }
@@ -972,7 +1055,15 @@
     .fid-flip button.on { background: var(--accent); color: #fff; }
     .fid-render { height: 640px; overflow: auto; background: #fff; position: relative; }
     .fid-render iframe { display: block; border: 0; transform-origin: top left; background: #fff; }
-    .fid-chips { display: flex; flex-direction: column; gap: 9px; }
+    .fid-chips { display: flex; flex-direction: column; gap: 7px; }
+    .fid-axhead { display: flex; align-items: center; gap: 9px; margin: 9px 0 2px; }
+    .fid-axhead:first-child { margin-top: 0; }
+    .fid-axhead .ax-tag { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; font-weight: 800;
+      letter-spacing: .1em; color: #fff; background: var(--axc); padding: 3px 9px; border-radius: 5px; }
+    .fid-axhead .ax-name { font-size: 13px; font-weight: 700; color: var(--text-2);
+      text-transform: uppercase; letter-spacing: .07em; }
+    .fid-axhead::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+    .fid-chip { margin-left: 14px; border-left: 3px solid var(--axc); }
     .fid-chip { display: flex; gap: 12px; align-items: flex-start; border: 1px solid var(--border); background: var(--card); border-radius: 12px; padding: 12px 14px; cursor: pointer; transition: all .15s; text-align: left; width: 100%; font-family: inherit; }
     .fid-chip:hover { border-color: var(--accent); transform: translateX(2px); }
     .fid-chip.active { border-color: var(--accent); background: var(--accent-soft); box-shadow: 0 0 0 3px var(--accent-soft); }
@@ -1554,28 +1645,38 @@
 
   // ---- Interactive teaser: methods + fidelity axes -------------------
   // Each expects an output image under static/images/teaser/{id}_output.png
+  // Order is the narrative order used in the talk: pipeline tool first, then
+  // the two strong VLMs, then ours — so the comparison builds to the payoff.
   const TEASER_METHODS = [
-    { id: "replica", name: "REPLICA (Ours)", ours: true, img: "static/images/teaser/13031_rendered.png", axes: { TE: true, LS: true, PS: true,  VF: true  } },
-    { id: "qwen",    name: "Qwen3-VL-30B",             img: "static/images/teaser/13031_rendered_qwen.png",    axes: { TE: true, LS: true, PS: false, VF: false } },
-    { id: "gpt5",    name: "GPT-5",                    img: "static/images/teaser/13031_rendered_gpt5.png",    axes: { TE: true, LS: true, PS: false, VF: false } },
     { id: "marker",  name: "Marker",                   img: "static/images/teaser/13031_rendered_marker.png",  axes: { TE: true, LS: true, PS: false, VF: false } },
+    { id: "gpt5",    name: "GPT-5",                    img: "static/images/teaser/13031_rendered_gpt5.png",    axes: { TE: true, LS: true, PS: false, VF: false } },
+    { id: "qwen",    name: "Qwen3-VL-30B",             img: "static/images/teaser/13031_rendered_qwen.png",    axes: { TE: true, LS: true, PS: false, VF: false } },
+    { id: "replica", name: "REPLICA (Ours)", ours: true, img: "static/images/teaser/13031_rendered.png", axes: { TE: true, LS: true, PS: true,  VF: true  } },
   ];
 
   // ---- FID-HTML interactive callouts (6 dimensions) ------------------
   // Each dimension maps to data-dim tokens in the live Fid-HTML code panel
   // (see highlightFidHtml). Clicking a chip spotlights its tokens in the code.
+  // Each dimension is tagged with the axis of document reconstruction it
+  // serves, so the six dimensions read as "two per axis" rather than a list.
+  const FIDHTML_AXES = {
+    TE: { name: 'Text Extraction',     short: 'T.E.', color: '#2f5480' },
+    LS: { name: 'Logical Structure',   short: 'L.S.', color: '#2f5480' },
+    PS: { name: 'Physical Structure',  short: 'P.S.', color: '#d4a437' },
+    VF: { name: 'Visual Fidelity',     short: 'V.F.', color: '#d4a437' },
+  };
   const FIDHTML_CALLOUTS = [
-    { id: 1, label: 'Textual Content',
+    { id: 1, ax: 'TE', label: 'Textual Content',
       desc: 'Complete text retained at word and block levels with line breaks and indents.' },
-    { id: 2, label: 'Hierarchical Structure',
+    { id: 2, ax: 'LS', label: 'Hierarchical Structure',
       desc: 'Nested <div> containers reflecting sections, subsections, and logical groupings.' },
-    { id: 3, label: 'Semantic Tags',
+    { id: 3, ax: 'LS', label: 'Semantic Tags',
       desc: 'Structured elements (&lt;h1&gt;, &lt;p&gt;, &lt;figure&gt;) with meaningful class names.' },
-    { id: 4, label: 'Positional Information',
+    { id: 4, ax: 'PS', label: 'Positional Information',
       desc: 'Global placement via absolute position, left/top, and width/height on every block.' },
-    { id: 5, label: 'Styling Metadata',
+    { id: 5, ax: 'VF', label: 'Styling Metadata',
       desc: 'Font size, color, and text attributes (bold, italic, underline) via inline CSS.' },
-    { id: 6, label: 'Figures & Backgrounds',
+    { id: 6, ax: 'VF', label: 'Figures & Backgrounds',
       desc: 'Images layered into the DOM via &lt;figure&gt;/&lt;img&gt; with accessibility alt-text.' },
   ];
 
@@ -1739,7 +1840,8 @@
 
   // ---- FID-HTML vs other formats (two-level header) ------------------
   const FIDHTML_FORMATS = {
-    groups: [ { name: "T.E.", span: 2 }, { name: "L.S.", span: 5 }, { name: "P.S.", span: 2 }, { name: "V.F.", span: 1 } ],
+    groups: [ { name: "T.E. · Text Extraction", span: 2 }, { name: "L.S. · Logical Structure", span: 5 },
+              { name: "P.S. · Physical Structure", span: 2 }, { name: "V.F. · Visual Fidelity", span: 1 } ],
     sub: ["Content", "R.O.", "L.H.", "Tables", "Lists", "Figures", "Formula", "Hierarchy", "BBoxes", "Styling"],
     rows: [
       { fmt: "Markdown", sub: "md",           v: ["✓","P","✓","×","×","P","P","P","×","×"] },
@@ -1825,19 +1927,24 @@
   //   correct[] semantically correct reading order (the RIGHT stream)
   //   ar        fallback height/width ratio (auto-corrected once img loads)
   const RO_RC = { hdr:"#64748b", a:"#35688f", b:"#b4690e", c:"#7c6f9c", tbl:"#4f8a73", ftr:"#8a8d93" };
+  // Region rectangles are FRACTIONS of each S3_reading.png. They were measured
+  // off a 1%-grid render of every page (poster/tools-style calibration), not
+  // eyeballed — the previous values were estimates and every box sat off its
+  // content. `ar` is height/width of the image, used only for the first paint;
+  // buildROFigure re-reads the true ratio once the image loads.
   const RO_DATA = {
     magazine: {
-      id:"magazine", img:"S3_reading", ar:1.30,
+      id:"magazine", img:"S3_reading", ar:1.390,
       blocks:[
-        { id:"title", c:"hdr", tag:"TITLE",  text:"返老还童 (Benjamin Button)",              x:.28, y:.05, w:.44, h:.05 },
-        { id:"byl",   c:"hdr", tag:"BYLINE",  text:"F.S. 菲茨杰拉德 · 陈欣 译",                x:.24, y:.11, w:.48, h:.03 },
-        { id:"L1",    c:"a",   tag:"COL 1",   text:"早在 1860 年，在家生孩子还是件合情合理的事…",  x:.06, y:.16, w:.26, h:.35 },
-        { id:"L2",    c:"a",   tag:"COL 1",   text:"在这家专为名媛绅士服务的私人医院的 2 楼大厅里…", x:.06, y:.53, w:.26, h:.34 },
-        { id:"M1",    c:"b",   tag:"COL 2",   text:"房间——时兴的叫法是“啼哭室”。他们走了进去…",      x:.37, y:.15, w:.26, h:.36 },
-        { id:"M2",    c:"b",   tag:"COL 2",   text:"巴顿先生的额头上冒着冷汗。他闭上双眼，又睁开…",  x:.37, y:.53, w:.26, h:.34 },
-        { id:"R1",    c:"c",   tag:"COL 3",   text:"巴顿先生一屁股跌坐在儿子近旁的椅子上…",        x:.68, y:.15, w:.26, h:.34 },
-        { id:"R2",    c:"c",   tag:"COL 3",   text:"但巴顿先生还是坚持认为，本杰明既是个婴儿…",      x:.68, y:.51, w:.26, h:.34 },
-        { id:"pg",    c:"ftr", tag:"FOLIO",   text:"4 · 读者 2018·1",                         x:.05, y:.93, w:.16, h:.04 },
+        { id:"title", c:"hdr", tag:"TITLE",  text:"返老还童 (Benjamin Button)",              x:.388, y:.099, w:.228, h:.055 },
+        { id:"byl",   c:"hdr", tag:"BYLINE",  text:"F.S. 菲茨杰拉德 · 陈欣 译",                x:.300, y:.152, w:.400, h:.034 },
+        { id:"L1",    c:"a",   tag:"COL 1",   text:"早在 1860 年，在家生孩子还是件合情合理的事…",  x:.120, y:.195, w:.245, h:.360 },
+        { id:"L2",    c:"a",   tag:"COL 1",   text:"在这家专为名媛绅士服务的私人医院的 2 楼大厅里…", x:.120, y:.560, w:.245, h:.395 },
+        { id:"M1",    c:"b",   tag:"COL 2",   text:"房间——时兴的叫法是“啼哭室”。他们走了进去…",      x:.385, y:.185, w:.245, h:.335 },
+        { id:"M2",    c:"b",   tag:"COL 2",   text:"巴顿先生的额头上冒着冷汗。他闭上双眼，又睁开…",  x:.385, y:.525, w:.245, h:.430 },
+        { id:"R1",    c:"c",   tag:"COL 3",   text:"巴顿先生一屁股跌坐在儿子近旁的椅子上…",        x:.645, y:.185, w:.245, h:.380 },
+        { id:"R2",    c:"c",   tag:"COL 3",   text:"但巴顿先生还是坚持认为，本杰明既是个婴儿…",      x:.645, y:.570, w:.245, h:.385 },
+        { id:"pg",    c:"ftr", tag:"FOLIO",   text:"4 · 读者 2018·1",                         x:.050, y:.944, w:.150, h:.046 },
       ],
       naive:  ["title","byl","L1","M1","R1","L2","M2","R2","pg"],
       correct:["title","byl","L1","L2","M1","M2","R1","R2","pg"],
@@ -1847,42 +1954,64 @@
         correct:"…and locks onto <b>column-major order</b>: finish column&nbsp;1 top-to-bottom, then&nbsp;2, then&nbsp;3. The prose now reads as one continuous story.",
       },
     },
+    // Newspaper: FULL-PAGE coverage for the reading-order figure. Every
+    // story on the page is one ordered block (the lead stays decomposed to
+    // showcase intra-article order), plus the masthead and promo banner —
+    // so the corrected view tiles the ENTIRE page: 18 blocks, nothing
+    // skipped. Story blocks are tagged by zone (L=left, C=center, R=right)
+    // rather than numbered, so they don't clash with the Segment stage's
+    // "Article 1-6" group names.
     newspaper: {
-      id:"newspaper", img:"S3_reading", ar:1.64,
+      id:"newspaper", img:"S3_reading", ar:1.646,
+      candA: "raster band-scan (as merged)",
+      candB: "article-by-article (story-major)",
       blocks:[
-        { id:"mast", c:"hdr", tag:"MASTHEAD", text:"మన తెలంగాణ · హైదరాబాద్ · పేజీ 12",                  x:.02, y:.02, w:.96, h:.035 },
-        { id:"ban",  c:"hdr", tag:"HEADLINE", text:"మీ ఆడబిడ్డగా ఆశీర్వదించండి",                        x:.22, y:.06, w:.56, h:.045 },
-        { id:"L1",   c:"a",   tag:"COL 1",    text:"పోస్టల్ బ్యాలెట్ ద్వారా ఓటు హక్కు వినియోగించుకోవాలి",  x:.03, y:.14, w:.16, h:.18 },
-        { id:"L2",   c:"a",   tag:"COL 1",    text:"సైబర్ నేరాలపట్ల జాగ్రత్తగా ఉండాలి",                   x:.03, y:.34, w:.16, h:.30 },
-        { id:"C1",   c:"b",   tag:"COL 2",    text:"మెడక్ ఎమ్మెల్యే అభ్యర్థి పద్మా దేవేందర్‌రెడ్డి…",       x:.21, y:.12, w:.36, h:.20 },
-        { id:"C2",   c:"b",   tag:"COL 2",    text:"మంత్రి హరీశ్‌రావుకే మా మద్దతు",                       x:.21, y:.34, w:.36, h:.24 },
-        { id:"C3",   c:"b",   tag:"COL 2",    text:"వంద శాతం ఓటింగే లక్ష్యం",                            x:.21, y:.60, w:.36, h:.30 },
-        { id:"R1",   c:"c",   tag:"COL 3",    text:"నేడు బీఆర్ఎస్ ఎమ్మెల్యే అభ్యర్థి భూపాల్‌రెడ్డి నామినేషన్", x:.60, y:.12, w:.37, h:.22 },
-        { id:"R2",   c:"c",   tag:"COL 3",    text:"ఖేడ్ ఆర్‌వో కార్యాలయాన్ని సందర్శించిన ఎన్నికల అధికారి",  x:.60, y:.36, w:.37, h:.22 },
-        { id:"R3",   c:"c",   tag:"COL 3",    text:"నేడు రెండు నామినేషన్లు దాఖలు",                       x:.60, y:.60, w:.37, h:.30 },
+        { id:"mast", art:"m",   c:"hdr", tag:"MASTHEAD",      text:"మన తెలంగాణ · హైదరాబాద్ · బుధవారం 8, నవంబర్ 2023",              x:.030, y:.042, w:.940, h:.023 },
+        { id:"ban",  art:"ban", c:"hdr", tag:"PROMO BANNER",  text:"మన తెలంగాణ · మెదక్ · సంగారెడ్డి · సిద్దిపేట",                     x:.027, y:.067, w:.238, h:.047 },
+        { id:"a1h",  art:"a1",  c:"hdr", tag:"ART 1 · HEAD",  text:"మీ ఆడబిడ్డగా ఆశీర్వదించండి",                                    x:.281, y:.0715, w:.688, h:.0315 },
+        { id:"a1d",  art:"a1",  c:"a",   tag:"ART 1 · DECK",  text:"🕨 సిఎం కెసిఆర్ ఆశీస్సులతో మరోసారి బరిలో · ప్రజల నుంచి మంచి స్పందన ఉంది…", x:.283, y:.114, w:.212, h:.042 },
+        { id:"a1b",  art:"a1",  c:"a",   tag:"ART 1 · BODY",  text:"మన తెలంగాణ/మెదక్ ప్రతినిధి : మెదక్ ఎమ్మెల్యే పద్మాదేవేందర్‌రెడ్డి…",     x:.283, y:.1535, w:.213, h:.088 },
+        { id:"a1c",  art:"a1",  c:"a",   tag:"ART 1 · CONT.", text:"…రంగాన్ని ముందుకు తీసుకెళ్లాలని ఉద్దేశంతో సాగునీటి కోసం ఏంఎన్ కెనాల్…",  x:.772, y:.113, w:.197, h:.128 },
+        { id:"L1",   art:"sL1", c:"b",   tag:"STORY · L1",    text:"పోస్టల్ బ్యాలెట్ ద్వారా ఓటు హక్కు వినియోగించుకోవాలి",              x:.030, y:.119, w:.236, h:.092 },
+        { id:"L2",   art:"sL2", c:"b",   tag:"STORY · L2",    text:"సైబర్ నేరగాళ్ల పట్ల జాగ్రత్తగా ఉండాలి",                             x:.030, y:.211, w:.236, h:.114 },
+        { id:"L3",   art:"sL3", c:"b",   tag:"STORY · L3",    text:"పారిశ్రామిక రంగంలో విప్లవాత్మక మార్పులు వచ్చాయి",                  x:.030, y:.328, w:.235, h:.647 },
+        { id:"C1",   art:"sC1", c:"c",   tag:"STORY · C1",    text:"మంత్రి హరీశ్‌రావుకే మా మద్దతు",                                   x:.283, y:.2455, w:.483, h:.180 },
+        { id:"C2",   art:"sC2", c:"c",   tag:"STORY · C2",    text:"గులాబీ దళంతో నిండిన సిఎం దత్తత గ్రామం ఎర్రవల్లి",                  x:.283, y:.428, w:.483, h:.174 },
+        { id:"C3",   art:"sC3", c:"c",   tag:"STORY · C3",    text:"వంద శాతం ఓటింగే లక్ష్యం",                                        x:.283, y:.602, w:.483, h:.196 },
+        { id:"C4",   art:"sC4", c:"c",   tag:"STORY · C4",    text:"చేగుంట మండల కేంద్రంలో బిఆర్ఎస్ ఇంటింటి ప్రచారం",                  x:.283, y:.790, w:.483, h:.185 },
+        { id:"R1",   art:"sR1", c:"tbl", tag:"STORY · R1",    text:"నేడు బిఆర్ఎస్ ఎమ్మెల్యే అభ్యర్థి భూపాల్‌రెడ్డి నామినేషన్",            x:.770, y:.2455, w:.199, h:.113 },
+        { id:"R2",   art:"sR2", c:"tbl", tag:"STORY · R2",    text:"ఖేడ్ ఆర్డీఓ కార్యాలయాన్ని సందర్శించిన ఎన్నికల అధికారి",             x:.768, y:.360, w:.201, h:.172 },
+        { id:"R3",   art:"sR3", c:"tbl", tag:"STORY · R3",    text:"అభివృద్ధిని చూసి ఓటెయ్యండి",                                      x:.768, y:.5345, w:.201, h:.114 },
+        { id:"R4",   art:"sR4", c:"tbl", tag:"STORY · R4",    text:"గజ్వేల్‌లో ఈటల నామినేషన్ దాఖలు",                                  x:.768, y:.6495, w:.201, h:.164 },
+        { id:"R5",   art:"sR5", c:"tbl", tag:"STORY · R5",    text:"నేడు రెండు నామినేషన్లు దాఖలు",                                    x:.768, y:.815, w:.201, h:.160 },
       ],
-      naive:  ["mast","ban","L1","C1","R1","L2","C2","R2","C3","R3"],
-      correct:["mast","ban","L1","L2","C1","C2","C3","R1","R2","R3"],
+      // Raster band-scan (top y, then left→right): the lead story's
+      // continuation column arrives BEFORE its own deck and body, and the
+      // three columns interleave story after story.
+      naive:  ["mast","ban","a1h","a1c","a1d","L1","a1b","L2","C1","R1","L3","R2","C2","R3","C3","R4","C4","R5"],
+      // Story-major: header zone, the lead read whole (head → deck → body →
+      // continuation), then every story read whole, column by column.
+      correct:["mast","ban","a1h","a1d","a1b","a1c","L1","L2","L3","C1","C2","C3","C4","R1","R2","R3","R4","R5"],
       cap:{
-        naive:"A dense multi-column page read in <b>raster order</b> ping-pongs across every column — headlines, bodies and unrelated stories collide. <b>Worst-case for naive order.</b>",
-        think:"The <b>Reading-Order Agent</b> tests band-scan vs. column-major routes, scoring each on coherence between adjacent regions…",
-        correct:"…and commits to <b>column-by-column</b> flow — each story stays whole and in sequence before the next column begins.",
+        naive:"A newspaper page has <b>no single fixed reading order</b>. Read in raster order, the lead story's <b>continuation column (4) arrives before its own deck and body</b>, and the three columns interleave story after story. <b>No hand-written rule survives this layout.</b>",
+        think:"The <b>Reading-Order Agent</b> first recovers <b>article boundaries</b> from the layout tree, then scores candidate traversals on textual continuity — a raster band-scan vs. a story-major walk…",
+        correct:"…and orders <b>every element on the page</b> — 18 blocks, nothing skipped. <b>Solid arrows</b> = flow <i>inside</i> the lead story (headline → deck → body → continuation); <b>dashed hops</b> = “story finished, start the next”, column by column. A per-page judgment no fixed heuristic makes.",
       },
     },
     gov: {
-      id:"gov", img:"S3_reading", ar:1.34,
+      id:"gov", img:"S3_reading", ar:1.337,
       blocks:[
-        { id:"logo", c:"hdr", tag:"EMBLEM",  text:"CSIR–IMMT emblem",                                              x:.03, y:.03, w:.12, h:.08 },
-        { id:"ttl",  c:"hdr", tag:"HEADER",  text:"CSIR – Institute of Minerals & Materials Technology, Bhubaneswar", x:.17, y:.03, w:.80, h:.08 },
-        { id:"meta", c:"hdr", tag:"META",    text:"Advt. PME/P65/2023 · Post 6502 · Interview 04.08.2023 · 08 applied, 05 interviewed", x:.04, y:.14, w:.92, h:.14 },
-        { id:"in1",  c:"b",   tag:"INTRO",   text:"The following candidate(s) are found suitable for engagement in order of merit.", x:.04, y:.30, w:.92, h:.05 },
-        { id:"hs",   c:"tbl", tag:"HEADING", text:"Select List",                                                    x:.42, y:.37, w:.16, h:.03 },
-        { id:"ts",   c:"tbl", tag:"TABLE",   text:"1 · Bibhu Bhusan Sha · Gen · Project Associate-II · 28000/- · 09.05.2025", x:.04, y:.41, w:.92, h:.08 },
-        { id:"in2",  c:"b",   tag:"INTRO",   text:"The following candidate(s) are found suitable as Wait Listed (WL) in order of merit.", x:.04, y:.51, w:.92, h:.05 },
-        { id:"hw",   c:"tbl", tag:"HEADING", text:"Waiting List",                                                   x:.42, y:.57, w:.16, h:.03 },
-        { id:"tw",   c:"tbl", tag:"TABLE",   text:"1 · Birupakshya Mishra · Gen  ·  2 · Shantanu Kumar Maity · OBC",  x:.04, y:.61, w:.92, h:.10 },
-        { id:"nb",   c:"ftr", tag:"NOTES",   text:"N.B. — selection provisional; published on website; offer subject to funds; WL preferred if selectee declines.", x:.04, y:.73, w:.92, h:.16 },
-        { id:"sig",  c:"ftr", tag:"SIGN",    text:"Sd/- Director",                                                  x:.80, y:.92, w:.17, h:.05 },
+        { id:"logo", c:"hdr", tag:"EMBLEM",  text:"CSIR–IMMT emblem",                                              x:.040, y:.034, w:.130, h:.086 },
+        { id:"ttl",  c:"hdr", tag:"HEADER",  text:"CSIR – Institute of Minerals & Materials Technology, Bhubaneswar", x:.180, y:.034, w:.750, h:.086 },
+        { id:"meta", c:"hdr", tag:"META",    text:"Advt. PME/P65/2023 · Post 6502 · Interview 04.08.2023 · 08 applied, 05 interviewed", x:.030, y:.140, w:.720, h:.135 },
+        { id:"in1",  c:"b",   tag:"INTRO",   text:"The following candidate(s) are found suitable for engagement in order of merit.", x:.030, y:.282, w:.900, h:.052 },
+        { id:"hs",   c:"tbl", tag:"HEADING", text:"Select List",                                                    x:.440, y:.343, w:.120, h:.032 },
+        { id:"ts",   c:"tbl", tag:"TABLE",   text:"1 · Bibhu Bhusan Sha · Gen · Project Associate-II · 28000/- · 09.05.2025", x:.040, y:.375, w:.920, h:.110 },
+        { id:"in2",  c:"b",   tag:"INTRO",   text:"The following candidate(s) are found suitable as Wait Listed (WL) in order of merit.", x:.030, y:.497, w:.900, h:.045 },
+        { id:"hw",   c:"tbl", tag:"HEADING", text:"Waiting List",                                                   x:.430, y:.542, w:.140, h:.033 },
+        { id:"tw",   c:"tbl", tag:"TABLE",   text:"1 · Birupakshya Mishra · Gen  ·  2 · Shantanu Kumar Maity · OBC",  x:.040, y:.577, w:.920, h:.135 },
+        { id:"nb",   c:"ftr", tag:"NOTES",   text:"N.B. — selection provisional; published on website; offer subject to funds; WL preferred if selectee declines.", x:.060, y:.725, w:.870, h:.190 },
+        { id:"sig",  c:"ftr", tag:"SIGN",    text:"Sd/- Director",                                                  x:.820, y:.932, w:.110, h:.050 },
       ],
       naive:  ["meta","logo","ts","ttl","hs","tw","in1","hw","in2","nb","sig"],
       correct:["logo","ttl","meta","in1","hs","ts","in2","hw","tw","nb","sig"],
@@ -1893,19 +2022,19 @@
       },
     },
     financial: {
-      id:"financial", img:"S3_reading", ar:2.90,
+      id:"financial", img:"S3_reading", ar:3.114,
       blocks:[
-        { id:"biz",  c:"hdr", tag:"MERCHANT", text:"VIVOPAC MARKETING SDN BHD · Taman Segar, 56100 KL · Tel 03-91334364", x:.06, y:.03, w:.88, h:.09 },
-        { id:"inv",  c:"hdr", tag:"DOC TYPE", text:"TAX INVOICE",                                x:.06, y:.13, w:.50, h:.03 },
-        { id:"meta", c:"hdr", tag:"META",     text:"Doc CS21532619 · 17/01/2017 · Terminal T02 · Cashier AI", x:.06, y:.20, w:.88, h:.07 },
-        { id:"d1",   c:"a",   tag:"ITEM",     text:"PP-14x20 0.04mm · 1.00 PKT × 14.60",         x:.06, y:.30, w:.52, h:.05 },
-        { id:"a1",   c:"tbl", tag:"AMOUNT",   text:"14.60 SR",                                   x:.62, y:.30, w:.32, h:.05 },
-        { id:"d2",   c:"a",   tag:"ITEM",     text:"PP-16x26 0.04mm · 1.00 PKT × 14.60",         x:.06, y:.36, w:.52, h:.05 },
-        { id:"a2",   c:"tbl", tag:"AMOUNT",   text:"14.60 SR",                                   x:.62, y:.36, w:.32, h:.05 },
-        { id:"d3",   c:"a",   tag:"ITEM",     text:"24x28 (75HT) Red · 1.00 PKT × 6.00",         x:.06, y:.42, w:.52, h:.05 },
-        { id:"a3",   c:"tbl", tag:"AMOUNT",   text:"6.00 SR",                                    x:.62, y:.42, w:.32, h:.05 },
-        { id:"tot",  c:"b",   tag:"TOTALS",   text:"Sub-total 44.00 · GST 6% 2.64 · Rounded Total RM 46.65", x:.06, y:.62, w:.88, h:.12 },
-        { id:"ft",   c:"ftr", tag:"TERMS",    text:"Terms: goods not refundable; exchange within 7 days with receipt.", x:.06, y:.80, w:.88, h:.14 },
+        { id:"biz",  c:"hdr", tag:"MERCHANT", text:"VIVOPAC MARKETING SDN BHD · Taman Segar, 56100 KL · Tel 03-91334364", x:.028, y:.035, w:.880, h:.110 },
+        { id:"inv",  c:"hdr", tag:"DOC TYPE", text:"TAX INVOICE",                                x:.028, y:.155, w:.290, h:.030 },
+        { id:"meta", c:"hdr", tag:"META",     text:"Doc CS21532619 · 17/01/2017 · Terminal T02 · Cashier AI", x:.032, y:.293, w:.700, h:.078 },
+        { id:"d1",   c:"a",   tag:"ITEM",     text:"PP-14x20 0.04mm · 1.00 PKT × 14.6000",       x:.034, y:.432, w:.480, h:.038 },
+        { id:"a1",   c:"tbl", tag:"AMOUNT",   text:"14.60 SR",                                   x:.650, y:.452, w:.270, h:.024 },
+        { id:"d2",   c:"a",   tag:"ITEM",     text:"PP-16x26 0.04mm · 1.00 PKT × 14.6000",       x:.034, y:.472, w:.480, h:.038 },
+        { id:"a2",   c:"tbl", tag:"AMOUNT",   text:"14.60 SR",                                   x:.650, y:.492, w:.270, h:.024 },
+        { id:"d3",   c:"a",   tag:"ITEM",     text:"24x28 (75HT) Red · 1.00 PKT × 6.0000",       x:.034, y:.512, w:.480, h:.038 },
+        { id:"a3",   c:"tbl", tag:"AMOUNT",   text:"6.00 SR",                                    x:.650, y:.532, w:.270, h:.024 },
+        { id:"tot",  c:"b",   tag:"TOTALS",   text:"Sub-total 44.00 · GST 6% 2.64 · Rounded Total RM 46.65", x:.034, y:.703, w:.880, h:.093 },
+        { id:"ft",   c:"ftr", tag:"TERMS",    text:"Terms: goods not refundable; exchange within 7 days with receipt.", x:.034, y:.901, w:.900, h:.088 },
       ],
       naive:  ["biz","inv","meta","d1","d2","d3","a1","a2","a3","tot","ft"],
       correct:["biz","inv","meta","d1","a1","d2","a2","d3","a3","tot","ft"],
@@ -2023,42 +2152,166 @@
 </div>` },
       ],
     },
+    // Newspaper: SIX full articles decomposed into their real hierarchy
+    // (headline → deck/kicker → figure → body columns). `art` assigns each
+    // region to its parent article; `groups` names the article-level groups
+    // the Grouping Agent (1D) draws in the Segment stage. All bboxes were
+    // measured against IndicDLP_6.png (2136×3515) with a grid-calibrated
+    // overlay; OCR strings are transcribed from the actual page.
     newspaper: {
       page: "IndicDLP_6",
+      // The six annotated articles are deliberately spread across DISTANT
+      // page zones (top band, left column, center-mid, center-bottom,
+      // right-mid, right-low) so each group outline reads clearly on stage.
+      groups: [
+        { art: 1, label: "Article 1 · lead story" },
+        { art: 2, label: "Article 2" },
+        { art: 3, label: "Article 3" },
+        { art: 4, label: "Article 4" },
+        { art: 5, label: "Article 5" },
+        { art: 6, label: "Article 6" },
+      ],
       crops: [
-        { label: "Figure", bbox: [0.5000, 0.1147, 0.2968, 0.1201], specialist: "image",
-          ocr: "obgoti somo Q34 - ಮಿದಕ ಕನಿಂದ ಕರ್ಯಾಕಕ್ಕಂ RETURNIN DEFICES 034 - Med sser Cor",
+        // ── Article 1 · lead story: మీ ఆడబిడ్డగా ఆశీర్వదించండి ──
+        { art: 1, label: "Headline", bbox: [0.281, 0.0715, 0.688, 0.0315], specialist: "text",
+          ocr: "మీ ఆడబిడ్డగా ఆశీర్వదించండి",
           subhtml:
-`<figure class="picture_1" style="position: absolute; left: 500px; top: 162px; width: 297px; height: 170px;">
-  <img src="region_1.png" alt="obgoti somo Q34 - ಮಿದಕ ಕನಿಂದ ಕರ್ಯಾಕಕ್ಕಂ RETURNIN DEFICES 034 - Med sse…">
+`<h1 class="article_1 headline" style="position: absolute; left: 600px; top: 251px; width: 1470px; height: 111px; font-size: 78px; font-weight: 700; color: rgb(15,15,15);">మీ ఆడబిడ్డగా ఆశీర్వదించండి</h1>` },
+        { art: 1, label: "List", bbox: [0.283, 0.114, 0.212, 0.042], specialist: "list",
+          ocr: "🕨 సిఎం కెసిఆర్ ఆశీస్సులతో మరోసారి బరిలో 🕨 ప్రజల నుంచి మంచి స్పందన ఉంది 🕨 అభివృద్ధి చేస్తామనే నినాదంతో ముందుకు వెళ్తా 🕨 మెదక్ బిఆర్ఎస్ అభ్యర్థి పద్మాదేవేందర్‌రెడ్డి",
+          subhtml:
+`<ul class="article_1 deck_list" style="position: absolute; left: 604px; top: 401px; width: 453px; height: 148px; list-style: none; font-weight: 700;">
+  <li>🕨 సిఎం కెసిఆర్ ఆశీస్సులతో మరోసారి బరిలో</li>
+  <li>🕨 ప్రజల నుంచి మంచి స్పందన ఉంది</li>
+  <li>🕨 అభివృద్ధి చేస్తామనే నినాదంతో ముందుకు వెళ్తా</li>
+  <li>🕨 మెదక్ బిఆర్ఎస్ అభ్యర్థి పద్మాదేవేందర్‌రెడ్డి</li>
+</ul>` },
+        { art: 1, label: "Figure", bbox: [0.502, 0.115, 0.263, 0.119], specialist: "image",
+          ocr: "RETURNING OFFICER 034 - Medak Assembly Constituency",
+          subhtml:
+`<figure class="article_1 figure" style="position: absolute; left: 1072px; top: 404px; width: 562px; height: 418px;">
+  <img src="article1_photo.png" alt="పద్మాదేవేందర్‌రెడ్డి రిటర్నింగ్ అధికారి కార్యాలయంలో నామినేషన్ దాఖలు">
 </figure>` },
-        { label: "List", bbox: [0.2832, 0.1377, 0.1568, 0.0122], specialist: "list",
-          ocr: "🕨 అభివృద్ధి చేస్తామనే నినాదంతో ముందుకు వెళ్తా",
+        { art: 1, label: "Paragraph", bbox: [0.283, 0.1535, 0.213, 0.088], specialist: "text",
+          ocr: "మన తెలంగాణ/మెదక్ ప్రతినిధి : మెదక్ ఎమ్మెల్యే పద్మాదేవేందర్‌రెడ్డి బీఆర్ఎస్ అభ్యర్థి స్వగ్రామం కోనాపూర్ పోచమ్మ ఆలయంలో ప్రసిద్ధ పుణ్యక్షేత్రం ఏడుపాయల వనదుర్గ అమ్మవారి వద్ద ప్రత్యేక పూజలు నిర్వ…",
           subhtml:
-`<ul class="list_2" style="position: absolute; left: 286px; top: 192px; width: 183px; height: 11px; padding-left: 18px;">
-    <li>🕨 అభివృద్ధి చేస్తామనే నినాదంతో ముందుకు వెళ్తా</li>
-  </ul>` },
-        { label: "Paragraph", bbox: [0.5056, 0.4689, 0.2247, 0.1309], specialist: "text",
-          ocr: "అభివృద్ధి పనులు చేశారని అన్నారు తెలంగాణ రాష్ట్రం రాకముందు ఎ(రవల్లి గ్రామం గురించి రాష్ట్రంలో దేశంలో ఎవరికి తెలియదని ముఖ్…",
-          subhtml:
-`<div class="paragraph_3" style="position: absolute; left: 512px; top: 656px; width: 218px; height: 191px;">
-  <p style="font-size: 14px; line-height: 1.45;">అభివృద్ధి పనులు చేశారని అన్నారు తెలంగాణ రాష్ట్రం రాకముందు ఎ(రవల్లి<br>గ్రామం గురించి రాష్ట్రంలో దేశంలో ఎవరికి తెలియదని ముఖ్యమంత్రి నేతృ<br>త్వంలో ఎగ్రవల్లి గ్రామం అభివృద్ధి చెంది దేశ స్థాయిలో అవార్మలు దక్కిం<br>చుకుందని అన్నారు. మేనిఫెస్ట్రోలో మరియు ఈ తొమ్మిది ఏళ్లలో ప్రవేశపె<br>ట్టిన సంక్షేమ పథకాల గురించి గడపగడపకు ప్రచారం చేశారు. మరోసారి<br>గెలిపించుకొని మరింత అభివృద్ధి పసులు చేపించుకుందామని అన్నారు.<br>గ్రామం మొత్తం గులాబీ జెందాలతో నిండిపోయి మందల ప్రజా ప్రతిని<br>ధులు గ్రామ సర్పంచ్ వార్డ్ మెంబర్లు (పచారం చేస్తూఎమ్మెల్యేగా లక్ష్మ భారీ…</p>
+`<div class="article_1 paragraph" style="position: absolute; left: 604px; top: 540px; width: 455px; height: 309px;">
+  <p style="font-size: 14px; line-height: 1.45;">మన తెలంగాణ/మెదక్ ప్రతినిధి : మెదక్ ఎమ్మెల్యే పద్మాదేవేందర్‌రెడ్డి<br>బీఆర్ఎస్ అభ్యర్థి స్వగ్రామం కోనాపూర్ పోచమ్మ ఆలయంలో ప్రసిద్ధ<br>పుణ్యక్షేత్రం ఏడుపాయల వనదుర్గ అమ్మవారి వద్ద ప్రత్యేక పూజలు నిర్వ<br>హించి రిటర్నింగ్ కార్యాలయంలో రెండు సెట్ల నామినేషన్ల దాఖలు<br>చేశారు. ఈ సందర్భంగా ఆమె మాట్లాడుతూ సిఎం కెసిఆర్ ఆశీస్సులతో<br>నామినేషన్ వేసినట్టు ఎమ్మెల్యే పద్మాదేవేందర్‌రెడ్డి తెలిపారు.</p>
 </div>` },
-        { label: "Paragraph", bbox: [0.0150, 0.5548, 0.2402, 0.1422], specialist: "text",
-          ocr: "మనతెలంగాణ/సంగారెడ్డి బ్యూరో: సంగారెడ్డి నియోజకవర్గంలో రాష్ట్ర ఐటి, పురపాలక శాఖ మంత్రి కేటీఆర్ బుధవారం పర్యటిస్తున్నారు.…",
+        { art: 1, label: "Paragraph", bbox: [0.772, 0.113, 0.197, 0.128], specialist: "text",
+          ocr: "రంగాన్ని ముందుకు తీసుకెళ్లాలని ఉద్దేశంతో సాగునీటి కోసం ఏంఎన్ కెనాల్, ఎఫ్ఎన్ కెనాల్‌కు లైనింగ్ చేసి పంట పొలాలకు సాగునీరు అందించమన్నారు. మిషన్ కాకతీయ ద్వారా చెరువులను పునరుద్ధరించడం జరిగిందన్నారు.…",
           subhtml:
-`<div class="paragraph_4" style="position: absolute; left: 32px; top: 793px; width: 222px; height: 215px;">
-  <p style="font-size: 14px; line-height: 1.45;">మనతెలంగాణ/సంగారెడ్డి బ్యూరో: సంగారెడ్డి నియోజకవర్గంలో రాష్ట్ర ఐటి,<br>పురపాలక శాఖ మంత్రి కేటీఆర్ బుధవారం పర్యటిస్తున్నారు. యువ నేత<br>ప్రచారాన్ని ఇక్కడి బిఆర్ఎస్ నాయకులు ప్రతిష్ఠాత్మకంగా తీసుకున్నారు.<br>దీంతో కేటీఆర్ (పచారానికి ప్రాధాన్యత ఏర్పడింది. ముంబయి హైవేపై ఉన్న<br>రుద్రారం గణేష్గద్ద దగ్గర నుంచి కేటీఆర్ పర్యటన ఉంటుంది.సుమారుగా<br>ఐదు వేల బెక్ల ర్యాలీతో కౌలంపేట, కంది, పోతిరెడ్డిపల్లి చౌరస్తా, కలెక్టరేట్,<br>ఐబి, కొత్త బస్టాండ్, పాతబస్టాండ్ మీదుగా గంజ్మమైదాన్ కు ఈ ర్యాలీ చేరు<br>కుంటుంది. అనంతరం గంజ్మేదాన్లో సభ జరుగుతుందని పార్టీ…</p>
+`<div class="article_1 paragraph continuation" style="position: absolute; left: 1649px; top: 397px; width: 421px; height: 450px;">
+  <p style="font-size: 14px; line-height: 1.45;">రంగాన్ని ముందుకు తీసుకెళ్లాలని ఉద్దేశంతో సాగునీటి కోసం<br>ఏంఎన్ కెనాల్, ఎఫ్ఎన్ కెనాల్‌కు లైనింగ్ చేసి పంట పొలా<br>లకు సాగునీరు అందించమన్నారు. మిషన్ కాకతీయ ద్వారా<br>చెరువులను పునరుద్ధరించడం జరిగిందన్నారు.</p>
 </div>` },
-        { label: "Section Title", bbox: [0.2846, 0.5960, 0.4354, 0.0450], specialist: "text",
-          ocr: "ත්වර් අම්ව සිද්දුවේ ප්රියුද්ධ සේ ප්රියුද්ධ සේව සේව සේව සේව සේව සේව සේව සේව සේව සේව",
+        // ── Article 2: సైబర్ నేరగాళ్లు (left column, middle) ──
+        { art: 2, label: "Headline", bbox: [0.032, 0.211, 0.230, 0.013], specialist: "text",
+          ocr: "సైబర్ నేరగాళ్ల పట్ల జాగ్రత్తగా ఉండాలి",
           subhtml:
-`<h2 class="title_5" style="position: absolute; left: 288px; top: 862px; width: 440px; height: 43px; font-size: 18px; font-weight: 700; color: rgb(20,20,20);">ත්වර් අම්ව සිද්දුවේ ප්රියුද්ධ සේ ප්රියුද්ධ සේව සේව සේව සේව සේව සේව සේව සේව සේව සේව</h2>` },
-        { label: "Paragraph", bbox: [0.5033, 0.6415, 0.2261, 0.1545], specialist: "text",
-          ocr: "ణి ప్రియదర్శిని మాట్లాడుతూ... నవంబర్ 30న ఎన్నికల కమిషన్ నియమ నిబంధనల మకారం పండగ వాతవరణంలో ఓటర్లందరు తమ ఓటు హక్కును వినియ…",
+`<h2 class="article_2 headline" style="position: absolute; left: 68px; top: 742px; width: 491px; height: 46px; font-size: 28px; font-weight: 700; text-align: center; color: rgb(15,15,15);">సైబర్ నేరగాళ్ల పట్ల జాగ్రత్తగా ఉండాలి</h2>` },
+        { art: 2, label: "Figure", bbox: [0.188, 0.230, 0.076, 0.049], specialist: "image",
+          ocr: "",
           subhtml:
-`<div class="paragraph_6" style="position: absolute; left: 512px; top: 915px; width: 219px; height: 201px;">
-  <p style="font-size: 14px; line-height: 1.45;">ణి ప్రియదర్శిని మాట్లాడుతూ... నవంబర్ 30న ఎన్నికల కమిషన్ నియమ<br>నిబంధనల మకారం పండగ వాతవరణంలో ఓటర్లందరు తమ ఓటు<br>హక్కును వినియోగించుకోవాలన్నారు. ఎన్నికల నోటిఫికేషన్ వెలువైనప్పటి<br>నుంచి జిల్లాలో అన్ని గ్రామాలలో ఓటు హక్కును వినియోగించుకోవాలని<br>అనేక అవగాహన కార్యక్రమాలు చేపట్టినట్లు పేర్కొన్నారు. మెదక్ జిల్లా లో<br>579 పోలీంగ్ కేంద్రాలను ఏర్పాటు చేశామన్నారు. నిష్పక్ష పాతంగా,<br>స్వచ్చందంగా ఎలాంటి (పలోభాలకు లొంగకుండా మెదక్, నర్సాపూర్<br>జిల్లాలో ఉన్న ఓటర్లందరు తమ ఓటు హక్కును వినియోగించుకోవాలన్నా<br>రు. పోలీంగ్ కేం(దాలకు ఎన్నికల కమిషన్ గుర్…</p>
+`<figure class="article_2 figure" style="position: absolute; left: 402px; top: 808px; width: 162px; height: 172px;">
+  <img src="article2_photo.png" alt="విలేకరులతో మాట్లాడుతున్న సిద్దిపేట పోలీస్ కమిషనర్ ఎన్. శ్వేత">
+</figure>` },
+        { art: 2, label: "Paragraph", bbox: [0.030, 0.226, 0.236, 0.098], specialist: "text",
+          ocr: "మన తెలంగాణ/సిద్దిపేట క్రైమ్: గుర్తుతెలియని సైబర్ నేరగాళ్ల పట్ల అప్రమత్తంగా ఉండాలని సీపీ శ్వేత అన్నారు. మంగళవారం విలేకరులతో మాట్లాడుతూ సిద్దిపేట పోలీస్ కమిషనర్ ఎన్. శ్వేత పేరు పైన, సెల్ 9934941611పై ఫేక్ ఐడి క్రియేట్ చేసి…",
+          subhtml:
+`<div class="article_2 paragraph" style="position: absolute; left: 64px; top: 794px; width: 504px; height: 344px;">
+  <p style="font-size: 14px; line-height: 1.45;">మన తెలంగాణ/సిద్దిపేట క్రైమ్: గుర్తుతెలియని<br>సైబర్ నేరగాళ్ల పట్ల అప్రమత్తంగా ఉండాలని సీపీ<br>శ్వేత అన్నారు. మంగళవారం విలేకరులతో మాట్లా<br>డుతూ సిద్దిపేట పోలీస్ కమిషనర్ ఎన్. శ్వేత పేరు<br>పైన, సెల్ 9934941611పై ఫేక్ ఐడి క్రియేట్ చేసి<br>(ఫోటో డీపీగా పెట్టి) డబ్బులు అత్యవసరంగా ఉన్నా<br>యని 30వేల రూపాయలు పంపించమని తిరిగి…</p>
+</div>` },
+        // ── Article 3: సీఎం దత్తత గ్రామం ఎర్రవల్లి (center, middle) ──
+        { art: 3, label: "Headline", bbox: [0.283, 0.430, 0.462, 0.022], specialist: "text",
+          ocr: "గులాబీ దళంతో నిండిన సిఎం దత్తత గ్రామం ఎర్రవల్లి",
+          subhtml:
+`<h2 class="article_3 headline" style="position: absolute; left: 604px; top: 1511px; width: 987px; height: 77px; font-size: 50px; font-weight: 700; color: rgb(15,15,15);">గులాబీ దళంతో నిండిన సిఎం దత్తత గ్రామం ఎర్రవల్లి</h2>` },
+        { art: 3, label: "Sub-heading", bbox: [0.287, 0.4555, 0.302, 0.0235], specialist: "text",
+          ocr: "✳ సిఎం కెసిఆర్ దత్తత గ్రామంలో ✳ బిఆర్ఎస్ కార్యాలయం ప్రారంభించిన ప్రజా ప్రతినిధులు",
+          subhtml:
+`<h3 class="article_3 subheading" style="position: absolute; left: 613px; top: 1601px; width: 645px; height: 83px; font-size: 22px; font-weight: 700; color: rgb(30,30,30);">✳ సిఎం కెసిఆర్ దత్తత గ్రామంలో<br>✳ బిఆర్ఎస్ కార్యాలయం ప్రారంభించిన ప్రజా ప్రతినిధులు</h3>` },
+        { art: 3, label: "Paragraph", bbox: [0.283, 0.481, 0.228, 0.041], specialist: "text",
+          ocr: "మన తెలంగాణ /మర్కుక్ : సిఎం కెసిఆర్ ప్రవేశపెట్టిన మేనిఫెస్టో గురించి ప్రజలకు వివరిస్తూ ఇంటింటి ప్రచారంలో పాల్గొన్న ఎంపీపీ పాండుగౌడ్ జెడ్పిటిసి మంగమ్మ రామచంద్రం వైస్ ఎంపీపీ బాలరెడ్డి.…",
+          subhtml:
+`<div class="article_3 paragraph" style="position: absolute; left: 604px; top: 1691px; width: 487px; height: 144px;">
+  <p style="font-size: 14px; line-height: 1.45;">మన తెలంగాణ /మర్కుక్ : సిఎం కెసిఆర్ ప్రవేశపెట్టిన మేనిఫెస్టో గురించి<br>ప్రజలకు వివరిస్తూ ఇంటింటి ప్రచారంలో పాల్గొన్న ఎంపీపీ పాండుగౌడ్<br>జెడ్పిటిసి మంగమ్మ రామచంద్రం వైస్ ఎంపీపీ బాలరెడ్డి. మర్కుక్ మండలం<br>లోని సీఎం దత్తత గ్రామమైన ఎర్రవల్లి గ్రామం మంగళవారం రోజున<br>గులాబీ జెండాలతో మెరిసిపోయింది. ప్రచారంలో భాగంగా మండల ప్రజా<br>ప్రతినిధులు మాట్లాడుతూ రాష్ట్రం మరియు దేశం చూపు మొత్తం ఎర్రవల్లి</p>
+</div>` },
+        { art: 3, label: "Figure", bbox: [0.283, 0.523, 0.228, 0.078], specialist: "image",
+          ocr: "",
+          subhtml:
+`<figure class="article_3 figure" style="position: absolute; left: 604px; top: 1838px; width: 487px; height: 274px;">
+  <img src="article3_photo.png" alt="గులాబీ జెండాలతో ఎర్రవల్లి గ్రామంలో ప్రచార దృశ్యం">
+</figure>` },
+        { art: 3, label: "Paragraph", bbox: [0.513, 0.461, 0.253, 0.139], specialist: "text",
+          ocr: "గ్రామం వైపు చూసే విధంగా ఎర్రవల్లి గ్రామంలో ముఖ్యమంత్రి కెసిఆర్ అభివృద్ధి పనులు చేశారని అన్నారు. తెలంగాణ రాష్ట్రం రాకముందు ఎర్రవల్లి గ్రామం గురించి రాష్ట్రంలో దేశంలో ఎవరికి తెలియదని…",
+          subhtml:
+`<div class="article_3 paragraph" style="position: absolute; left: 1096px; top: 1620px; width: 540px; height: 489px;">
+  <p style="font-size: 14px; line-height: 1.45;">గ్రామం వైపు చూసే విధంగా ఎర్రవల్లి గ్రామంలో ముఖ్యమంత్రి కెసిఆర్<br>అభివృద్ధి పనులు చేశారని అన్నారు. తెలంగాణ రాష్ట్రం రాకముందు ఎర్రవల్లి<br>గ్రామం గురించి రాష్ట్రంలో దేశంలో ఎవరికి తెలియదని ముఖ్యమంత్రి నేతృ<br>త్వంలో ఎర్రవల్లి గ్రామం అభివృద్ధి చెంది దేశ స్థాయిలో అవార్డులు దక్కిం<br>చుకుందని అన్నారు. మేనిఫెస్టోలో మరియు ఈ తొమ్మిది ఏళ్లలో ప్రవేశపె<br>ట్టిన సంక్షేమ పథకాల గురించి గడపగడపకు ప్రచారం చేశారు. మరోసారి<br>గెలిపించుకొని మరింత అభివృద్ధి పనులు చేయించుకుందామని అన్నారు.</p>
+</div>` },
+        // ── Article 4: చేగుంట ఇంటింటి ప్రచారం (center, bottom) ──
+        { art: 4, label: "Headline", bbox: [0.285, 0.792, 0.462, 0.016], specialist: "text",
+          ocr: "చేగుంట మండల కేంద్రంలో బిఆర్ఎస్ ఇంటింటి ప్రచారం",
+          subhtml:
+`<h2 class="article_4 headline" style="position: absolute; left: 609px; top: 2784px; width: 987px; height: 56px; font-size: 42px; font-weight: 700; color: rgb(15,15,15);">చేగుంట మండల కేంద్రంలో బిఆర్ఎస్ ఇంటింటి ప్రచారం</h2>` },
+        { art: 4, label: "Sub-heading", bbox: [0.297, 0.808, 0.20, 0.008], specialist: "text",
+          ocr: "✳ ప్రచారంలో ఎంపీ కొత్త ప్రభాకర్‌రెడ్డి కుమారుడు",
+          subhtml:
+`<h3 class="article_4 subheading" style="position: absolute; left: 634px; top: 2840px; width: 427px; height: 28px; font-size: 22px; font-weight: 700; color: rgb(30,30,30);">✳ ప్రచారంలో ఎంపీ కొత్త ప్రభాకర్‌రెడ్డి కుమారుడు</h3>` },
+        { art: 4, label: "Paragraph", bbox: [0.283, 0.818, 0.230, 0.157], specialist: "text",
+          ocr: "మన తెలంగాణ/చేగుంట: చేగుంట మండల కేంద్రంలో బీఆర్ఎస్ అభ్యర్థి కొత్త ప్రభాకర్‌రెడ్డి గెలుపు కోసం ఇంటింటి ప్రచారం నిర్వహించారు. మంగళవారం రోజున చేగుంట మండల కేంద్రంలో మండల ఇంచార్జ్ చక్ర నర్సింహారెడ్డి…",
+          subhtml:
+`<div class="article_4 paragraph" style="position: absolute; left: 604px; top: 2875px; width: 491px; height: 552px;">
+  <p style="font-size: 14px; line-height: 1.45;">మన తెలంగాణ/చేగుంట: చేగుంట మండల కేంద్రంలో బీఆర్ఎస్ అభ్యర్థి<br>కొత్త ప్రభాకర్‌రెడ్డి గెలుపు కోసం ఇంటింటి ప్రచారం నిర్వహించారు. మంగ<br>ళవారం రోజున చేగుంట మండల కేంద్రంలో మండల ఇంచార్జ్ చక్ర నర్సిం<br>హారెడ్డి మండల సమన్వయ కమిటీ ఆధ్వర్యంలో గ్రామ సర్పంచ్ మంచికట్ల…</p>
+</div>` },
+        { art: 4, label: "Figure", bbox: [0.517, 0.8175, 0.206, 0.0675], specialist: "image",
+          ocr: "",
+          subhtml:
+`<figure class="article_4 figure" style="position: absolute; left: 1104px; top: 2874px; width: 440px; height: 237px;">
+  <img src="article4_photo.png" alt="చేగుంటలో ఇంటింటి ప్రచారం చేస్తున్న బీఆర్ఎస్ నాయకులు">
+</figure>` },
+        { art: 4, label: "Paragraph", bbox: [0.513, 0.887, 0.247, 0.088], specialist: "text",
+          ocr: "కర్‌రెడ్డినే గెలిపించాలని కోరారు. ఈ కార్యక్రమంలో మండల సమన్వయ కమిటీ సభ్యులతోపాటు మండల నాయకులు, ఎంపీపీ మాసుల శ్రీనివాస్, జడ్పీటీసీ ముదాం శ్రీనివాస్, సర్పంచ్‌లు మంచికట్ల శ్రీనివాస్, బాలనర్స్,…",
+          subhtml:
+`<div class="article_4 paragraph" style="position: absolute; left: 1096px; top: 3118px; width: 528px; height: 309px;">
+  <p style="font-size: 14px; line-height: 1.45;">కర్‌రెడ్డినే గెలిపించాలని కోరారు. ఈ కార్యక్రమంలో మండల సమన్వయ<br>కమిటీ సభ్యులతోపాటు మండల నాయకులు, ఎంపీపీ మాసుల శ్రీనివాస్,<br>జడ్పీటీసీ ముదాం శ్రీనివాస్, సర్పంచ్‌లు మంచికట్ల శ్రీనివాస్, బాలనర్స్,<br>అంజిరెడ్డి, ఎంపీటీసీలు రమేష్, వలియా, నందం, గణేష్, నవీన్, వెంకట<br>లక్ష్మి, పార్టీ అధ్యక్షులు నాయకులు అలీ, క్రాంతి, వంశీ, శ్రీను, యాదగిరి…</p>
+</div>` },
+        // ── Article 5: ఖేడ్ ఆర్డీఓ కార్యాలయం (right column, middle) ──
+        { art: 5, label: "Headline", bbox: [0.770, 0.361, 0.198, 0.024], specialist: "text",
+          ocr: "ఖేడ్ ఆర్డీఓ కార్యాలయాన్ని సందర్శించిన ఎన్నికల అధికారి",
+          subhtml:
+`<h2 class="article_5 headline" style="position: absolute; left: 1645px; top: 1269px; width: 423px; height: 84px; font-size: 30px; font-weight: 700; text-align: center; color: rgb(15,15,15);">ఖేడ్ ఆర్డీఓ కార్యాలయాన్ని<br>సందర్శించిన ఎన్నికల అధికారి</h2>` },
+        { art: 5, label: "Sub-heading", bbox: [0.782, 0.388, 0.170, 0.009], specialist: "text",
+          ocr: "✳ నామినేషన్ స్వీకరణ ఏర్పాట్లు పరిశీలన",
+          subhtml:
+`<h3 class="article_5 subheading" style="position: absolute; left: 1670px; top: 1364px; width: 363px; height: 32px; font-size: 21px; font-weight: 700; text-align: center; color: rgb(30,30,30);">✳ నామినేషన్ స్వీకరణ ఏర్పాట్లు పరిశీలన</h3>` },
+        { art: 5, label: "Figure", bbox: [0.770, 0.402, 0.198, 0.060], specialist: "image",
+          ocr: "రిటర్నింగ్ అధికారి 035 - నారాయణఖేడ్ RETURNING OFFICER ASSEMBLY CONSTITUENCY",
+          subhtml:
+`<figure class="article_5 figure" style="position: absolute; left: 1645px; top: 1413px; width: 423px; height: 211px;">
+  <img src="article5_photo.png" alt="ఖేడ్ ఆర్డీఓ కార్యాలయాన్ని సందర్శిస్తున్న కలెక్టర్ శరత్‌కుమార్">
+</figure>` },
+        { art: 5, label: "Paragraph", bbox: [0.768, 0.4635, 0.201, 0.0685], specialist: "text",
+          ocr: "మన తెలంగాణ / నారాయణఖేడ్: ఖేడ్ ఎన్నికల రిటర్నింగ్ అధికారి కార్యాలయం (ఆర్డీఓ)ను మంగళవారం జిల్లా ఎన్నికల అధికారి కలెక్టర్ డాక్టర్ శరత్‌కుమార్ సందర్శించారు.…",
+          subhtml:
+`<div class="article_5 paragraph" style="position: absolute; left: 1640px; top: 1629px; width: 429px; height: 241px;">
+  <p style="font-size: 14px; line-height: 1.45;">మన తెలంగాణ / నారాయణఖేడ్: ఖేడ్ ఎన్నికల రిటర్నింగ్ అధికారి<br>కార్యాలయం (ఆర్డీఓ)ను మంగళవారం జిల్లా ఎన్నికల అధికారి కలె<br>క్టర్ డాక్టర్ శరత్‌కుమార్ సందర్శించారు. ఈసందర్భంగా ఎన్నికల<br>రిటర్నింగ్ అధికారి వెంకటేష్, అసిస్టెంట్ రిటర్నింగ్ అధికారి దేవదాస్…</p>
+</div>` },
+        // ── Article 6: గజ్వేల్‌లో ఈటల నామినేషన్ (right column, lower) ──
+        { art: 6, label: "Headline", bbox: [0.775, 0.6505, 0.185, 0.0125], specialist: "text",
+          ocr: "గజ్వేల్‌లో ఈటల నామినేషన్ దాఖలు",
+          subhtml:
+`<h2 class="article_6 headline" style="position: absolute; left: 1655px; top: 2287px; width: 395px; height: 44px; font-size: 26px; font-weight: 700; text-align: center; color: rgb(15,15,15);">గజ్వేల్‌లో ఈటల నామినేషన్ దాఖలు</h2>` },
+        { art: 6, label: "Figure", bbox: [0.770, 0.664, 0.198, 0.054], specialist: "image",
+          ocr: "RETURNING OFFICER 42 - Gajwel Assembly Constituency",
+          subhtml:
+`<figure class="article_6 figure" style="position: absolute; left: 1645px; top: 2334px; width: 423px; height: 190px;">
+  <img src="article6_photo.png" alt="గజ్వేల్ రిటర్నింగ్ అధికారి వద్ద నామినేషన్ దాఖలు చేస్తున్న ఈటల రాజేందర్">
+</figure>` },
+        { art: 6, label: "Paragraph", bbox: [0.768, 0.720, 0.201, 0.0935], specialist: "text",
+          ocr: "మన తెలంగాణ/గజ్వేల్ జోన్: సిద్దిపేట జిల్లా గజ్వేల్ అసెంబ్లీ స్థానానికి ఎమ్మెల్యే అభ్యర్థిగా బిజెపి నాయకుడు హుజురాబాద్ సిట్టింగ్ ఎమ్మెల్యే ఈటల రాజేందర్ మంగళవారం బిజెపి రాష్ట్ర అధ్యక్షుడు జి. కిషన్ రెడ్డితో కలిసి…",
+          subhtml:
+`<div class="article_6 paragraph" style="position: absolute; left: 1640px; top: 2531px; width: 429px; height: 329px;">
+  <p style="font-size: 14px; line-height: 1.45;">మన తెలంగాణ/గజ్వేల్ జోన్: సిద్దిపేట జిల్లా గజ్వేల్ అసెంబ్లీ స్థానా<br>నికి ఎమ్మెల్యే అభ్యర్థిగా బిజెపి నాయకుడు హుజురాబాద్ సిట్టింగ్<br>ఎమ్మెల్యే ఈటల రాజేందర్ మంగళవారం బిజెపి రాష్ట్ర అధ్యక్షుడు జి.<br>కిషన్ రెడ్డితో కలిసి తన నామినేషన్ పత్రాలను స్థానిక ఆర్డీఓ కార్యాల<br>యంలోని ఎన్నికల రిటర్నింగ్ అధికారికి అందచేశారు…</p>
 </div>` },
       ],
     },
@@ -2389,7 +2642,9 @@
   // positioned image slots on #pdemoCanvas, then reveals them (and swaps
   // captions) one "beat" at a time via Play/Step. Ported from the
   // InteractiveDemov2 prototype and re-skinned to the site's design tokens.
-  let currentDoc = 0;
+  // Default input document: the newspaper — the layout that argues hardest
+  // for agentic grouping + reading order (no fixed reading order exists).
+  let currentDoc = Math.max(0, PIPELINE_PRESETS.findIndex(d => d.id === "newspaper"));
   let stageIdx = 0, beatIdx = 0, beats = [], playing = false, timer = null, speedMult = 1, doneStages = new Set();
   let cycleTimer = null;
   const REDUCED_MOTION = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -2735,6 +2990,11 @@
   // it (raw boxes → numbered SoM marks → semantic labels → nested groups),
   // and image-swap for genuine intermediate assets (e.g. S1_tree).
   const SOM_COLORS = ["#e0574a", "#2563eb", "#1f9d7c", "#ca8a04", "#7c3aed", "#db2777", "#0891b2", "#65a30d"];
+  // Article-group palette shared by the group outlines AND the layout-tree
+  // panel, so an article keeps one color across both visualizations.
+  const GROUP_COLORS = ["#e0574a", "#2563eb", "#1f9d7c", "#ca8a04", "#7c3aed", "#db2777", "#0891b2"];
+  const REGION_ICONS = { "Headline": "fa-heading", "Sub-heading": "fa-font", "List": "fa-list-ul",
+    "Figure": "fa-image", "Paragraph": "fa-align-left", "Table": "fa-table-cells" };
   // Resolve the document's page image: prefer LOCALIZE_DATA.page, fall back
   // to S1_raw (always present) if that export hasn't been added yet.
   const _pageKeyCache = {};
@@ -2764,12 +3024,16 @@
       (arrowElsByTarget[key] || []).forEach(a => a.classList.add("show"));
       p.querySelector(".ip-tag").textContent = tag || "intermediate output";
     }
-    function setImg(k, cb) {
+    function setImg(k, cb, wfrac) {
+      wfrac = wfrac || 1;
       if (curImg !== k) { curImg = k; imgWrap.innerHTML = ""; loadImage(imgWrap, demoSrc(docId, k), k); }
       imgWrap.classList.add("on");
+      // wfrac < 1 confines the page to the left portion of the panel (the
+      // layout-tree card occupies the right portion).
+      imgWrap.style.right = wfrac < 1 ? ((1 - wfrac) * 100) + "%" : "";
       withPageSize(demoSrc(docId, k), sz => {
         if (!sz) { if (cb) cb(null); return; }
-        const pw = p.clientWidth, ph = p.clientHeight;
+        const pw = p.clientWidth * wfrac, ph = p.clientHeight;
         const s = Math.min(pw / sz.w, ph / sz.h);   // object-fit: contain
         if (cb) cb({ dx: (pw - sz.w * s) / 2, dy: (ph - sz.h * s) / 2, s, sz });
       });
@@ -2794,17 +3058,61 @@
         addT(() => d.classList.add("show"), i * 110);
       });
       if (mode === "groups" && crops.length) {
-        const xs = crops.map(c => c.bbox[0]), ys = crops.map(c => c.bbox[1]);
-        const x1 = Math.max(...crops.map(c => c.bbox[0] + c.bbox[2])), y1 = Math.max(...crops.map(c => c.bbox[1] + c.bbox[3]));
-        const x0 = Math.min(...xs), y0 = Math.min(...ys);
-        const u = el("div", "pv-union");
-        u.style.left = (rect.dx + x0 * rect.sz.w * rect.s - 6) + "px";
-        u.style.top = (rect.dy + y0 * rect.sz.h * rect.s - 6) + "px";
-        u.style.width = ((x1 - x0) * rect.sz.w * rect.s + 12) + "px";
-        u.style.height = ((y1 - y0) * rect.sz.h * rect.s + 12) + "px";
-        ov.appendChild(u);
-        addT(() => u.classList.add("show"), crops.length * 110 + 150);
+        // One dashed parent outline per named group (e.g. per newspaper
+        // article); documents without `groups` fall back to a single union.
+        const gdefs = ldata && ldata.groups;
+        const sets = gdefs
+          ? gdefs.map(g => ({ label: g.label, crops: crops.filter(c => c.art === g.art) })).filter(g => g.crops.length)
+          : [{ label: null, crops }];
+        const GC = GROUP_COLORS;
+        sets.forEach((g, gi) => {
+          const x0 = Math.min(...g.crops.map(c => c.bbox[0])), y0 = Math.min(...g.crops.map(c => c.bbox[1]));
+          const x1 = Math.max(...g.crops.map(c => c.bbox[0] + c.bbox[2])), y1 = Math.max(...g.crops.map(c => c.bbox[1] + c.bbox[3]));
+          const u = el("div", "pv-union");
+          u.style.left = (rect.dx + x0 * rect.sz.w * rect.s - 6) + "px";
+          u.style.top = (rect.dy + y0 * rect.sz.h * rect.s - 6) + "px";
+          u.style.width = ((x1 - x0) * rect.sz.w * rect.s + 12) + "px";
+          u.style.height = ((y1 - y0) * rect.sz.h * rect.s + 12) + "px";
+          if (gdefs) {
+            const gc = GC[gi % GC.length];
+            u.style.borderColor = gc;
+            const t = el("span", "pv-lab pv-glab", g.label);
+            t.style.background = gc;
+            u.appendChild(t);
+            // tint member boxes to their parent group's color
+            g.crops.forEach(c => {
+              const i = crops.indexOf(c), box = ov.children[i];
+              if (box && box.classList.contains("pv-box")) box.style.borderColor = gc;
+            });
+          }
+          ov.appendChild(u);
+          addT(() => u.classList.add("show"), crops.length * 110 + 150 + gi * 260);
+        });
       }
+    }
+    // Layman-readable layout tree: an explicit node-link card (Document →
+    // Article → Headline/Figure/Paragraph…) beside the grouped page, with
+    // node numbers matching the SoM marks on the page.
+    function buildTreeCard() {
+      const gdefs = ldata.groups;
+      const card = el("div", "pv-tree");
+      let html = '<div class="pvt-title"><i class="fa-solid fa-sitemap"></i> Nested hierarchical layout tree</div>' +
+        '<div class="pvt-root pvt-n0"><i class="fa-solid fa-file-lines"></i> Document · newspaper page</div>';
+      gdefs.forEach((g, gi) => {
+        const gc = GROUP_COLORS[gi % GROUP_COLORS.length];
+        const members = crops.filter(c => c.art === g.art);
+        if (!members.length) return;
+        html += `<div class="pvt-artwrap" style="--gc:${gc}">` +
+          `<div class="pvt-art pvt-n0"><span class="pvt-dot"></span>${g.label}</div>` +
+          members.map(c => {
+            const idx = crops.indexOf(c) + 1;
+            return `<div class="pvt-leaf pvt-n0"><i class="fa-solid ${REGION_ICONS[c.label] || "fa-vector-square"}"></i>${c.label}<span class="pvt-n">${idx}</span></div>`;
+          }).join("") + `</div>`;
+      });
+      html += '<div class="pvt-more pvt-n0">＋ the remaining stories nest the same way</div>';
+      card.innerHTML = html;
+      ov.appendChild(card);
+      $$(".pvt-n0", card).forEach((n, i) => addT(() => n.classList.add("in"), 200 + i * 60));
     }
     return {
       el: p,
@@ -2813,6 +3121,15 @@
         resolveDocPage(docId, pk => setImg(pk, rect => { ov.innerHTML = ""; if (rect && m !== "page") drawBoxes(rect, m); }));
       },
       img(k, tag) { activate(tag); ov.innerHTML = ""; setImg(k); },
+      tree(tag) {
+        if (!(ldata && ldata.groups)) { this.img("S1_tree", tag); return; }
+        activate(tag);
+        resolveDocPage(docId, pk => setImg(pk, rect => {
+          ov.innerHTML = "";
+          if (rect) drawBoxes(rect, "groups");
+          buildTreeCard();
+        }, 0.57));
+      },
     };
   }
 
@@ -2996,20 +3313,31 @@
       cap("The Labeling Agent's <b>intermediate output</b>: every mark now carries its semantic name — these are the real labels for this document.");
     }, "1C_labeling", "✨ The agent replies with a <b>semantic name on every region</b> — real labels from this document's ground truth.", 3.6));
 
+    const segGroups = LOCALIZE_DATA[PIPELINE_PRESETS[currentDoc].id];
+    const hasArticles = !!(segGroups && segGroups.groups && segGroups.groups.length > 1);
     bts.push(B(() => {
       labeling.classList.remove("agent-think", "lit");
       reveal(grouping); grouping.classList.add("lit", "agent-think");
       tokenBurst("N_labeling", "N_grouping", 3);
-      pv.mode("groups", "④ nested groups (Grouping Agent output)");
+      pv.mode("groups", hasArticles ? "④ article groups (Grouping Agent output)" : "④ nested groups (Grouping Agent output)");
       addT(() => grouping.classList.remove("agent-think"), 2200);
-      cap("The <b>Grouping Agent (1D)</b> reasons about spatial &amp; semantic relations and <b>nests</b> the labeled regions — the dashed outline is the parent group forming.");
-    }, "1D_grouping", "🧩 The Grouping Agent nests labeled regions into a hierarchy — watch the parent group close around them.", 3.8));
+      cap(hasArticles
+        ? "The <b>Grouping Agent (1D)</b> reasons about spatial &amp; semantic relations and nests the labeled regions <b>into articles</b> — each dashed outline is one article closing around its headline, figure and body columns."
+        : "The <b>Grouping Agent (1D)</b> reasons about spatial &amp; semantic relations and <b>nests</b> the labeled regions — the dashed outline is the parent group forming.");
+    }, "1D_grouping", hasArticles
+      ? "🧩 The Grouping Agent discovers <b>which regions belong to which article</b> — headline, deck, figures, body columns — and closes a dashed group around each story."
+      : "🧩 The Grouping Agent nests labeled regions into a hierarchy — watch the parent group close around them.", 3.8));
 
     bts.push(B(() => {
-      pv.img("S1_tree", "⑤ hierarchical layout tree (Stage 1 output)");
+      if (hasArticles) pv.tree("⑤ nested hierarchical layout tree (Stage 1 output)");
+      else pv.img("S1_tree", "⑤ hierarchical layout tree (Stage 1 output)");
       tokenBurst("N_grouping", "S1_iv", 3);
-      cap("Stage 1 output: the <b>Nested Hierarchical Layout Tree</b> — the real annotated page: geometry, types, hierarchy, order. → Localize.", "good");
-    }, "layout_tree", "🌳 Everything condenses into the <b>hierarchical layout tree</b> — the document's skeleton, and Stage 1's output.", 3.4));
+      cap(hasArticles
+        ? "Stage 1 output: the <b>Nested Hierarchical Layout Tree</b>, drawn explicitly — <b>Document → Article → headline / figure / paragraphs</b>. Every tree node's number matches its mark on the page. → Localize."
+        : "Stage 1 output: the <b>Nested Hierarchical Layout Tree</b> — the real annotated page: geometry, types, hierarchy, order. → Localize.", "good");
+    }, "layout_tree", hasArticles
+      ? "🌳 And here is the point of Stage 1, drawn as an actual <b>tree</b>: the page becomes <b>Document → Articles → regions</b>. Same colors, same numbers as the marks on the left."
+      : "🌳 Everything condenses into the <b>hierarchical layout tree</b> — the document's skeleton, and Stage 1's output.", 3.4));
     return bts;
   }
 
@@ -3202,6 +3530,14 @@
     im.setAttributeNS("http://www.w3.org/1999/xlink", "href", src);
     const gBoxes = svgEl("g", {});
     const gPath  = svgEl("g", {});
+    // arrowhead for the story-flow rendering (correct variant is always the
+    // green #1f9d7c — hops/flows only exist there)
+    const defs = svgEl("defs");
+    const mk = svgEl("marker", { id: "roArrow", viewBox: "0 0 10 10", refX: "7.5", refY: "5",
+      markerWidth: "3.6", markerHeight: "3.6", orient: "auto-start-reverse" });
+    mk.appendChild(svgEl("path", { d: "M0,0 L10,5 L0,10 Z", fill: "#1f9d7c" }));
+    defs.appendChild(mk);
+    svg.appendChild(defs);
     svg.appendChild(im); svg.appendChild(gBoxes); svg.appendChild(gPath);
     slot.appendChild(svg);
 
@@ -3234,6 +3570,49 @@
         doc.blocks.forEach(b => {
           gPath.appendChild(svgEl("circle", { cx: cx(b).toFixed(2), cy: cy(b).toFixed(2), r: 2.6, class: "ro-node", style: "--vc:#8a8d93" }));
           const t = svgEl("text", { x: cx(b).toFixed(2), y: cy(b).toFixed(2), class: "ro-num" }); t.textContent = "?";
+          gPath.appendChild(t);
+        });
+      } else if (variant === "correct" && doc.blocks.some(b => b.art)) {
+        // Story-flow rendering: the corrected order must LOOK calm, not like
+        // a second plate of spaghetti. Solid arrows connect regions inside
+        // one article; a faint dashed hop marks "now start the next story";
+        // numbered badges sit on each block's top-left corner.
+        const order = doc.correct;
+        const artOf = id => byId[id].art || id;
+        order.forEach(id => {
+          const b = byId[id];
+          gPath.appendChild(svgEl("rect", {
+            x: (b.x * 100).toFixed(2), y: (b.y * H).toFixed(2),
+            width: (b.w * 100).toFixed(2), height: (b.h * H).toFixed(2),
+            rx: 1.2, class: "ro-seq",
+          }));
+        });
+        for (let i = 1; i < order.length; i++) {
+          const p = byId[order[i - 1]], n = byId[order[i]];
+          if (artOf(order[i - 1]) === artOf(order[i])) {
+            const attrs = {
+              x1: cx(p).toFixed(2), y1: cy(p).toFixed(2),
+              x2: cx(n).toFixed(2), y2: cy(n).toFixed(2),
+            };
+            gPath.appendChild(svgEl("line", Object.assign({ class: "ro-casing" }, attrs)));
+            gPath.appendChild(svgEl("line", Object.assign({ class: "ro-flow", "marker-end": "url(#roArrow)" }, attrs)));
+          } else {
+            // hop: leave from the bottom of the finished story, arrive at the
+            // top of the next one, bowed sideways so it skirts the content
+            const x1 = cx(p), y1 = (p.y + p.h) * H, x2 = cx(n), y2 = n.y * H;
+            const dx = x2 - x1, dy = y2 - y1, len = Math.hypot(dx, dy) || 1;
+            const bow = Math.min(10, len * 0.22);
+            const qx = (x1 + x2) / 2 - dy / len * bow, qy = (y1 + y2) / 2 + dx / len * bow;
+            const d = `M${x1.toFixed(2)} ${y1.toFixed(2)} Q${qx.toFixed(2)} ${qy.toFixed(2)} ${x2.toFixed(2)} ${y2.toFixed(2)}`;
+            gPath.appendChild(svgEl("path", { d, class: "ro-casing" }));
+            gPath.appendChild(svgEl("path", { d, class: "ro-hop", "marker-end": "url(#roArrow)" }));
+          }
+        }
+        order.forEach((id, i) => {
+          const b = byId[id];
+          const bx = b.x * 100 + 3.1, by = b.y * H + Math.min(3.1, b.h * H / 2);
+          gPath.appendChild(svgEl("circle", { cx: bx.toFixed(2), cy: by.toFixed(2), r: 2.8, class: "ro-node" }));
+          const t = svgEl("text", { x: bx.toFixed(2), y: by.toFixed(2), class: "ro-num" }); t.textContent = String(i + 1);
           gPath.appendChild(t);
         });
       } else {
@@ -3288,7 +3667,7 @@
       if (variant === "think") {
         slot.innerHTML = `<div class="ro-ribbon-head"><i class="fa-solid fa-magnifying-glass"></i>Candidate orders — scoring coherence</div>`;
         const wrap = el("div", "ro-cands");
-        [["Candidate A · raster scan", doc.naive], ["Candidate B · column-major", doc.correct]].forEach(([tag, order]) => {
+        [["Candidate A · " + (doc.candA || "raster scan"), doc.naive], ["Candidate B · " + (doc.candB || "column-major"), doc.correct]].forEach(([tag, order]) => {
           const cd = el("div", "ro-cand");
           const dots = order.map(id => `<span class="ro-dot" style="--rc:${RO_RC[byId[id].c]}"></span>`).join("");
           cd.innerHTML = `<span class="ro-cand-tag">${tag}</span><div class="ro-dots">${dots}</div>`;
@@ -3369,8 +3748,8 @@
         `<span>${name}</span><span class="bar"><i data-v="${val}"></i></span><span class="sc">${val.toFixed(2)}</span>`);
       scores.appendChild(c); return c;
     };
-    const cand1 = mkCand("Candidate A — as merged (row by row)", 0.42, "lose");
-    const cand2 = mkCand("Candidate B — finish each column first", 0.91, "win");
+    const cand1 = mkCand("Candidate A — " + ((doc && doc.candA) || "as merged (row by row)"), 0.42, "lose");
+    const cand2 = mkCand("Candidate B — " + ((doc && doc.candB) || "finish each column first"), 0.91, "win");
     CV().appendChild(scores);
     const showCand = () => [cand1, cand2].forEach((c, i) => addT(() => {
       c.classList.add("show");
@@ -3384,7 +3763,12 @@
       strip.style.left = "57%"; strip.style.top = "6%"; strip.style.width = "19%"; strip.style.height = "88%";
       strip.innerHTML = '<div class="rs-t">HTML source order<br><span style="font-weight:600;text-transform:none;letter-spacing:0">(render unchanged — positions are absolute)</span></div>';
       const scan = el("div", "rs-scan"); strip.appendChild(scan);
-      const CH = 29;  // chip slot height (px-ish via top offsets)
+      // Chip slot height adapts to the strip's real height so full-coverage
+      // documents (18 blocks) still fit; tight fits get the dense styling.
+      CV().appendChild(strip);
+      const stripH = strip.clientHeight || 520;
+      const CH = Math.max(17, Math.min(29, Math.floor((stripH - 54) / (doc.naive.length || 1))));
+      if (CH < 25) strip.classList.add("dense");
       const byId = {}; doc.blocks.forEach(b => byId[b.id] = b);
       const chips = {};
       doc.naive.forEach((id, i) => {
@@ -3397,7 +3781,7 @@
         strip.appendChild(c);
         chips[id] = c;
       });
-      CV().appendChild(strip);
+      let corrected = false;   // once true, late inspect() timers must not re-flag chips
       return {
         el: strip,
         show() { doc.naive.forEach((id, i) => addT(() => chips[id].classList.add("show"), 90 * i)); },
@@ -3405,6 +3789,7 @@
         inspect() {
           scan.style.opacity = 1;
           doc.naive.forEach((id, i) => addT(() => {
+            if (corrected) return;   // user stepped ahead — the strip is already fixed
             scan.style.top = (44 + i * CH) + "px";
             const nextNaive = doc.naive[i + 1];
             const ci = doc.correct.indexOf(id);
@@ -3419,6 +3804,8 @@
         },
         // the agent REWRITES the source order: chips fly to their correct slots
         correct() {
+          corrected = true;
+          scan.style.opacity = 0;
           strip.querySelector(".rs-t").textContent = "corrected source order";
           doc.correct.forEach((id, i) => {
             const c = chips[id];
@@ -3846,7 +4233,7 @@
   function buildPicker() {
     const p = $("#pdemoDocRow"); p.innerHTML = "";
     PIPELINE_PRESETS.forEach((d, i) => {
-      const b = el("div", "pdemo-doc" + (i === 0 ? " active" : ""),
+      const b = el("div", "pdemo-doc" + (i === currentDoc ? " active" : ""),
         `<span class="dtag">${d.tag}</span><div class="thumb"></div><div class="dname">${d.label}</div>`);
       b.dataset.doc = d.id;
       p.appendChild(b);
@@ -4262,11 +4649,22 @@
     return out;
   }
   function renderFidhtml() {
-    $("#fidChips").innerHTML = FIDHTML_CALLOUTS.map(c => `
-      <button class="fid-chip" data-fc="${c.id}">
+    // grouped by axis: the six dimensions are two-per-axis, and saying so
+    // turns a flat list into the same four-part frame used everywhere else
+    let chips = "", lastAx = null;
+    FIDHTML_CALLOUTS.forEach(c => {
+      if (c.ax !== lastAx) {
+        const a = FIDHTML_AXES[c.ax];
+        chips += `<div class="fid-axhead" style="--axc:${a.color}">
+            <span class="ax-tag">${a.short}</span><span class="ax-name">${a.name}</span></div>`;
+        lastAx = c.ax;
+      }
+      chips += `<button class="fid-chip ax-${c.ax}" data-fc="${c.id}" style="--axc:${FIDHTML_AXES[c.ax].color}">
         <span class="fc-num d${c.id}">${c.id}</span>
         <span><span class="fc-name">${c.label}</span><span class="fc-desc">${c.desc}</span></span>
-      </button>`).join("");
+      </button>`;
+    });
+    $("#fidChips").innerHTML = chips;
     $$("#fidChips .fid-chip").forEach(ch => ch.addEventListener("click", () => toggleFid(parseInt(ch.dataset.fc, 10))));
     const code = $("#fidCode");
     if (code) code.innerHTML = highlightFidHtml(FIDHTML_SRC);
@@ -4316,9 +4714,13 @@
     const mark = v => v === "✓" ? '<span class="check">✓</span>'
       : v === "P" ? '<span class="pchar">P</span>' : '<span class="cross">×</span>';
     let html = "<thead><tr class='grp'><th rowspan='2'>Format</th><th rowspan='2'>Subtype</th>";
-    F.groups.forEach(g => { html += `<th colspan="${g.span}">${g.name}</th>`; });
+    // index of the first sub-column of each axis group — those cells carry the
+    // divider rule, so the four axes read as four blocks rather than 10 columns
+    const axStart = new Set(); let acc = 0;
+    F.groups.forEach(g => { axStart.add(acc); acc += g.span; });
+    F.groups.forEach((g, gi) => { html += `<th class="axg${gi ? " axsep" : ""}" colspan="${g.span}">${g.name}</th>`; });
     html += "</tr><tr>";
-    F.sub.forEach(s => { html += `<th>${s}</th>`; });
+    F.sub.forEach((s, i) => { html += `<th class="${axStart.has(i) && i ? "axsep" : ""}">${s}</th>`; });
     html += "</tr></thead><tbody>";
     // group consecutive rows sharing a format into one rowspanned cell
     F.rows.forEach((r, i) => {
@@ -4328,7 +4730,7 @@
       html += `<tr class="${r.ours ? "ours" : ""}">` +
         (first ? `<td rowspan="${span}" class="td-group">${r.fmt}</td>` : "") +
         `<td>${r.sub}</td>` +
-        r.v.map(v => `<td>${mark(v)}</td>`).join("") + "</tr>";
+        r.v.map((v, i) => `<td class="${axStart.has(i) && i ? "axsep" : ""}">${mark(v)}</td>`).join("") + "</tr>";
     });
     html += "</tbody>";
     $("#fidFormatTable").innerHTML = html;
@@ -4519,6 +4921,19 @@
       sec.querySelectorAll("[data-part]").forEach(n => {
         if (!keep.has(n.dataset.part)) n.style.display = "none";
       });
+    }
+    // ?only=<id>,<id> — restrict the teaser to a subset of methods, in the
+    // order given. The talk shows the baselines first with our own result
+    // withheld, so the failure lands before the fix does.
+    const only = params.get("only");
+    if (only) {
+      const want = only.split(",").filter(Boolean);
+      const subset = want.map(id => TEASER_METHODS.find(m => m.id === id)).filter(Boolean);
+      if (subset.length) {
+        TEASER_METHODS.length = 0;
+        subset.forEach(m => TEASER_METHODS.push(m));
+        renderTeaser();
+      }
     }
     // ?hide=<sel>,<sel> — ad-hoc removal of anything else.
     (params.get("hide") || "").split(",").filter(Boolean).forEach(sel => {

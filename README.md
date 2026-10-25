@@ -1,6 +1,6 @@
 # Rebuilding the Page — and Grounding It
 
-A single 79-slide, ~1-hour research talk (research-lab visits), in one
+A ~1-hour research talk (61 slides here, the REPLICA part hosted as one of them) (research-lab visits), in one
 self-contained `index.html`. Told as a **story**: each paper's section opens from a question
 and only names the paper at its end, where the title card carries the team.
 Before that reveal, charts and tables label our systems **"Ours"**, never the
@@ -14,16 +14,23 @@ between the four systems.
 | Slides | Part | |
 |---|---|---|
 | 1 | Title | |
-| 2–20 | **REPLICA** (the ICDAR talk, ~15 min); 20 is the title card with the team | ICDAR 2026 Oral |
-| 21 | Bridge — from rebuilding to grounding | |
-| 22–25 | The grounding problem — boxes-as-text, the polygon surgery, where boxes break | |
-| 26–41 | **M3Grounder** — requirements, why not chain two tools, related work (LISA), the Fid-HTML data engine | CVPR 2026 |
-| 42–58 | **DoCoG** — the uncheckable chain, the $27.50 bill, worked K=13 output, DPO, drift + anchor, sorted ablations | ECCV 2026 Spotlight |
-| 59–72 | **DocLayout-VL** — "SAM for documents", the tagged tree, architecture vs data on the hierarchy track | ECCV 2026 |
-| 73 | Three papers, one recipe | |
-| 74 | What flows between the four systems | |
-| 75–78 | What made it possible · design choices and evidence · the frontier · what we learned | |
-| 79 | Thank you | |
+| 2 | **REPLICA** — the ICDAR 2026 deck itself, hosted full-screen (its own 20 slides and build-ups; arrows step through it, then move on) | ICDAR 2026 Oral |
+| 3 | Bridge — from rebuilding to grounding | |
+| 4–7 | The grounding problem — boxes-as-text, the polygon surgery, where boxes break | |
+| 8–23 | **M3Grounder** — requirements, why not chain two tools, related work (LISA), the Fid-HTML data engine | CVPR 2026 |
+| 24–40 | **DoCoG** — the uncheckable chain, the $27.50 bill, worked K=13 output, DPO, drift + anchor, sorted ablations | ECCV 2026 Spotlight |
+| 41–54 | **DocLayout-VL** — "SAM for documents", the tagged tree, architecture vs data on the hierarchy track | ECCV 2026 |
+| 55 | Three papers, one recipe | |
+| 56 | What flows between the four systems | |
+| 57–60 | What made it possible · design choices and evidence · the frontier · what we learned | |
+| 61 | Thank you | |
+
+**The REPLICA half** is `replica/slides.html`, the ICDAR deck, loaded in hosted
+mode (`?host=1`): it hides its own counter, progress bar and controls and drops
+its thank-you slide. While it is on screen, → / Space / ← step through its
+slides and build-ups first; at its last (or first) step the key moves this deck.
+Clicking inside it works too. Its live figures come from `replica/index.html`.
+Open `replica/slides.html` on its own to present REPLICA standalone.
 
 Each paper's title card carries its team (build.py injects the grid at a
 `<!-- TEAM:key -->` placeholder). Photos go in `team/` — see
