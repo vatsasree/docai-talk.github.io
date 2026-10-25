@@ -288,3 +288,23 @@
 .slide .bench{display:inline-block;background:var(--m3);color:#fff;border-radius:6px;padding:.15vh .9vh;font-weight:800;font-size:2vh}
 .slide h2 .norep{display:inline-block;vertical-align:middle;margin-left:1vw;font-size:1.9vh;font-weight:800;color:#8a4b00;
   background:#fff3e0;border:2px solid var(--orange);border-radius:999px;padding:.3vh 1.2vh}
+
+/* ---- M3Grounder losses slide ---- */
+.lossbar{display:flex;align-items:center;justify-content:center;gap:1vw;margin:.4vh 0 1.6vh;font-family:Georgia,serif}
+.lossbar .lt{display:inline-flex;flex-direction:column;align-items:center;padding:.7vh 1.4vw;border-radius:10px;font-size:2.8vh;font-style:italic}
+.lossbar .lt b{font-weight:400;white-space:nowrap}
+.lossbar .lt i{font-family:"Avenir Next","Segoe UI",sans-serif;font-style:normal;font-size:1.5vh;font-weight:700;margin-top:.2vh}
+.lossbar .std{background:#eef2f6;color:#7d8b99}
+.lossbar .bl{background:#fff1e8;color:#c2410c;border:2.5px solid #c2410c}
+.lossbar .hi{background:#e7f0fa;color:#05539C;border:2.5px solid #05539C}
+.lossbar .op{font-size:2.6vh;color:#8a97a5}
+.losscols{display:grid;grid-template-columns:1fr 1fr;gap:1.6vw;flex:1;min-height:0}
+.losscard{display:flex;flex-direction:column;gap:.9vh;border-top:6px solid var(--lc);min-height:0}
+.losscard h3{color:var(--lc);margin:0;font-size:2.4vh}
+.losscard p{margin:0}
+.lossimg{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;background:#f8fafc;border-radius:8px;padding:.8vh}
+.lossimg img{max-width:100%;max-height:100%;object-fit:contain;border-radius:6px}
+.lossimg.stack{flex-direction:column;gap:1vh}
+.lossimg.stack img{max-height:48%}
+.lossnum{margin-top:auto;font-size:1.9vh;color:var(--muted)}
+.lossnum b{color:var(--lc);font-size:2.6vh;margin-right:.6vw}
