@@ -493,6 +493,20 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
 .divider .person figcaption{color:#fff;font-size:1.7vh;font-weight:600}
 .divider .person sup{color:#ffd98a}
 .divider .teamfoot{color:#ffffffcc;font-size:1.9vh;padding:.4vh 0 0}
+
+/* ---- "Part 1 of 2" / "Paper 1 of 3" chip: solid, so it stands out on the card ---- */
+.divider .time{background:#fff;color:var(--accent);border-color:#fff;font-weight:800;
+  box-shadow:0 2px 12px rgba(0,0,0,.18)}
+.hero .partchip{position:absolute;top:4vh;right:4vw;background:var(--blue);color:#fff;
+  border-radius:999px;padding:.8vh 2.2vh;font-size:2.3vh;font-weight:800;box-shadow:0 2px 12px rgba(5,83,156,.25)}
+/* ---- conference logo on the paper cards ---- */
+.divider .venuelogo{position:absolute;top:11vh;right:4vw;background:#fff;border-radius:14px;
+  padding:1.4vh 1.8vh;box-shadow:0 4px 18px rgba(0,0,0,.18)}
+.divider .venuelogo img{display:block;height:8vh;width:auto}
+/* ---- benchmark names stand out; "no REPLICA" badge on the two data engines ---- */
+.slide .bench{display:inline-block;background:var(--m3);color:#fff;border-radius:6px;padding:.15vh .9vh;font-weight:800;font-size:2vh}
+.slide h2 .norep{display:inline-block;vertical-align:middle;margin-left:1vw;font-size:1.9vh;font-weight:800;color:#8a4b00;
+  background:#fff3e0;border:2px solid var(--orange);border-radius:999px;padding:.3vh 1.2vh}
 </style>
 </head>
 <body>
@@ -519,7 +533,6 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
     <text x="512" y="53" text-anchor="middle" font-size="15" fill="#fff" font-weight="700">mask</text>
   </svg>
   <h1 style="margin-top:1.8vh;font-size:5.6vh;max-width:84vw">Grounding, Reasoning, and Structure with <span class="k">Multimodal Foundation Models</span></h1>
-  <p class="sub" style="margin-top:1.4vh">Rebuild the page faithfully — then teach models to point at it, with masks</p>
   <div class="papers" style="margin-top:2.6vh">
     <div class="paper"><h4>REPLICA</h4><span>ICDAR 2026 <b class="oral">Oral</b></span></div>
     <div class="paper"><h4>M3Grounder</h4><span>CVPR 2026</span></div>
@@ -539,6 +552,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   <div class="kicker">Rebuilding the page</div>
   <h2>REPLICA</h2>
   <p>An <b>Agentic Framework</b> for Visually Faithful Document Reconstruction · <b>ICDAR 2026 Oral</b></p>
+  <div class="venuelogo"><img src="replica/static/images/logos/icdar_logo.png" alt="ICDAR 2026"></div>
   <div class="team"><figure class="person"><span class="ph"><span class="ini">RR</span><img src="team/Raghuveer.jpg" alt="Raghuveer R" loading="lazy" onerror="this.remove()"></span><figcaption>Raghuveer R<sup>*</sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">AS</span><img src="team/Anirudh.jpg" alt="Anirudh Srinivasan" loading="lazy" onerror="this.remove()"></span><figcaption>Anirudh Srinivasan<sup>*</sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">VK</span><img src="team/Kesav.jpg" alt="Venkata Kesav Venna" loading="lazy" onerror="this.remove()"></span><figcaption>Venkata Kesav Venna<sup>*</sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">SS</span><img src="team/Sreevatsa.jpg" alt="Sreevatsa S" loading="lazy" onerror="this.remove()"></span><figcaption>Sreevatsa S<sup></sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">AJ</span><img src="team/Aryan.jpg" alt="Aryan Jain" loading="lazy" onerror="this.remove()"></span><figcaption>Aryan Jain<sup></sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">SK</span><img src="team/Sahithi.jpg" alt="Sahithi Kukkala" loading="lazy" onerror="this.remove()"></span><figcaption>Sahithi Kukkala<sup></sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">RK</span><img src="team/RaviKiran.jpg" alt="Ravi Kiran Sarvadevabhatla" loading="lazy" onerror="this.remove()"></span><figcaption>Ravi Kiran Sarvadevabhatla<sup></sup></figcaption></figure></div>
   <div class="teamfoot">* equal contribution &nbsp;·&nbsp; BharatGen · IIIT Hyderabad &nbsp;·&nbsp; replica-agents.github.io</div>
 </section>
@@ -554,6 +568,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
 
 <!-- ====== G1 · GROUNDING TITLE ====== -->
 <section class="slide hero" style="--accent:var(--blue)">
+  <div class="partchip">Part 2 of 2</div>
   <div class="vc" style="display:flex;flex-direction:column;align-items:center">
   <svg viewBox="0 0 520 90" style="width:44vw;max-width:620px" aria-hidden="true">
     <rect x="10" y="14" width="150" height="62" rx="6" fill="none" stroke="#b42318" stroke-width="3" stroke-dasharray="9 6"/>
@@ -816,101 +831,51 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   <div class="kicker">Paper 1 · The obvious approach first</div>
   <h2>Why not just <span class="k">chain two tools</span>?</h2>
   <div class="svgbox vc" style="flex:1;min-height:0">
-  <svg viewBox="0 0 1000 330" style="width:94%" aria-label="A two-stage pipeline: OCR reads the sign, a picker chooses a string, SAM segments it — and the picker chooses the wrong one">
+  <svg viewBox="0 0 1000 330" style="width:94%" aria-label="OCR misreads a curved banner on a real poster; the answer string cannot be matched, so the segmenter never gets the right region">
     <defs>
       <marker id="arrTC" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#8a97a5"/></marker>
       <marker id="arrTCd" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#b42318"/></marker>
     </defs>
-    <!-- the question -->
-    <rect x="600" y="22" width="380" height="64" rx="12" fill="#fff" stroke="#c9d4de" stroke-width="2"/>
-    <text x="620" y="50" font-size="16" fill="#16222e"><tspan font-weight="800">Q:</tspan> “What does the café sell?”</text>
-    <text x="620" y="74" font-size="14" fill="#0E7C61"><tspan font-weight="800">A:</tspan> coffee and pastries</text>
-    <!-- stage 1 -->
-    <text x="12" y="18" font-size="13.5" font-weight="800" fill="#8a97a5">1 · OCR reads the sign</text>
-    <rect x="12" y="30" width="150" height="104" rx="8" fill="#e8ded0" stroke="#c9b9a3" stroke-width="2"/>
-    <rect x="28" y="46" width="118" height="20" rx="3" fill="#6b5a46"/><text x="87" y="61" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">CAFE</text>
-    <rect x="28" y="70" width="118" height="22" rx="3" fill="#8a7560"/><text x="87" y="86" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">BOULEVARD</text>
-    <text x="87" y="108" text-anchor="middle" font-size="10.5" fill="#6b5a46">COFFEE · PASTRIES</text>
-    <text x="87" y="124" text-anchor="middle" font-size="10" fill="#6b5a46">OPEN DAILY</text>
-    <path d="M170 82 h38" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrTC)"/>
-    <rect x="214" y="58" width="104" height="48" rx="10" fill="#fff" stroke="#dde5ec" stroke-width="2"/>
-    <text x="266" y="88" text-anchor="middle" font-size="15" font-weight="700" fill="#16222e">OCR</text>
-    <path d="M326 82 h38" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrTC)"/>
-    <rect x="370" y="30" width="150" height="104" rx="8" fill="#0d2740"/>
+    <text x="10" y="16" font-size="13.5" font-weight="800" fill="#8a97a5">1 · OCR reads the page</text>
+    <image href="grounding/assets/m3_poster_curved.jpg" x="10" y="26" width="199" height="281"/>
+    <rect x="44" y="99" width="134" height="40" rx="6" fill="none" stroke="#b42318" stroke-width="2.5" stroke-dasharray="6 4"/>
+    <path d="M216 166 h34" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrTC)"/>
+    <rect x="256" y="142" width="96" height="48" rx="10" fill="#fff" stroke="#dde5ec" stroke-width="2"/>
+    <text x="304" y="172" text-anchor="middle" font-size="15" font-weight="700" fill="#16222e">OCR</text>
+    <path d="M358 166 h30" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrTC)"/>
+    <rect x="394" y="40" width="214" height="252" rx="10" fill="#0d2740"/>
     <g font-family="Menlo,monospace" font-size="12.5" fill="#dfe9f5">
-      <text x="386" y="54">CAFE</text><text x="386" y="76">BOULEVARD</text><text x="386" y="98">COFFEE</text><text x="386" y="120">PASTRIES</text>
+      <text x="410" y="68">ANNUAL FEST</text>
+      <text x="410" y="96" fill="#ff8f8f">5TH YFAR CE1F8RAT</text>
+      <path d="M410 102 q6 4 12 0 t12 0 t12 0 t12 0 t12 0 t12 0 t12 0 t12 0 t12 0 t12 0 t12 0" stroke="#ff8f8f" stroke-width="1.6" fill="none"/>
+      <text x="410" y="128">TUG OF WAR COMPETITION</text>
+      <text x="410" y="152">SACK RACE COMPETITION</text>
+      <text x="410" y="176">DECORATIVE BIKE CONTEST</text>
+      <text x="410" y="200">POLE CLIMBING COMPETITION</text>
+      <text x="410" y="236">LOCATION: SCHOOL FIELD</text>
+      <text x="410" y="260">TIME: 4PM-7PM</text>
     </g>
-    <!-- stage 2: a picker chooses a string -->
+    <text x="501" y="310" text-anchor="middle" font-size="11.5" fill="#8a97a5">curved banner misread (illustrative)</text>
+    <rect x="630" y="26" width="360" height="66" rx="12" fill="#fff" stroke="#c9d4de" stroke-width="2"/>
+    <text x="648" y="52" font-size="14.5" fill="#16222e"><tspan font-weight="800">Q:</tspan> What milestone is being celebrated?</text>
+    <text x="648" y="76" font-size="14" fill="#0E7C61"><tspan font-weight="800">A:</tspan> 5th Year Celebrations</text>
     <g class="frag">
-      <rect x="380" y="61" width="104" height="21" rx="4" fill="none" stroke="#F59222" stroke-width="2.5"/>
-      <path d="M484 72 h70 q12 0 12 12 v96 q0 12 -12 12 h-92" stroke="#b42318" stroke-width="2.5" fill="none" stroke-dasharray="6 4" marker-end="url(#arrTCd)"/>
-      <text x="580" y="140" font-size="13.5" font-weight="800" fill="#b42318">2 · a picker chooses a string</text>
-      <text x="580" y="158" font-size="12.5" fill="#5b6b7a">a separate model — it never sees the pixels</text>
-      <rect x="320" y="176" width="140" height="34" rx="17" fill="#fff3e0" stroke="#F59222" stroke-width="2.5"/>
-      <text x="390" y="198" text-anchor="middle" font-size="14" font-weight="800" font-family="Menlo,monospace" fill="#8a4b00">"BOULEVARD"</text>
-      <path d="M318 193 h-40" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrTC)"/>
-      <rect x="170" y="169" width="102" height="48" rx="10" fill="#fff" stroke="#dde5ec" stroke-width="2"/>
-      <text x="221" y="191" text-anchor="middle" font-size="15" font-weight="700" fill="#16222e">SAM</text>
-      <text x="221" y="207" text-anchor="middle" font-size="10.5" fill="#8a97a5">needs a box first</text>
-      <path d="M166 193 h-26" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrTC)"/>
-      <rect x="12" y="150" width="122" height="104" rx="8" fill="#e8ded0" stroke="#c9b9a3" stroke-width="2"/>
-      <rect x="24" y="164" width="98" height="18" rx="3" fill="#b3a492"/>
-      <rect x="24" y="186" width="98" height="20" rx="3" fill="#05539C"/>
-      <text x="73" y="200" text-anchor="middle" font-size="11" font-weight="800" fill="#fff">BOULEVARD</text>
-      <text x="73" y="224" text-anchor="middle" font-size="9.5" fill="#6b5a46">COFFEE · PASTRIES</text>
-      <text x="12" y="276" font-size="13.5" font-weight="800" fill="#8a97a5">3 · SAM masks it</text>
+      <path d="M644 116 L 618 100" stroke="#b42318" stroke-width="2.5" fill="none" marker-end="url(#arrTCd)"/>
+      <text x="648" y="122" font-size="13.5" font-weight="800" fill="#b42318">2 · find “5th Year Celebrations” in the OCR text</text>
+      <text x="648" y="142" font-size="13" fill="#5b6b7a">no line matches — SAM gets no box to segment</text>
     </g>
-    <!-- the mistake -->
     <g class="frag">
-      <circle cx="122" cy="166" r="17" fill="#b42318"/>
-      <path d="M114 158 l16 16 M130 158 l-16 16" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/>
-      <rect x="20" y="214" width="106" height="16" rx="3" fill="none" stroke="#0E7C61" stroke-width="2" stroke-dasharray="4 3"/>
-      <rect x="600" y="196" width="380" height="118" rx="12" fill="#fffcfc" stroke="#f0c9c9" stroke-width="2"/>
-      <text x="620" y="224" font-size="15" font-weight="800" fill="#b42318">✗ a confident mask on the wrong words</text>
+      <rect x="630" y="170" width="360" height="122" rx="12" fill="#fffcfc" stroke="#f0c9c9" stroke-width="2"/>
+      <text x="648" y="198" font-size="15" font-weight="800" fill="#b42318">✗ the OCR error propagates</text>
       <g font-size="13.5" fill="#39485a">
-        <text x="620" y="252">· the picker chose the wrong string</text>
-        <text x="620" y="276">· no string exists for “the third wedge”</text>
-        <text x="620" y="300">· the two models never meet</text>
+        <text x="648" y="226">· one misread in stage 1 …</text>
+        <text x="648" y="250">· … and no later stage can recover it</text>
+        <text x="648" y="274">· nothing downstream looks at the pixels again</text>
       </g>
     </g>
   </svg>
   </div>
   <div class="footer"><span class="act">Paper 1</span><span>Pipeline vs end-to-end</span></div>
-</section>
-
-<!-- ====== M3c · LISA ====== -->
-<section class="slide" style="--accent:var(--m3)">
-  <div class="kicker">Paper 1 · Related work</div>
-  <h2>Reasoning segmentation: <span class="k">LISA</span> and after</h2>
-  <div class="cols vc" style="grid-template-columns:.95fr 1.05fr;align-items:stretch;gap:1.6vw">
-    <div class="card casc" style="animation-delay:.05s;border-top:5px solid #7d8b99">
-      <h3 style="color:#52616f">LISA · Lai et al., CVPR 2024</h3>
-      <svg viewBox="0 0 420 110" style="width:100%;margin-top:1vh">
-        <defs><marker id="arrLi" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#8a97a5"/></marker></defs>
-        <rect x="4" y="26" width="92" height="44" rx="10" fill="#fff" stroke="#c9d4de" stroke-width="2"/><text x="50" y="53" text-anchor="middle" font-size="14" font-weight="700" fill="#33424f">LLM</text>
-        <path d="M100 48 h26" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrLi)"/>
-        <rect x="130" y="30" width="78" height="36" rx="8" fill="#0d2740"/><text x="169" y="53" text-anchor="middle" font-size="13" font-family="Menlo,monospace" fill="#ffd28a">&lt;SEG&gt;</text>
-        <path d="M212 48 h26" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrLi)"/>
-        <rect x="242" y="26" width="92" height="44" rx="10" fill="#fff" stroke="#c9d4de" stroke-width="2"/><text x="288" y="46" text-anchor="middle" font-size="12.5" font-weight="700" fill="#33424f">SAM</text><text x="288" y="62" text-anchor="middle" font-size="11" fill="#5b6b7a">decoder</text>
-        <path d="M338 48 h26" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrLi)"/>
-        <path d="M374 36 q10 -14 24 -8 q14 8 10 20 q-8 14 -24 8 q-14 -8 -10 -20 z" fill="#7d8b99"/>
-        <text x="210" y="98" text-anchor="middle" font-size="13" fill="#33424f">the token’s hidden state is the SAM prompt</text>
-      </svg>
-      <p class="small" style="margin-top:1vh;text-align:center">one token → one mask · natural images</p>
-    </div>
-    <div class="card casc" style="animation-delay:.2s;border-top:5px solid var(--m3)">
-      <table class="abl" style="font-size:1.95vh">
-        <thead><tr><th style="text-align:left">work</th><th style="text-align:left">grounds with</th><th style="text-align:left">domain</th></tr></thead>
-        <tbody>
-          <tr><td>LISA</td><td style="text-align:left">one mask</td><td style="text-align:left">natural images</td></tr>
-          <tr><td>LISA++ · GLaMM · PixelLM</td><td style="text-align:left">several masks</td><td style="text-align:left">natural images</td></tr>
-          <tr class="ours"><td><b>Ours</b></td><td style="text-align:left"><b>K pointers × 3 nested masks</b></td><td style="text-align:left"><b>documents</b></td></tr>
-        </tbody>
-      </table>
-      <div class="stat frag" style="margin-top:1.6vh"><div class="v" style="font-size:3.4vh">25.4 · 35.2 · <span style="color:var(--m3)">79.0</span></div><div class="l">LISA++ · GLaMM · ours — grounding F1 on GDQA-Bench, both baselines fine-tuned on our data</div></div>
-    </div>
-  </div>
-  <div class="footer"><span class="act">Paper 1</span><span>Related work</span></div>
 </section>
 
 <!-- ====== M4 · THE IDEA + ARCHITECTURE ====== -->
@@ -930,10 +895,6 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   <div class="kicker">Paper 1 · Watch it run</div>
   <h2 style="font-size:3.4vh">The forward pass</h2>
   <div class="ifwrap"><iframe data-src="grounding/interactive/m3grounder.html" loading="lazy" title="M3Grounder interactive walkthrough"></iframe></div>
-  <div class="ifbar">
-    <span class="small"><b>Watch:</b> the [GROUND] token’s hidden state leaves the language model and arrives at the segmenter as its prompt — three masks come back. <kbd>Space</kbd> pause · <kbd>R</kbd> restart · <kbd>F</kbd> fit</span>
-    <a href="grounding/interactive/m3grounder.html" target="_blank">open standalone ↗</a>
-  </div>
   <div class="footer"><span class="act">Paper 1</span><span>Interactive architecture</span></div>
 </section>
 
@@ -941,49 +902,22 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
 <section class="slide" style="--accent:var(--m3)">
   <div class="kicker">Paper 1 · Training</div>
   <h2>Two document-specific losses</h2>
-  <div class="cols vc" style="grid-template-columns:1fr 1fr;align-items:stretch">
+  <div class="cols vc" style="grid-template-columns:1fr 1.25fr;align-items:stretch;gap:1.6vw">
     <div class="card" style="display:flex;flex-direction:column;gap:1vh">
-      <h3>Masks don’t spill</h3>
-      <svg viewBox="0 0 520 190" style="width:100%">
-        <g>
-          <rect x="14" y="10" width="230" height="170" rx="10" fill="#fbfdff" stroke="#c9d4de" stroke-width="1.5"/>
-          <rect x="30" y="26" width="130" height="9" rx="3" fill="#d5dee6"/>
-          <rect x="30" y="44" width="180" height="9" rx="3" fill="#d5dee6"/>
-          <circle cx="204" cy="88" r="26" fill="#ffe3c4" stroke="#F59222" stroke-width="2"/>
-          <path d="M204 74 v28 M191 88 h26" stroke="#F59222" stroke-width="3"/>
-          <rect x="30" y="74" width="120" height="28" rx="6" fill="#d5dee6"/>
-          <path d="M24 70 q80 -18 158 6 q30 12 26 30 q-6 22 -60 16 q-90 4 -124 -14 q-12 -14 0 -38z" fill="#b42318" opacity=".42"/>
-          <text x="129" y="168" text-anchor="middle" font-size="13" font-weight="700" fill="#b42318">without the loss</text>
-        </g>
-        <g class="frag">
-          <rect x="276" y="10" width="230" height="170" rx="10" fill="#fbfdff" stroke="#c9d4de" stroke-width="1.5"/>
-          <rect x="292" y="26" width="130" height="9" rx="3" fill="#d5dee6"/>
-          <rect x="292" y="44" width="180" height="9" rx="3" fill="#d5dee6"/>
-          <circle cx="466" cy="88" r="26" fill="#ffe3c4" stroke="#F59222" stroke-width="2"/>
-          <path d="M466 74 v28 M453 88 h26" stroke="#F59222" stroke-width="3"/>
-          <rect x="292" y="74" width="120" height="28" rx="6" fill="#d5dee6"/>
-          <rect x="288" y="70" width="128" height="36" rx="9" fill="#05539C" opacity=".55"/>
-          <text x="391" y="168" text-anchor="middle" font-size="13" font-weight="700" fill="#05539C">with the loss</text>
-        </g>
-      </svg>
-      <p class="small" style="text-align:center"><b>bleed-suppression loss</b>: penalises mask outside the text</p>
+      <div style="display:flex;align-items:center;gap:1vw">
+        <svg viewBox="0 0 90 50" style="width:5.6vw;flex:0 0 auto"><rect x="4" y="18" width="46" height="14" rx="3" fill="#c9d4de"/><circle cx="70" cy="25" r="14" fill="#ffe3c4" stroke="#F59222" stroke-width="2"/><path d="M2 14 q36 -10 62 2 q12 8 6 18 q-10 12 -30 6 q-30 2 -38 -8z" fill="#b42318" opacity=".4"/></svg>
+        <div><h3 style="margin:0">Bleed suppression</h3><p class="small" style="margin:0">mask on non-text pixels is penalised</p></div>
+      </div>
+      <figure class="fig" style="flex:1;min-height:0;margin:0"><img src="grounding/assets/m3_loss_bleed_ex.png" alt="A mask for '1 billion active users' spills onto the Facebook bar; the spill is penalised" style="max-height:44vh;width:auto;max-width:100%;border-radius:8px"></figure>
+      <p class="small" style="text-align:center;margin:0">“1 billion active users”: the spill onto the bar is penalised</p>
     </div>
     <div class="card" style="display:flex;flex-direction:column;gap:1vh">
-      <h3>Masks nest</h3>
-      <svg viewBox="0 0 520 190" style="width:100%">
-        <rect x="110" y="16" width="300" height="158" rx="14" fill="#eaf1f8" stroke="#b9cfe4" stroke-width="1.5" stroke-dasharray="7 5"/>
-        <rect x="146" y="62" width="212" height="82" rx="10" fill="#cfe0f2" stroke="#8fb4d6" stroke-width="2" stroke-dasharray="7 5"/>
-        <rect x="178" y="88" width="214" height="32" rx="16" fill="#05539C"/>
-        <g class="frag">
-          <rect x="356" y="86" width="40" height="36" fill="#b42318" opacity=".82"/>
-          <text x="418" y="100" font-size="13.5" font-weight="700" fill="#b42318">escaped</text>
-          <text x="418" y="118" font-size="12.5" font-weight="600" fill="#b42318">→ penalized</text>
-        </g>
-        <g font-size="12.5" fill="#5b6b7a">
-          <text x="120" y="36">block</text><text x="156" y="56">line</text><text x="188" y="82">phrase</text>
-        </g>
-      </svg>
-      <p class="small" style="text-align:center"><b>enclosure loss</b>: phrase ⊂ line ⊂ block</p>
+      <div style="display:flex;align-items:center;gap:1vw">
+        <svg viewBox="0 0 90 50" style="width:5.6vw;flex:0 0 auto"><rect x="3" y="3" width="84" height="44" rx="6" fill="#eaf1f8" stroke="#8fb4d6" stroke-width="1.5" stroke-dasharray="4 3"/><rect x="12" y="13" width="64" height="24" rx="5" fill="#cfe0f2" stroke="#8fb4d6" stroke-width="1.5" stroke-dasharray="4 3"/><rect x="22" y="20" width="44" height="10" rx="5" fill="#05539C"/></svg>
+        <div><h3 style="margin:0">Hierarchical enclosure</h3><p class="small" style="margin:0">phrase ⊂ line ⊂ block — escaping its parent is penalised</p></div>
+      </div>
+      <figure class="fig" style="margin:0"><img src="grounding/assets/m3_loss_hier_phrase.png" alt="A phrase mask overflowing beyond its line" style="width:72%;border-radius:8px"></figure>
+      <figure class="fig" style="margin:0"><img src="grounding/assets/m3_loss_hier_line.png" alt="A line mask overflowing beyond its block" style="width:100%;border-radius:8px"></figure>
     </div>
   </div>
   <p class="small frag" style="text-align:center;margin-top:1vh">Together: <b>+5 F1</b> on grounding.</p>
@@ -997,6 +931,41 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   <figure class="fig framed vc" style="width:100%"><img src="grounding/assets/m3_engine_row1.png" alt="Layout-aware documents pipeline" style="max-height:52vh;width:98%"></figure>
   <p class="small frag" style="text-align:center;margin-top:1vh">The QA writer cites <b>element IDs, never coordinates</b> — each ID maps back to a mask drawn by Hi-SAM, a text segmenter.<br><b>Hallucinated geometry is impossible by construction.</b></p>
   <div class="footer"><span class="act">Paper 1</span><span>Data engine · layout docs</span></div>
+</section>
+
+<!-- ====== M7a · RECAP: FID-HTML ELEMENTS ====== -->
+<section class="slide" style="--accent:var(--m3)">
+  <div class="kicker">Paper 1 · Data engine · recap from Part 1</div>
+  <h2>Every element of a Fid-HTML page is <span class="k">addressable</span></h2>
+  <div class="svgbox vc" style="flex:1;min-height:0">
+  <svg viewBox="0 0 1000 330" style="width:90%" aria-label="A document with one table cell highlighted as element e47, and what Fid-HTML records about it">
+    <defs><marker id="arrRC" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#0E7C61"/></marker></defs>
+    <rect x="20" y="10" width="400" height="310" rx="10" fill="#fff" stroke="#c9d4de" stroke-width="2"/>
+    <text x="220" y="48" text-anchor="middle" font-size="20" font-weight="800" fill="#16222e" font-family="Georgia,serif">Govt Circular</text>
+    <rect x="50" y="66" width="340" height="7" rx="3" fill="#d5dee6"/><rect x="50" y="82" width="300" height="7" rx="3" fill="#d5dee6"/><rect x="50" y="98" width="320" height="7" rx="3" fill="#d5dee6"/>
+    <g font-size="14" fill="#16222e">
+      <rect x="50" y="124" width="340" height="34" fill="#eef2f6" stroke="#c9d4de"/><text x="62" y="146" font-weight="700">Post</text><text x="210" y="146">Assistant Engineer</text>
+      <rect x="50" y="158" width="340" height="34" fill="#fff" stroke="#c9d4de"/><text x="62" y="180" font-weight="700">Last date</text><text x="210" y="180" font-weight="700">15 March 2024</text>
+      <rect x="50" y="192" width="340" height="34" fill="#eef2f6" stroke="#c9d4de"/><text x="62" y="214" font-weight="700">Fee</text><text x="210" y="214">₹ 500</text>
+    </g>
+    <line x1="200" y1="124" x2="200" y2="226" stroke="#c9d4de"/>
+    <rect x="204" y="161" width="182" height="28" rx="5" fill="#0E7C61" fill-opacity=".14" stroke="#0E7C61" stroke-width="2.5"/>
+    <rect x="352" y="146" width="44" height="20" rx="6" fill="#0E7C61"/><text x="374" y="160" text-anchor="middle" font-size="12" font-weight="800" fill="#fff" font-family="Menlo,monospace">e47</text>
+    <rect x="50" y="248" width="300" height="7" rx="3" fill="#d5dee6"/><rect x="50" y="264" width="260" height="7" rx="3" fill="#d5dee6"/>
+    <path d="M396 175 C 450 175, 470 120, 530 120" stroke="#0E7C61" stroke-width="2.5" fill="none" marker-end="url(#arrRC)"/>
+    <rect x="540" y="30" width="440" height="270" rx="14" fill="#0d2740"/>
+    <text x="566" y="66" font-size="16" font-weight="800" fill="#7ee0bd" font-family="Menlo,monospace">element e47</text>
+    <g font-family="Menlo,monospace" font-size="14.5" fill="#dfe9f5">
+      <text x="566" y="104" fill="#8fb4d6">text</text><text x="690" y="104">“15 March 2024”</text>
+      <text x="566" y="140" fill="#8fb4d6">structure</text><text x="690" y="140">&lt;td&gt; in row e46, table e40</text>
+      <text x="566" y="176" fill="#8fb4d6">position</text><text x="690" y="176">its box on the page</text>
+      <text x="566" y="212" fill="#8fb4d6">style</text><text x="690" y="212">bold</text>
+      <text x="566" y="248" fill="#8fb4d6">id</text><text x="690" y="248">e47 → its mask</text>
+    </g>
+  </svg>
+  </div>
+  <p class="small" style="text-align:center">An LLM can cite <b>e47</b> instead of writing a coordinate.</p>
+  <div class="footer"><span class="act">Paper 1</span><span>Fid-HTML recap</span></div>
 </section>
 
 <!-- ====== M7b · TWO WAYS TO MAKE GROUNDED QA ====== -->
@@ -1100,34 +1069,39 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   <div class="footer"><span class="act">Paper 1</span><span>Why Fid-HTML</span></div>
 </section>
 
-<!-- ====== M8 · DATA ENGINES 2+3 ====== -->
+<!-- ====== M8 · DATA ENGINE 2 · CURVED TEXT ====== -->
 <section class="slide" style="--accent:var(--m3)">
-  <div class="kicker">Paper 1 · Data engine · pipelines ② and ③</div>
-  <h2>Two more engines: curved text, charts</h2>
-  <div class="cols vc" style="grid-template-columns:1fr 1fr;gap:1.6vw;align-items:start">
-    <div>
-      <figure class="fig framed" style="width:100%"><img src="grounding/assets/m3_engine_row2.png" alt="Curved text pipeline" style="max-height:44vh;width:100%"></figure>
-      <p class="small" style="text-align:center;margin-top:.9vh"><b>Curved text.</b> The mask is drawn <i>before</i> the question exists, and the question may only ask about it — <b>the mask precedes the question</b>, so grounding is exact.</p>
-    </div>
-    <div>
-      <figure class="fig framed" style="width:100%"><img src="grounding/assets/m3_engine_row3.png" alt="Charts pipeline" style="max-height:44vh;width:100%"></figure>
-      <p class="small" style="text-align:center;margin-top:.9vh"><b>Charts.</b> Every bar, tick and legend is recorded <i>at render time</i> — <b>no detection step</b>; the renderer already knew where everything was.</p>
-    </div>
+  <div class="kicker">Paper 1 · Data engine · pipeline ②</div>
+  <h2>Training data: curved text <span class="norep">no REPLICA</span></h2>
+  <figure class="fig framed vc" style="width:100%"><img src="grounding/assets/m3_engine_curved_hi.jpg" alt="Curved text pipeline" style="max-height:52vh;width:98%"></figure>
+  <p class="small" style="text-align:center;margin-top:1vh">The curved text is segmented first <b>(2A)</b> and highlighted <b>(2B)</b>; the VLM may only ask about the highlight <b>(2C)</b>. The mask exists before the question, so no box-to-mask step is needed.</p>
+  <div class="footer"><span class="act">Paper 1</span><span>Data engine · curved text</span></div>
+</section>
+
+<!-- ====== M9 · DATA ENGINE 3 · CHARTS ====== -->
+<section class="slide" style="--accent:var(--m3)">
+  <div class="kicker">Paper 1 · Data engine · pipeline ③</div>
+  <h2>Training data: charts <span class="norep">no REPLICA</span></h2>
+  <figure class="fig framed vc" style="width:100%"><img src="grounding/assets/m3_engine_charts_hi.jpg" alt="Charts pipeline" style="max-height:48vh;width:98%"></figure>
+  <div class="cols" style="grid-template-columns:repeat(3,1fr);gap:1vw;margin-top:1vh">
+    <p class="small"><b>3A–3D · render, intercepted.</b> The plotting library’s renderer is intercepted, so every bar, tick and label is logged with its box and an ID.</p>
+    <p class="small"><b>3E–3G · write the QA.</b> The VLM sees the chart and its ID-tagged metadata, and writes QA citing element IDs.</p>
+    <p class="small"><b>3F–3H · post-processing.</b> The cited IDs map back to boxes, and Hi-SAM turns each box into a mask.</p>
   </div>
-  <div class="footer"><span class="act">Paper 1</span><span>Data engine · curved text · charts</span></div>
+  <div class="footer"><span class="act">Paper 1</span><span>Data engine · charts</span></div>
 </section>
 
 <!-- ====== M10 · BENCH ====== -->
 <section class="slide" style="--accent:var(--m3)">
   <div class="kicker">Paper 1 · Measuring it</div>
-  <h2>Benchmark</h2>
-  <div class="vc" style="display:flex;flex-direction:column;gap:2.4vh;justify-content:center;flex:1">
-  <div class="statrow" style="grid-auto-flow:column;margin:0">
-    <div class="stat casc" style="animation-delay:.05s"><div class="v">2.5K</div><div class="l">documents — charts, reports, forms, tables, webpages</div></div>
-    <div class="stat casc" style="animation-delay:.15s"><div class="v">5K</div><div class="l">QA pairs, manually curated &amp; verified</div></div>
-    <div class="stat casc" style="animation-delay:.25s"><div class="v">3</div><div class="l">mask granularities: phrase · line · block · a mask counts when it overlaps the truth by more than half (IoU &gt; 0.5)</div></div>
-  </div>
-  <p class="small frag" style="text-align:center">Every baseline is scored in <b>its own native format</b> — boxes rasterized to masks, masks tightly boxed — so a box loses only where a box truly fails. Answer quality here is an LLM judge; DoCoG’s is an exact match, so the two are not comparable.</p>
+  <h2>Benchmark: <span class="k">GDQA-Bench</span></h2>
+  <div class="cols vc" style="grid-template-columns:1fr 1fr;gap:2vw;align-items:center">
+    <div style="display:flex;flex-direction:column;gap:1.6vh">
+      <div class="stat casc" style="animation-delay:.05s"><div class="v">2.5K</div><div class="l">documents — charts, reports, forms, tables, webpages</div></div>
+      <div class="stat casc" style="animation-delay:.15s"><div class="v">5K</div><div class="l">QA pairs, every mask checked by a second annotator</div></div>
+      <div class="stat casc" style="animation-delay:.25s"><div class="v">3</div><div class="l">mask granularities: phrase · line · block</div></div>
+    </div>
+    <figure class="fig casc" style="animation-delay:.35s;margin:0"><img src="grounding/assets/m3_bench_annot.jpg" alt="An annotator verifying grounding masks on a pen tablet" style="max-height:56vh;border-radius:12px"><figcaption class="small" style="text-align:center;margin-top:.6vh">30 annotators verified every QA pair and mask</figcaption></figure>
   </div>
   <div class="footer"><span class="act">Paper 1</span><span>Benchmark</span></div>
 </section>
@@ -1138,7 +1112,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   <h2>Results</h2>
   <div class="cols vc" style="grid-template-columns:1.25fr .75fr">
     <div class="chartcard">
-      <h3>Grounding F1 on GDQA-Bench</h3><p class="sub">higher is better · 0–100</p>
+      <h3>Grounding F1 on <span class="bench">GDQA-Bench</span></h3><p class="sub">higher is better · 0–100</p>
       <svg viewBox="0 0 664 300" role="img" aria-label="Bar chart of grounding F1 on GDQA-Bench">
         <g stroke="#e1e0d9" stroke-width="1"><line x1="180" y1="16" x2="180" y2="264"/><line x1="295" y1="16" x2="295" y2="264"/><line x1="410" y1="16" x2="410" y2="264"/><line x1="525" y1="16" x2="525" y2="264"/><line x1="640" y1="16" x2="640" y2="264"/></g>
         <g font-size="13" fill="#898781" text-anchor="middle"><text x="180" y="284">0</text><text x="295" y="284">25</text><text x="410" y="284">50</text><text x="525" y="284">75</text><text x="640" y="284">100</text></g>
@@ -1157,15 +1131,46 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
         </g>
       </svg>
     </div>
-    <div style="display:flex;flex-direction:column;gap:1.1vh;justify-content:center">
-      <p class="small">…and vs the best prior on every other benchmark:</p>
-      <div class="stat frag"><div class="v" style="font-size:3.4vh">70.0 → 81.4</div><div class="l">BoundingDocs-Test (vs Gemini-2.5-Pro)</div></div>
-      <div class="stat frag"><div class="v" style="font-size:3.4vh">66.4 → 73.3</div><div class="l">DOGR-Bench (vs DOGR, same 8B scale)</div></div>
-      <div class="stat frag"><div class="v" style="font-size:3.4vh">49.4 → 68.2</div><div class="l">MMDocBench IoU (vs Gemini-2.5-Pro)</div></div>
-      <p class="small frag">On BoundingDocs GPT-5 answers as well as we do — <b>89.3 vs 88.8</b> — and grounds at <b>5.4</b>. It knows the answer; it cannot show you where. <span class="tiny">(Frontier models answer with boxes; we rasterise them before scoring.)</span></p>
+    <div style="display:flex;flex-direction:column;gap:1.3vh;justify-content:center">
+      <p style="font-size:2.1vh;margin:0">…and vs the best prior on every other benchmark:</p>
+      <div class="stat frag" style="text-align:left;padding:1.4vh 1.6vh"><span class="bench">BoundingDocs-Test</span><div style="display:flex;align-items:baseline;gap:1vw;margin-top:.8vh"><span style="font-size:3vh;color:#7d8b99;font-weight:700">70.0</span><span style="font-size:2.4vh;color:#8a97a5">→</span><span style="font-size:4vh;color:var(--m3);font-weight:800">81.4</span></div><div style="font-size:1.85vh;color:var(--muted)">Gemini-2.5-Pro → ours · F1<sub>g</sub></div></div>
+      <div class="stat frag" style="text-align:left;padding:1.4vh 1.6vh"><span class="bench">DOGR-Bench</span><div style="display:flex;align-items:baseline;gap:1vw;margin-top:.8vh"><span style="font-size:3vh;color:#7d8b99;font-weight:700">66.4</span><span style="font-size:2.4vh;color:#8a97a5">→</span><span style="font-size:4vh;color:var(--m3);font-weight:800">73.3</span></div><div style="font-size:1.85vh;color:var(--muted)">DOGR, same 8B → ours · F1<sub>g</sub></div></div>
+      <div class="stat frag" style="text-align:left;padding:1.4vh 1.6vh"><span class="bench">MMDocBench</span><div style="display:flex;align-items:baseline;gap:1vw;margin-top:.8vh"><span style="font-size:3vh;color:#7d8b99;font-weight:700">49.4</span><span style="font-size:2.4vh;color:#8a97a5">→</span><span style="font-size:4vh;color:var(--m3);font-weight:800">68.2</span></div><div style="font-size:1.85vh;color:var(--muted)">Gemini-2.5-Pro → ours · IoU</div></div>
     </div>
   </div>
   <div class="footer"><span class="act">Paper 1</span><span>Main results</span></div>
+</section>
+
+<!-- ====== M3c · LISA ====== -->
+<section class="slide" style="--accent:var(--m3)">
+  <div class="kicker">Paper 1 · Related work</div>
+  <h2>Why not <span class="k">LISA</span>?</h2>
+  <div class="cols vc" style="grid-template-columns:.8fr 1.2fr;align-items:stretch;gap:1.6vw">
+    <div class="card casc" style="animation-delay:.05s;border-top:5px solid #7d8b99">
+      <h3 style="color:#52616f">LISA · Lai et al., CVPR 2024</h3>
+      <svg viewBox="0 0 420 110" style="width:100%;margin-top:1vh">
+        <defs><marker id="arrLi" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#8a97a5"/></marker></defs>
+        <rect x="4" y="26" width="92" height="44" rx="10" fill="#fff" stroke="#c9d4de" stroke-width="2"/><text x="50" y="53" text-anchor="middle" font-size="14" font-weight="700" fill="#33424f">LLM</text>
+        <path d="M100 48 h26" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrLi)"/>
+        <rect x="130" y="30" width="78" height="36" rx="8" fill="#0d2740"/><text x="169" y="53" text-anchor="middle" font-size="13" font-family="Menlo,monospace" fill="#ffd28a">&lt;SEG&gt;</text>
+        <path d="M212 48 h26" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrLi)"/>
+        <rect x="242" y="26" width="92" height="44" rx="10" fill="#fff" stroke="#c9d4de" stroke-width="2"/><text x="288" y="46" text-anchor="middle" font-size="12.5" font-weight="700" fill="#33424f">SAM</text><text x="288" y="62" text-anchor="middle" font-size="11" fill="#5b6b7a">decoder</text>
+        <path d="M338 48 h26" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrLi)"/>
+        <path d="M374 36 q10 -14 24 -8 q14 8 10 20 q-8 14 -24 8 q-14 -8 -10 -20 z" fill="#7d8b99"/>
+        <text x="210" y="98" text-anchor="middle" font-size="13" fill="#33424f">one token → one mask · natural images</text>
+      </svg>
+      <div style="display:flex;flex-direction:column;gap:.8vh;margin-top:1.6vh;font-size:1.9vh">
+        <div><b>We add</b> — K pointers per answer</div>
+        <div>three nested masks per pointer</div>
+        <div>document losses: bleed · enclosure</div>
+      </div>
+    </div>
+    <div class="chartcard casc" style="animation-delay:.2s">
+      <h3>Grounding F1 on <span style="background:var(--m3);color:#fff;border-radius:6px;padding:.1vh .8vh">GDQA-Bench</span></h3><p class="sub">natural-image grounders, before and after training on our data</p>
+      <svg viewBox="0 0 720 190" role="img" aria-label="LISA++ 1.9 and 25.4, GLaMM 3.1 and 35.2, ours 79.0"><text x="300" y="29" text-anchor="end" font-size="14" fill="#16222e">LISA++</text><path d="M310 14 h8.0 a4 4 0 0 1 4 4 v14 a4 4 0 0 1 -4 4 h-8.0 z" fill="#c9d1d9"/><text x="326.0" y="29" font-size="14" fill="#16222e">1.9</text><text x="300" y="61" text-anchor="end" font-size="14" fill="#16222e">LISA++ · fine-tuned on our data</text><path d="M310 46 h106.7 a4 4 0 0 1 4 4 v14 a4 4 0 0 1 -4 4 h-106.7 z" fill="#7d8b99"/><text x="424.7" y="61" font-size="14" fill="#16222e">25.4</text><text x="300" y="101" text-anchor="end" font-size="14" fill="#16222e">GLaMM</text><path d="M310 86 h13.0 a4 4 0 0 1 4 4 v14 a4 4 0 0 1 -4 4 h-13.0 z" fill="#c9d1d9"/><text x="331.0" y="101" font-size="14" fill="#16222e">3.1</text><text x="300" y="133" text-anchor="end" font-size="14" fill="#16222e">GLaMM · fine-tuned on our data</text><path d="M310 118 h147.8 a4 4 0 0 1 4 4 v14 a4 4 0 0 1 -4 4 h-147.8 z" fill="#7d8b99"/><text x="465.8" y="133" font-size="14" fill="#16222e">35.2</text><text x="300" y="177" text-anchor="end" font-size="14" font-weight="800" fill="#16222e">Ours</text><path d="M310 162 h331.8 a4 4 0 0 1 4 4 v14 a4 4 0 0 1 -4 4 h-331.8 z" fill="#05539C"/><text x="649.8" y="177" font-size="16" font-weight="800" fill="#05539C">79.0</text></svg>
+    </div>
+  </div>
+  <div class="footer"><span class="act">Paper 1</span><span>Related work</span></div>
 </section>
 
 <!-- ====== M12 · QUAL ====== -->
@@ -1185,6 +1190,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   <div class="time">Paper 1 of 3</div>
   <h2>M3Grounder</h2>
   <p>Mask-Based <b>Multi-Span</b> and <b>Multi-Granular</b> Grounding for Document QA · <b>CVPR 2026</b></p>
+  <div class="venuelogo"><img src="grounding/assets/logo_cvpr.png" alt="CVPR 2026"></div>
   <div class="team"><figure class="person"><span class="ph"><span class="ini">VK</span><img src="team/Kesav.jpg" alt="Venkata Kesav Venna" loading="lazy" onerror="this.remove()"></span><figcaption>Venkata Kesav Venna<sup>*</sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">SM</span><img src="team/SaiMadhu.jpg" alt="Sai Madhusudan Gunda" loading="lazy" onerror="this.remove()"></span><figcaption>Sai Madhusudan Gunda<sup>*</sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">JS</span><img src="team/Swaroopa.jpg" alt="Jyothi Swaroopa Jinka" loading="lazy" onerror="this.remove()"></span><figcaption>Jyothi Swaroopa Jinka<sup>†</sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">HS</span><img src="team/Hrithik.png" alt="Hrithik Sagar Rachakonda" loading="lazy" onerror="this.remove()"></span><figcaption>Hrithik Sagar Rachakonda<sup>†</sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">AS</span><img src="team/Anirudh.jpg" alt="Anirudh Srinivasan" loading="lazy" onerror="this.remove()"></span><figcaption>Anirudh Srinivasan<sup></sup></figcaption></figure><figure class="person"><span class="ph"><span class="ini">RK</span><img src="team/RaviKiran.jpg" alt="Ravi Kiran Sarvadevabhatla" loading="lazy" onerror="this.remove()"></span><figcaption>Ravi Kiran Sarvadevabhatla<sup></sup></figcaption></figure></div>
   <div class="teamfoot">* equal contribution · † equal contribution &nbsp;·&nbsp; BharatGen · IIIT Hyderabad &nbsp;·&nbsp; m3grounder.github.io</div>
 </section>

@@ -274,3 +274,17 @@
 .divider .person figcaption{color:#fff;font-size:1.7vh;font-weight:600}
 .divider .person sup{color:#ffd98a}
 .divider .teamfoot{color:#ffffffcc;font-size:1.9vh;padding:.4vh 0 0}
+
+/* ---- "Part 1 of 2" / "Paper 1 of 3" chip: solid, so it stands out on the card ---- */
+.divider .time{background:#fff;color:var(--accent);border-color:#fff;font-weight:800;
+  box-shadow:0 2px 12px rgba(0,0,0,.18)}
+.hero .partchip{position:absolute;top:4vh;right:4vw;background:var(--blue);color:#fff;
+  border-radius:999px;padding:.8vh 2.2vh;font-size:2.3vh;font-weight:800;box-shadow:0 2px 12px rgba(5,83,156,.25)}
+/* ---- conference logo on the paper cards ---- */
+.divider .venuelogo{position:absolute;top:11vh;right:4vw;background:#fff;border-radius:14px;
+  padding:1.4vh 1.8vh;box-shadow:0 4px 18px rgba(0,0,0,.18)}
+.divider .venuelogo img{display:block;height:8vh;width:auto}
+/* ---- benchmark names stand out; "no REPLICA" badge on the two data engines ---- */
+.slide .bench{display:inline-block;background:var(--m3);color:#fff;border-radius:6px;padding:.15vh .9vh;font-weight:800;font-size:2vh}
+.slide h2 .norep{display:inline-block;vertical-align:middle;margin-left:1vw;font-size:1.9vh;font-weight:800;color:#8a4b00;
+  background:#fff3e0;border:2px solid var(--orange);border-radius:999px;padding:.3vh 1.2vh}
