@@ -20,12 +20,12 @@ between the four systems.
 | 5–6 | The grounding problem — why grounding matters; boxes, and where they break |  |
 | 7–21 | **M3Grounder** — chain two tools (OCR → SAM), losses, data engine (Fid-HTML recap → why Fid-HTML → two ways; curved text; charts), benchmark, results | CVPR 2026 |
 | 22–34 | **DoCoG** — the Net Sales chain, the $27.50 bill, why GIM (where it sits + the HDFC Bank example), training data, why preference training, building the pairs (rewards), drift + anchor, results, examples (Teamscore first), what and where (the pills) | ECCV 2026 Spotlight |
-| 35–48 | **DocLayout-VL** — three problems (columns and carousels one at a time), what a layout model needs, SAM for documents, tasks A–D, architecture, HGC examples, losses, curriculum, HOPLay-Docs-Bench, results | ECCV 2026 |
-| 49 | Three papers, one recipe (abstracted architectures) |  |
-| 50–51 | What made this possible · the frontier, growing one paper at a time |  |
-| 52 | Thank you |  |
+| 35–49 | **DocLayout-VL** — three problems (columns and carousels one at a time), what a layout model needs, SAM for documents, tasks A–D, architecture, HGC examples, losses, curriculum, HOPLay-Docs-Bench, results, architecture vs scale of data | ECCV 2026 |
+| 50 | Three papers, one recipe (abstracted architectures) |  |
+| 51–52 | What made this possible · the frontier, growing one paper at a time |  |
+| 53 | Thank you |  |
 
-**No ablations.** Ablation results (component removed or added, cumulative build-ups, data-scale studies) were taken out of every paper's slides, the hosted REPLICA deck included, on 2026-10-26. Don't reintroduce them; main results and baseline comparisons stay.
+**No ablations.** Ablation results (component removed or added, cumulative build-ups, data-scale studies) were taken out of every paper's slides, the hosted REPLICA deck included, on 2026-10-26. Don't reintroduce them; main results and baseline comparisons stay. One exception, at the professor's request: DocLayout-VL's *What matters more — architecture, or scale of data?* slide.
 
 **The REPLICA half** is `replica/slides.html`, the ICDAR deck, loaded in hosted
 mode (`?host=1`): it hides its own counter, progress bar and controls and drops

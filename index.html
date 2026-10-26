@@ -1863,6 +1863,35 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   <div class="footer"><span class="act">Paper 3</span><span>Main results</span></div>
 </section>
 
+<!-- ====== L14 · WHAT MATTERS MORE ====== -->
+<section class="slide" style="--accent:var(--dlvl)">
+  <div class="kicker">Paper 3 · One question we kept being asked</div>
+  <h2>What matters more — <span class="k">architecture</span>, or <span class="k">scale of data</span>?</h2>
+  <div class="vc" style="display:flex;flex:1;align-items:center;justify-content:center">
+    <div class="chartcard frag" style="width:76%">
+      <h3>Hierarchy quality vs training-data fraction (Qwen3-VL-8B backbone)</h3><p class="sub">Open mIoU, hierarchical track · one component added at a time · 25%, 50%, 100% data</p>
+      <svg viewBox="0 0 784 370" role="img" aria-label="Slopegraph: configurations at 25, 50 and 100 percent of the data">
+        <text x="640" y="30" font-size="13.5" fill="#b42318" font-weight="700">the gap never closes</text>
+        <g stroke="#e1e0d9" stroke-width="1"><line x1="140" y1="40" x2="140" y2="340"/><line x1="320" y1="40" x2="320" y2="340"/><line x1="500" y1="40" x2="500" y2="340"/></g>
+        <g font-size="13.5" fill="#52514e" text-anchor="middle"><text x="140" y="362">25% data</text><text x="320" y="362">50%</text><text x="500" y="362">100% data</text></g>
+        <g stroke-linecap="round">
+          <polyline class="draw" style="--len:420" points="140 254.8 320 249.7 500 242.5" fill="none" stroke="#a5b2be" stroke-width="2" stroke-linejoin="round"/><polyline class="draw" style="--len:420" points="140 197.2 320 180.7 500 165.1" fill="none" stroke="#7d8b99" stroke-width="2" stroke-linejoin="round"/><polyline class="draw" style="--len:420" points="140 160.6 320 142.9 500 132.4" fill="none" stroke="#566573" stroke-width="2" stroke-linejoin="round"/><polyline class="draw" style="--len:420" points="140 149.5 320 129.4 500 107.5" fill="none" stroke="#0E7C61" stroke-width="3.5" stroke-linejoin="round"/>
+        </g>
+        <g stroke="#fff" stroke-width="2">
+          <circle cx="140" cy="254.8" r="5" fill="#a5b2be"/><circle cx="320" cy="249.7" r="5" fill="#a5b2be"/><circle cx="500" cy="242.5" r="5" fill="#a5b2be"/><circle cx="140" cy="197.2" r="5" fill="#7d8b99"/><circle cx="320" cy="180.7" r="5" fill="#7d8b99"/><circle cx="500" cy="165.1" r="5" fill="#7d8b99"/><circle cx="140" cy="160.6" r="5" fill="#566573"/><circle cx="320" cy="142.9" r="5" fill="#566573"/><circle cx="500" cy="132.4" r="5" fill="#566573"/><circle cx="140" cy="149.5" r="6.5" fill="#0E7C61"/><circle cx="320" cy="129.4" r="6.5" fill="#0E7C61"/><circle cx="500" cy="107.5" r="6.5" fill="#0E7C61"/>
+        </g>
+        <g font-size="13.5" fill="#16222e">
+          <text x="512" y="247.5">VLM only (boxes) · 32.5</text><text x="128" y="259.8" text-anchor="end">28.4</text><text x="512" y="170.1">+ SAM head · 58.3</text><text x="128" y="202.2" text-anchor="end">47.6</text><text x="512" y="137.4">+ HGC · 69.2</text><text x="128" y="170" text-anchor="end">59.8</text><text x="512" y="112.5" font-weight="700">full (+ structure losses) · 77.5</text><text x="128" y="147" text-anchor="end">63.5</text>
+        </g>
+        <path d="M732 242.5 v-127.0" stroke="#b42318" stroke-width="2" marker-end="url(#arr8)" stroke-dasharray="6 4"/>
+        <defs><marker id="arr8" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#b42318"/></marker></defs>
+      </svg>
+      <p class="small" style="text-align:center;margin-top:.4vh"><b>Both — but architecture wins.</b></p>
+    </div>
+  </div>
+  <div class="footer"><span class="act">Paper 3</span><span>Architecture vs data</span></div>
+</section>
+
 <!-- ====== L16 · DLVL PAPER CARD ====== -->
 <section class="slide divider" style="--accent:var(--dlvl)">
   <div class="time">Paper 3 of 3</div>
