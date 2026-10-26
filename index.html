@@ -601,6 +601,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
 .frontier:has(.fs2.show) .fs1 .blob,
 .frontier:has(.fs3.show) :is(.fs1,.fs2) .blob,
 .frontier:has(.fs4.show) :is(.fs1,.fs2,.fs3) .blob{opacity:0}
+.bench.dc{background:var(--docog)}
 </style>
 </head>
 <body>
@@ -1454,7 +1455,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   <h2>Results</h2>
   <div class="cols vc" style="grid-template-columns:1.35fr .65fr">
     <div class="chartcard">
-      <h3>DoCoG-Bench (All): answer quality vs final-answer grounding</h3>
+      <h3>Answer quality vs final-answer grounding on <span class="bench dc">DoCoG-Bench</span></h3><p class="sub">all document types · higher is better on both axes</p>
       <svg viewBox="0 0 720 420" role="img" aria-label="Scatter of AQ vs grounding quality">
         <g stroke="#e1e0d9" stroke-width="1">
           <line x1="70" y1="380" x2="690" y2="380"/><line x1="70" y1="300" x2="690" y2="300"/><line x1="70" y1="220" x2="690" y2="220"/><line x1="70" y1="140" x2="690" y2="140"/><line x1="70" y1="60" x2="690" y2="60"/>
@@ -1482,7 +1483,13 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
     </div>
     <div style="display:flex;flex-direction:column;gap:1.1vh;justify-content:center">
       <div class="stat"><div class="v" style="font-size:4.2vh">85.8 / 81.9</div><div class="l">Ours · answer / grounding — best on <b>both</b></div></div>
-      <div class="card frag"><h3>General QA intact</h3><p class="small">ChartQA <b>92.7</b> · TabFact <b>89.4</b> · DocVQA 93.4 · best of its size on 8 of 10</p></div>
+      <div class="card frag"><h3>General QA intact</h3>
+        <div style="display:flex;flex-direction:column;gap:.9vh;margin-top:.9vh;font-size:2.2vh">
+          <div><span class="bench dc">ChartQA</span> &nbsp;<b>92.7</b></div>
+          <div><span class="bench dc">TabFact</span> &nbsp;<b>89.4</b></div>
+          <div><span class="bench dc">DocVQA</span> &nbsp;93.4</div>
+        </div>
+        <p class="small" style="margin-top:.9vh">best of its size on 8 of 10 benchmarks</p></div>
     </div>
   </div>
   <div class="footer"><span class="act">Paper 2</span><span>Main results</span></div>
@@ -1492,7 +1499,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
 <section class="slide iframe-slide" style="--accent:var(--docog)">
   <div class="kicker">Paper 2 · In the wild</div>
   <h2 style="font-size:3.4vh">Examples</h2>
-  <div class="ifwrap"><iframe data-src="grounding/interactive/docog-examples.html" loading="lazy" title="DoCoG grounded reasoning examples"></iframe></div>
+  <div class="ifwrap"><iframe data-src="grounding/interactive/docog-examples.html?v=3" loading="lazy" title="DoCoG grounded reasoning examples"></iframe></div>
   <div class="ifbar">
     <span class="small">Autoplays · tabs switch examples · click any <span class="tok g">[GND]</span> to re-sweep its mask</span>
     <a href="grounding/interactive/docog-examples.html" target="_blank">open standalone ↗</a>
@@ -1543,15 +1550,15 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   <div class="vc" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.2vw;align-items:stretch">
     <div class="probcol casc" style="animation-delay:.05s">
       <div class="mot prob"><h4>Real pages are messy</h4><p>a rectangle cannot trace them</p></div>
-      <div class="cyc" data-interval="2000" style="height:46vh"><figure class="on"><img src="grounding/assets/dlvl_ex_seals.jpg" alt="Circular seals with curved text on a certificate"><figcaption>curved seals</figcaption></figure><figure><img src="grounding/assets/dlvl_ex_wedges.jpg" alt="Wedges and icons of a circular infographic"><figcaption>wedges and icons</figcaption></figure><figure><img src="grounding/assets/dlvl_ex_vertical.jpg" alt="Rotated text labels on infographic cards"><figcaption>rotated text</figcaption></figure><div class="cycdots"></div></div>
+      <div class="cyc" data-interval="1400" style="height:46vh"><figure class="on"><img src="grounding/assets/dlvl_ex_seals.jpg" alt="Circular seals with curved text on a certificate"><figcaption>curved seals</figcaption></figure><figure><img src="grounding/assets/dlvl_ex_wedges.jpg" alt="Wedges and icons of a circular infographic"><figcaption>wedges and icons</figcaption></figure><figure><img src="grounding/assets/dlvl_ex_vertical.jpg" alt="Rotated text labels on infographic cards"><figcaption>rotated text</figcaption></figure><div class="cycdots"></div></div>
     </div>
     <div class="probcol frag">
       <div class="mot prob"><h4>Every domain has its own words</h4><p>fixed label sets can’t keep up</p></div>
-      <div class="cyc" data-interval="2000" style="height:46vh"><figure class="on"><img src="grounding/assets/dlvl_ex_app.jpg" alt="A banking app labelled status-bar, account-summary-card, quick-action-icons"><figcaption>banking app</figcaption></figure><figure><img src="grounding/assets/dlvl_ex_exam.jpg" alt="An exam paper labelled multiple-choice-question, short-answer-question"><figcaption>exam paper</figcaption></figure><figure><img src="grounding/assets/dlvl_task_B.png" alt="An insurance policy with generic and insurance-specific labels"><figcaption>insurance policy</figcaption></figure><div class="cycdots"></div></div>
+      <div class="cyc" data-interval="1400" style="height:46vh"><figure class="on"><img src="grounding/assets/dlvl_ex_app.jpg" alt="A banking app labelled status-bar, account-summary-card, quick-action-icons"><figcaption>banking app</figcaption></figure><figure><img src="grounding/assets/dlvl_ex_exam.jpg" alt="An exam paper labelled multiple-choice-question, short-answer-question"><figcaption>exam paper</figcaption></figure><figure><img src="grounding/assets/dlvl_task_B.png" alt="An insurance policy with generic and insurance-specific labels"><figcaption>insurance policy</figcaption></figure><div class="cycdots"></div></div>
     </div>
     <div class="probcol frag">
       <div class="mot prob"><h4>A page is a tree, not a list</h4><p>flat boxes throw that away</p></div>
-      <div class="cyc" data-interval="2000" style="height:46vh"><figure class="on"><img src="grounding/assets/dlvl_task_C_page.png" alt="A newspaper front page segmented region by region"><figcaption>newspaper</figcaption></figure><figure><img src="grounding/assets/dlvl_page_telugu.jpg" alt="A Telugu feature article with nested story regions"><figcaption>feature article</figcaption></figure><figure><img src="grounding/assets/dlvl_page_menu.jpg" alt="A restaurant menu with sections and item groups"><figcaption>menu</figcaption></figure><div class="cycdots"></div></div>
+      <div class="cyc" data-interval="1400" style="height:46vh"><figure class="on"><img src="grounding/assets/dlvl_task_C_page.png" alt="A newspaper front page segmented region by region"><figcaption>newspaper</figcaption></figure><figure><img src="grounding/assets/dlvl_page_telugu.jpg" alt="A Telugu feature article with nested story regions"><figcaption>feature article</figcaption></figure><figure><img src="grounding/assets/dlvl_page_menu.jpg" alt="A restaurant menu with sections and item groups"><figcaption>menu</figcaption></figure><div class="cycdots"></div></div>
     </div>
   </div>
   <div class="footer"><span class="act">Paper 3</span><span>Motivation</span></div>
@@ -1856,8 +1863,13 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
     </div>
     <div style="display:flex;flex-direction:column;gap:1.1vh;justify-content:center">
       <div class="stat"><div class="v" style="font-size:4vh">6.9 vs 77.5</div><div class="l">hierarchical-track Open mIoU · Gemini 3 Pro vs ours</div></div>
-      <div class="card frag"><h3>Zero-shot on classic benchmarks</h3><p class="small">PubLayNet 96.5 · M6Docs 76.9 · IndicDLP 77.5 mAP — competitive with per-dataset detectors</p></div>
-      <div class="card"><h3>Not a judge artifact</h3><p class="small">Prompt track, two other LLM judges: 17-model ranking barely moves (rank correlation 0.97 / 0.96); ours first under all three.</p></div>
+      <div class="card frag"><h3>Zero-shot on classic benchmarks</h3>
+        <div style="display:flex;flex-direction:column;gap:.9vh;margin-top:.9vh;font-size:2.2vh">
+          <div><span class="bench dl">PubLayNet</span> &nbsp;<b>96.5</b></div>
+          <div><span class="bench dl">M6Docs</span> &nbsp;<b>76.9</b></div>
+          <div><span class="bench dl">IndicDLP</span> &nbsp;<b>77.5</b></div>
+        </div>
+        <p class="small" style="margin-top:.9vh">mAP · competitive with per-dataset detectors</p></div>
     </div>
   </div>
   <div class="footer"><span class="act">Paper 3</span><span>Main results</span></div>

@@ -382,3 +382,4 @@
 .frontier:has(.fs2.show) .fs1 .blob,
 .frontier:has(.fs3.show) :is(.fs1,.fs2) .blob,
 .frontier:has(.fs4.show) :is(.fs1,.fs2,.fs3) .blob{opacity:0}
+.bench.dc{background:var(--docog)}
