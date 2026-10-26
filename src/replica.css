@@ -369,3 +369,4 @@
 
 /* a dashed outline inside a build-up draws when the build-up appears, not on slide entry */
 .slide.in .frag:not(.show) .draw{stroke-dashoffset:var(--len,700)}
+.bench.dl{background:var(--dlvl)}

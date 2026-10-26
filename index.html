@@ -588,6 +588,7 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
 
 /* a dashed outline inside a build-up draws when the build-up appears, not on slide entry */
 .slide.in .frag:not(.show) .draw{stroke-dashoffset:var(--len,700)}
+.bench.dl{background:var(--dlvl)}
 </style>
 </head>
 <body>
@@ -781,23 +782,6 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
     <div class="mot prob frag"><h4>Evidence is plural</h4><p>one box ≠ two places</p></div>
   </div>
   <div class="footer"><span class="act">The problem</span><span>Boxes, and where they break</span></div>
-</section>
-
-<!-- ====== M1 · WHAT WOULD IT TAKE ====== -->
-<section class="slide" style="--accent:var(--m3)">
-  <div class="kicker">Paper 1 · So what would it take?</div>
-  <h2>What a solution needs</h2>
-  <div class="vc" style="display:flex;flex-direction:column;gap:1.8vh;justify-content:center">
-    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:1.4vw">
-      <div class="mot prob casc" style="animation-delay:.05s"><h4>Evidence has any shape</h4><p>curved rivers, pie wedges, skewed scans</p></div>
-      <div class="mot sol casc" style="animation-delay:.15s"><h4>→ pixel masks</h4><p>exactly the shape the evidence has</p></div>
-      <div class="mot prob casc" style="animation-delay:.25s"><h4>Evidence is plural</h4><p>a logo <i>and</i> three table rows</p></div>
-      <div class="mot sol casc" style="animation-delay:.35s"><h4>→ one mask per cited span</h4><p>as many as the answer needs</p></div>
-      <div class="mot prob casc" style="animation-delay:.45s"><h4>Scope depends on the use</h4><p>cite a number · redact a row · chunk a section</p></div>
-      <div class="mot sol casc" style="animation-delay:.55s"><h4>→ three nested granularities</h4><p>phrase, line, block — from one token</p></div>
-    </div>
-  </div>
-  <div class="footer"><span class="act">Paper 1</span><span>Requirements</span></div>
 </section>
 
 <!-- ====== M2 · TEASER A+B ====== -->
@@ -1820,13 +1804,37 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   <div class="footer"><span class="act">Paper 3</span><span>Curriculum</span></div>
 </section>
 
+<!-- ====== L12b · BENCH ====== -->
+<section class="slide" style="--accent:var(--dlvl)">
+  <div class="kicker">Paper 3 · Measuring it</div>
+  <h2>Benchmark: <span class="k">HOPLay-Docs-Bench</span></h2>
+  <div class="vc" style="display:flex;flex-direction:column;justify-content:center;flex:1;gap:3vh">
+  <div class="statrow" style="grid-template-columns:repeat(4,1fr);gap:1vw;margin:0">
+    <div class="stat casc" style="animation-delay:.05s"><div class="v">5K</div><div class="l">documents, every one manually verified</div></div>
+    <div class="stat casc" style="animation-delay:.15s"><div class="v">51K</div><div class="l">annotated regions</div></div>
+    <div class="stat casc" style="animation-delay:.25s"><div class="v">5.3K</div><div class="l">open-set labels</div></div>
+    <div class="stat casc" style="animation-delay:.35s"><div class="v">47.6K</div><div class="l">prompt-conditioned annotations</div></div>
+  </div>
+  <div class="frag">
+    <p class="small" style="text-align:center;margin:0 0 1.2vh">four tracks · the Overall Score is their mean</p>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1vw">
+      <div class="card" style="text-align:center"><span class="bench dl">FlatLay-Docs-Bench</span><p class="small" style="margin-top:1vh">flat, open-set segmentation</p></div>
+      <div class="card" style="text-align:center"><span class="bench dl">HierLay-Docs-Bench</span><p class="small" style="margin-top:1vh">hierarchical parsing — the layout tree</p></div>
+      <div class="card" style="text-align:center"><span class="bench dl">CurveLay-Docs-Bench</span><p class="small" style="margin-top:1vh">boundaries of curved, irregular regions</p></div>
+      <div class="card" style="text-align:center"><span class="bench dl">PromptLay-Docs-Bench</span><p class="small" style="margin-top:1vh">regions asked for by an instruction</p></div>
+    </div>
+  </div>
+  </div>
+  <div class="footer"><span class="act">Paper 3</span><span>Benchmark</span></div>
+</section>
+
 <!-- ====== L13 · RESULTS ====== -->
 <section class="slide" style="--accent:var(--dlvl)">
   <div class="kicker">Paper 3 · Results</div>
   <h2>Results</h2>
   <div class="cols vc" style="grid-template-columns:1.25fr .75fr">
     <div class="chartcard">
-      <h3>HOPLay-Docs-Bench · Overall Score</h3><p class="sub">HOPLay = Hierarchical, Open-set, Promptable Layout · mean over four tracks · 0–100</p>
+      <h3>Overall Score on <span class="bench dl">HOPLay-Docs-Bench</span></h3><p class="sub">HOPLay = Hierarchical, Open-set, Promptable Layout · mean over four tracks · 0–100</p>
       <svg viewBox="0 0 640 260" role="img" aria-label="Overall score bars">
         <g stroke="#e1e0d9" stroke-width="1"><line x1="215" y1="14" x2="215" y2="226"/><line x1="320" y1="14" x2="320" y2="226"/><line x1="425" y1="14" x2="425" y2="226"/><line x1="530" y1="14" x2="530" y2="226"/><line x1="635" y1="14" x2="635" y2="226"/></g>
         <g font-size="13" fill="#898781" text-anchor="middle"><text x="215" y="246">0</text><text x="320" y="246">25</text><text x="425" y="246">50</text><text x="530" y="246">75</text><text x="628" y="246">100</text></g>
