@@ -585,6 +585,9 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
 .needcard .small{margin:0}
 /* paper cards: keep the title clear of the conference logo */
 .divider:has(.venuelogo) > h2, .divider:has(.venuelogo) > p{max-width:calc(100% - 22vw)}
+
+/* a dashed outline inside a build-up draws when the build-up appears, not on slide entry */
+.slide.in .frag:not(.show) .draw{stroke-dashoffset:var(--len,700)}
 </style>
 </head>
 <body>
@@ -670,48 +673,6 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   </div>
 </section>
 
-<!-- ====== I1 · DOCUMENT QA TODAY ====== -->
-<section class="slide" style="--accent:var(--intro)">
-  <div class="kicker">The task</div>
-  <h2>Document question answering</h2>
-  <div style="flex:1;display:flex;flex-direction:column;gap:2.6vh;justify-content:center;min-height:0;padding-bottom:1.4vh">
-    <div class="casc" style="animation-delay:.05s;display:grid;grid-template-columns:1.2fr auto 1.25fr auto .75fr;align-items:center;gap:1.2vw">
-      <div class="card" style="padding:1.1vh">
-        <img src="grounding/assets/doc_table_crop.png" alt="Credit-card summary table" style="width:100%;border-radius:8px;display:block">
-      </div>
-      <span class="eqop">+</span>
-      <div class="card" style="padding:1.6vh"><p style="font-size:2.25vh">“What is JCB’s <b>Net Sales</b>?”</p></div>
-      <span class="eqop">→</span>
-      <div class="card" style="padding:1.6vh;text-align:center;background:#eaf2fb;border-color:#b9d3ee">
-        <p style="font-size:2.6vh;font-weight:800;color:var(--blue)">$30.00</p></div>
-    </div>
-    <div class="casc" style="animation-delay:.2s;display:grid;grid-template-columns:1.2fr auto 1.25fr auto .75fr;align-items:center;gap:1.2vw">
-      <div class="card" style="padding:1.1vh">
-        <svg viewBox="0 0 300 140" style="width:100%;max-height:17vh">
-          <path d="M70,70 L70,12 A58,58 0 0 1 109.7,112.3 Z" fill="#05539C" stroke="#fff" stroke-width="2"/>
-          <path d="M70,70 L109.7,112.3 A58,58 0 0 1 30.3,112.3 Z" fill="#c3ceda" stroke="#fff" stroke-width="2"/>
-          <path d="M70,70 L30.3,112.3 A58,58 0 0 1 21.0,38.9 Z" fill="#dfe6ed" stroke="#fff" stroke-width="2"/>
-          <path d="M70,70 L21.0,38.9 A58,58 0 0 1 70,12 Z" fill="#eef2f6" stroke="#fff" stroke-width="2"/>
-          <text x="70" y="135" text-anchor="middle" font-size="12" fill="#8a97a5">Monthly spending</text>
-          <g font-size="13.6" fill="#39485a">
-            <rect x="150" y="22" width="10" height="10" rx="2.5" fill="#05539C"/><text x="167" y="31">Housing 38%</text>
-            <rect x="150" y="46" width="10" height="10" rx="2.5" fill="#c3ceda"/><text x="167" y="55">Food 24%</text>
-            <rect x="150" y="70" width="10" height="10" rx="2.5" fill="#dfe6ed"/><text x="167" y="79">Transport 22%</text>
-            <rect x="150" y="94" width="10" height="10" rx="2.5" fill="#eef2f6" stroke="#dde5ec"/><text x="167" y="103">Other 16%</text>
-          </g>
-        </svg>
-      </div>
-      <span class="eqop">+</span>
-      <div class="card" style="padding:1.6vh"><p style="font-size:2.25vh">“Which category has the <b>largest share</b>?”</p></div>
-      <span class="eqop">→</span>
-      <div class="card" style="padding:1.6vh;text-align:center;background:#eaf2fb;border-color:#b9d3ee">
-        <p style="font-size:2.6vh;font-weight:800;color:var(--blue)">Housing</p></div>
-    </div>
-    <p class="small casc" style="animation-delay:.35s;text-align:center">Today’s VLMs do this well — on text, tables, charts, flowcharts. <b>So what’s missing?</b></p>
-  </div>
-  <div class="footer"><span class="act">The problem</span><span>Document QA</span></div>
-</section>
-
 <!-- ====== I2 · AN ANSWER YOU CAN'T POINT TO ====== -->
 <section class="slide" style="--accent:var(--intro)">
   <div class="kicker">The problem</div>
@@ -747,13 +708,14 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
   <div class="footer"><span class="act">The problem</span><span>Why grounding</span></div>
 </section>
 
-<!-- ====== I3 · STATUS QUO + SURGERY ====== -->
+<!-- ====== I3 · STATUS QUO + WHERE BOXES BREAK ====== -->
 <section class="slide" style="--accent:var(--intro)">
   <div class="kicker">The status quo — and where it cracks</div>
   <h2>How grounding works today</h2>
-  <div class="vc" style="display:flex;flex-direction:column;gap:1.6vh;justify-content:center">
-    <div class="svgbox">
-    <svg viewBox="0 0 760 94" style="width:76%;max-width:980px">
+  <div class="cols vc" style="grid-template-columns:1fr 1fr;gap:2vw;align-items:center">
+    <div style="display:flex;flex-direction:column;gap:2.4vh">
+      <div class="svgbox">
+    <svg viewBox="0 0 760 94" style="width:100%">
       <rect x="4" y="14" width="230" height="66" rx="12" fill="#fff" stroke="#dde5ec" stroke-width="2"/>
       <text x="119" y="43" text-anchor="middle" font-size="19" font-weight="700" fill="#16222e">Language model</text>
       <text x="119" y="66" text-anchor="middle" font-size="13.5" fill="#5b6b7a">four more tokens, nothing special</text>
@@ -762,9 +724,9 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
       <rect x="296" y="20" width="460" height="54" rx="10" fill="#0d2740"/>
       <text x="526" y="54" text-anchor="middle" font-size="18" font-family="Menlo,monospace" fill="#ffd28a">&lt;box&gt;212, 88, 410, 236&lt;/box&gt;</text>
     </svg>
-    </div>
-    <div class="svgbox frag">
-    <svg viewBox="0 0 760 104" style="width:76%;max-width:980px">
+      </div>
+      <div class="svgbox frag">
+    <svg viewBox="0 0 760 104" style="width:100%">
       <path d="M14 58 q46 -40 104 -14 q52 24 112 2" fill="none" stroke="#05539C" stroke-width="12" stroke-linecap="round"/>
       <path d="M248 52 h40" stroke="#8a97a5" stroke-width="3" marker-end="url(#arr1b)"/>
       <defs><marker id="arr1b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#8a97a5"/></marker></defs>
@@ -773,24 +735,11 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
       <text x="312" y="60" font-size="14.5" font-family="Menlo,monospace" fill="#ffd28a">236,110, 247,114, 259,116, 274,115, 291,112,</text>
       <text x="312" y="82" font-size="14.5" font-family="Menlo,monospace" fill="#ffb3a6">309,107, 328,101, … hundreds more … 🙁</text>
     </svg>
+      </div>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.2vw">
-      <div class="mot prob frag"><h4>Too many tokens</h4><p>hundreds of coordinates per span</p></div>
-      <div class="mot prob frag"><h4>Nothing ties them to the page</h4><p>just more next-token predictions — they can be <b>hallucinated</b></p></div>
-      <div class="mot prob frag"><h4>Evidence is plural</h4><p>real answers cite several places at once — and each has its own shape; K boxes are still K rectangles</p></div>
-    </div>
-  </div>
-  <div class="footer"><span class="act">The problem</span><span>Boxes via the vocabulary</span></div>
-</section>
-
-<!-- ====== I4 · WHERE BOXES BREAK ====== -->
-<section class="slide" style="--accent:var(--intro)">
-  <div class="kicker">And even for one region — rectangles crack</div>
-  <h2>Where boxes break</h2>
-  <div class="cols vc" style="grid-template-columns:1.1fr .9fr;align-items:start">
-    <div class="card" style="padding:2vh">
+    <div class="card frag" style="padding:1.6vh 2vh">
       <p style="text-align:center;margin:0 0 .8vh;font-size:2.05vh;color:#33424f">Q: “What share does <b>Mumbai</b> hold?” → A: <b>7.7%</b> — now <i>show the evidence</i></p>
-      <svg viewBox="0 0 596 330" style="width:100%">
+      <svg viewBox="0 0 596 330" style="width:100%;max-height:42vh">
         <g transform="translate(150,150)">
           <g stroke="#fff" stroke-width="2">
             <path d="M0 0 L0 -95 A95 95 0 0 1 38.3 -86.9 Z" fill="#dfe7ee"/>
@@ -824,38 +773,14 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
         <text x="440" y="316" text-anchor="middle" font-size="14" font-weight="700" fill="#05539C">mask-based</text>
       </svg>
     </div>
-    <div class="svgbox">
-    <svg viewBox="0 0 348 400" style="max-height:62vh">
-      <g class="frag">
-        <path d="M80 20 A46 46 0 0 1 122 82 L80 66 Z" fill="#F59222"/><circle cx="80" cy="66" r="46" fill="none" stroke="#c9d4de" stroke-width="2"/>
-        <rect x="76" y="16" width="52" height="70" fill="none" stroke="#b42318" stroke-width="2.5" stroke-dasharray="6 4"/>
-        <text x="150" y="52" font-size="15" font-weight="700" fill="#16222e">pie wedges</text>
-        <text x="150" y="72" font-size="13" fill="#5b6b7a">box overshoots</text>
-      </g>
-      <g class="frag">
-        <path d="M30 168 q60 -46 120 0" fill="none" stroke="#05539C" stroke-width="13" stroke-linecap="round"/>
-        <rect x="24" y="126" width="132" height="52" fill="none" stroke="#b42318" stroke-width="2.5" stroke-dasharray="6 4"/>
-        <text x="176" y="150" font-size="15" font-weight="700" fill="#16222e">curved text</text>
-        <text x="176" y="170" font-size="13" fill="#5b6b7a">mostly empty box</text>
-      </g>
-      <g class="frag">
-        <path d="M60 226 l34 26 l-34 26 l-34 -26 z" fill="#0E7C61" opacity=".85"/>
-        <path d="M96 252 h48" stroke="#0E7C61" stroke-width="3" marker-end="url(#arr2)"/>
-        <defs><marker id="arr2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#0E7C61"/></marker></defs>
-        <rect x="22" y="222" width="126" height="60" fill="none" stroke="#b42318" stroke-width="2.5" stroke-dasharray="6 4"/>
-        <text x="176" y="248" font-size="15" font-weight="700" fill="#16222e">diagram parts</text>
-        <text x="176" y="268" font-size="13" fill="#5b6b7a">nodes, arrows, labels</text>
-      </g>
-      <g class="frag">
-        <rect x="26" y="320" width="60" height="14" rx="4" fill="#7C3AED"/><rect x="98" y="356" width="72" height="14" rx="4" fill="#7C3AED"/>
-        <rect x="18" y="310" width="162" height="70" fill="none" stroke="#b42318" stroke-width="2.5" stroke-dasharray="6 4"/>
-        <text x="196" y="340" font-size="15" font-weight="700" fill="#16222e">multi-span facts</text>
-        <text x="196" y="360" font-size="13" fill="#5b6b7a">one box ≠ two places</text>
-      </g>
-    </svg>
-    </div>
   </div>
-  <div class="footer"><span class="act">The problem</span><span>Failure modes</span></div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1vw;margin-top:1.6vh">
+    <div class="mot prob frag"><h4>Too many tokens</h4><p>hundreds of coordinates per span</p></div>
+    <div class="mot prob frag"><h4>Nothing ties them to the page</h4><p>just next-token predictions — they can be <b>hallucinated</b></p></div>
+    <div class="mot prob frag"><h4>Rectangles overshoot</h4><p>pie wedges, curved text, diagram parts</p></div>
+    <div class="mot prob frag"><h4>Evidence is plural</h4><p>one box ≠ two places</p></div>
+  </div>
+  <div class="footer"><span class="act">The problem</span><span>Boxes, and where they break</span></div>
 </section>
 
 <!-- ====== M1 · WHAT WOULD IT TAKE ====== -->
@@ -1217,38 +1142,6 @@ svg text{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif}
     </div>
   </div>
   <div class="footer"><span class="act">Paper 1</span><span>Main results</span></div>
-</section>
-
-<!-- ====== M3c · LISA ====== -->
-<section class="slide" style="--accent:var(--m3)">
-  <div class="kicker">Paper 1 · Related work</div>
-  <h2>Why not <span class="k">LISA</span>?</h2>
-  <div class="cols vc" style="grid-template-columns:.8fr 1.2fr;align-items:stretch;gap:1.6vw">
-    <div class="card casc" style="animation-delay:.05s;border-top:5px solid #7d8b99">
-      <h3 style="color:#52616f">LISA · Lai et al., CVPR 2024</h3>
-      <svg viewBox="0 0 420 110" style="width:100%;margin-top:1vh">
-        <defs><marker id="arrLi" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#8a97a5"/></marker></defs>
-        <rect x="4" y="26" width="92" height="44" rx="10" fill="#fff" stroke="#c9d4de" stroke-width="2"/><text x="50" y="53" text-anchor="middle" font-size="14" font-weight="700" fill="#33424f">LLM</text>
-        <path d="M100 48 h26" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrLi)"/>
-        <rect x="130" y="30" width="78" height="36" rx="8" fill="#0d2740"/><text x="169" y="53" text-anchor="middle" font-size="13" font-family="Menlo,monospace" fill="#ffd28a">&lt;SEG&gt;</text>
-        <path d="M212 48 h26" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrLi)"/>
-        <rect x="242" y="26" width="92" height="44" rx="10" fill="#fff" stroke="#c9d4de" stroke-width="2"/><text x="288" y="46" text-anchor="middle" font-size="12.5" font-weight="700" fill="#33424f">SAM</text><text x="288" y="62" text-anchor="middle" font-size="11" fill="#5b6b7a">decoder</text>
-        <path d="M338 48 h26" stroke="#8a97a5" stroke-width="2.5" marker-end="url(#arrLi)"/>
-        <path d="M374 36 q10 -14 24 -8 q14 8 10 20 q-8 14 -24 8 q-14 -8 -10 -20 z" fill="#7d8b99"/>
-        <text x="210" y="98" text-anchor="middle" font-size="13" fill="#33424f">one token → one mask · natural images</text>
-      </svg>
-      <div style="display:flex;flex-direction:column;gap:.8vh;margin-top:1.6vh;font-size:1.9vh">
-        <div><b>We add</b> — K pointers per answer</div>
-        <div>three nested masks per pointer</div>
-        <div>document losses: bleed · enclosure</div>
-      </div>
-    </div>
-    <div class="chartcard casc" style="animation-delay:.2s">
-      <h3>Grounding F1 on <span style="background:var(--m3);color:#fff;border-radius:6px;padding:.1vh .8vh">GDQA-Bench</span></h3><p class="sub">natural-image grounders, before and after training on our data</p>
-      <svg viewBox="0 0 720 190" role="img" aria-label="LISA++ 1.9 and 25.4, GLaMM 3.1 and 35.2, ours 79.0"><text x="300" y="29" text-anchor="end" font-size="14" fill="#16222e">LISA++</text><path d="M310 14 h8.0 a4 4 0 0 1 4 4 v14 a4 4 0 0 1 -4 4 h-8.0 z" fill="#c9d1d9"/><text x="326.0" y="29" font-size="14" fill="#16222e">1.9</text><text x="300" y="61" text-anchor="end" font-size="14" fill="#16222e">LISA++ · fine-tuned on our data</text><path d="M310 46 h106.7 a4 4 0 0 1 4 4 v14 a4 4 0 0 1 -4 4 h-106.7 z" fill="#7d8b99"/><text x="424.7" y="61" font-size="14" fill="#16222e">25.4</text><text x="300" y="101" text-anchor="end" font-size="14" fill="#16222e">GLaMM</text><path d="M310 86 h13.0 a4 4 0 0 1 4 4 v14 a4 4 0 0 1 -4 4 h-13.0 z" fill="#c9d1d9"/><text x="331.0" y="101" font-size="14" fill="#16222e">3.1</text><text x="300" y="133" text-anchor="end" font-size="14" fill="#16222e">GLaMM · fine-tuned on our data</text><path d="M310 118 h147.8 a4 4 0 0 1 4 4 v14 a4 4 0 0 1 -4 4 h-147.8 z" fill="#7d8b99"/><text x="465.8" y="133" font-size="14" fill="#16222e">35.2</text><text x="300" y="177" text-anchor="end" font-size="14" font-weight="800" fill="#16222e">Ours</text><path d="M310 162 h331.8 a4 4 0 0 1 4 4 v14 a4 4 0 0 1 -4 4 h-331.8 z" fill="#05539C"/><text x="649.8" y="177" font-size="16" font-weight="800" fill="#05539C">79.0</text></svg>
-    </div>
-  </div>
-  <div class="footer"><span class="act">Paper 1</span><span>Related work</span></div>
 </section>
 
 <!-- ====== M12 · QUAL ====== -->

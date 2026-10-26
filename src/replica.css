@@ -366,3 +366,6 @@
 .needcard .small{margin:0}
 /* paper cards: keep the title clear of the conference logo */
 .divider:has(.venuelogo) > h2, .divider:has(.venuelogo) > p{max-width:calc(100% - 22vw)}
+
+/* a dashed outline inside a build-up draws when the build-up appears, not on slide entry */
+.slide.in .frag:not(.show) .draw{stroke-dashoffset:var(--len,700)}
