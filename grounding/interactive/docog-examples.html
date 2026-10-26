@@ -81,67 +81,80 @@ html,body{margin:0;height:100%;background:#fff;font-family:'Avenir Next',Avenir,
 
 const DOCOG_EXAMPLES = [
 
-  /* ════════════════════ 1. FOOD WEB ════════════════════ */
+  /* ══════════════════════ 7. TEAM SCORE ══════════════════════ */
   {
-    id: 'foodweb',
-    label: 'Food Web',
-    image: 'qual/qual_res_6_foodweb.png',
-    question: 'Who eats penguins?',
+    id: 'teamscore',
+    label: 'Teamscore',
+    image: 'qual/qual_res_8_teamscore.png',
+    question: 'From Round 3 to Round 4, which team has an increasing trend?',
 
     spans: [
-      { text: 'penguins', masks: [
-        { points:[[65.14,39.5],[65.05,38],[68.68,37.75],[68.95,37],[69.05,35.38],[69.95,33.63],[69.59,30.38],[69.32,27.38],[69.41,23.75],[69.86,19],[72.41,15.13],[74.95,14.63],[75.68,16],[77.5,17.63],[77.59,18.5],[75.68,18.13],[75.05,18.5],[75.14,20],[77.05,26.88],[77.14,33.38],[76.14,34.38],[76.95,36.38],[76.14,37.13],[75.5,37.63],[77.23,37.88],[77.23,40.25],[72.77,40.63],[67.59,40.5]], bbox:{x:65.05,y:14.63,w:12.54,h:26} }
-      ] },
-      { text: 'arrows from penguins', masks: [
-        { points:[[60.59,25.75],[62.68,27.63],[63.32,26.75],[69.59,26.75],[69.68,25.37],[63.32,25.25],[63.41,24]], bbox:{x:60.59,y:24,w:9.09,h:3.63} },
-        { points:[[58.59,15.63],[59.32,19],[60.23,17.88],[68.95,23.88],[69.5,22.25],[61.14,16.63],[61.5,15.75]], bbox:{x:58.59,y:15.63,w:10.91,h:8.25} }
-      ] },
-      { text: 'smaller toothed whales', masks: [
-        { points:[[30.5,14],[33.95,10.13],[39.59,7.12],[39.77,1.75],[41.5,1.75],[42.77,6.25],[49.68,5.25],[50.95,6.13],[54.05,5.63],[53.14,7.25],[53.86,9.13],[54.32,10.75],[53.77,11.75],[51.32,9.63],[51.14,8.63],[45.95,11.63],[44.32,12.88],[62.77,12.5],[62.77,15.63],[55.5,15.75],[55.59,19.5],[46.41,19.5],[46.5,15.88],[42.59,15.75],[42.05,14.37],[39.41,15.5],[39.23,17.38],[36.68,17.88],[35.41,16.25],[32.23,16.88]], bbox:{x:30.5,y:1.75,w:32.27,h:17.75} }
-      ] },
-      { text: 'leopard seal', masks: [
-        { points:[[38.23,26.88],[41.86,25.75],[42.59,24.5],[43.5,25.5],[46.95,23.13],[48.41,23.13],[51.95,21.88],[56.14,23.25],[58.05,22.38],[59.59,24.25],[61.32,23.63],[60.95,25],[60.77,27],[59.68,27.5],[60.5,28.63],[60.86,29.88],[59.5,31],[58.14,30.63],[57.68,31.25],[60.86,31.87],[60.95,34.63],[44.95,34.88],[44.5,32.38],[44.77,30.63],[45.59,31.5],[53.23,31.75],[52.14,30.75],[48.05,30.63],[48.05,30.63]], bbox:{x:38.23,y:21.88,w:23.09,h:13} }
-      ] },
+      // one span = one mask = one GND token
+      { text: 'Round 3 label', masks: [
+        { points:[[41.59,87.66],[43.77,93.46],[63.41,81.96],[60.23,76.58]], bbox:{x:41.59,y:76.58,w:21.82,h:16.88} }
+      ] },  // 0
+      { text: 'Round 4 label', masks: [
+        { points:[[60.14,87.76],[77.86,77.74],[80.5,83.23],[62.41,92.83]], bbox:{x:60.14,y:77.74,w:20.36,h:15.09} }
+      ] },  // 1
+      { text: 'Team Aurora legend', masks: [
+        { points:[[14.05,14.35],[39.32,14.35],[39.32,18.57],[14.05,18.57]], bbox:{x:14.05,y:14.35,w:25.27,h:4.22} }
+      ] },  // 2
+      { text: 'Team Aurora line', masks: [
+        { points:[[51.77,33.33],[71.05,28.16],[72.32,29.96],[72.05,31.01],[51.95,36.39],[51.05,35.34]], bbox:{x:51.05,y:28.16,w:21.27,h:8.23} }
+      ] },  // 3
+      { text: 'Team Blaze legend', masks: [
+        { points:[[14.05,19.2],[38.23,19.2],[38.23,23.1],[14.05,23.1]], bbox:{x:14.05,y:19.2,w:24.18,h:3.9} }
+      ] },  // 4
+      { text: 'Team Blaze line', masks: [
+        { points:[[50.95,40.82],[52.32,37.34],[53.5,39.03],[70.14,43.67],[70.86,41.98],[72.32,45.68],[69.14,46.2],[69.59,44.51],[53.95,40.61],[53.77,41.35]], bbox:{x:50.95,y:37.34,w:21.37,h:8.86} }
+      ] },  // 5
+      { text: 'Team Dynamo legend', masks: [
+        { points:[[13.86,23.52],[41.05,23.52],[41.05,27.95],[13.86,27.95]], bbox:{x:13.86,y:23.52,w:27.19,h:4.43} }
+      ] },  // 6
+      { text: 'Team Dynamo line', masks: [
+        { points:[[50.41,44.3],[52.77,41.88],[54.5,43.99],[54.32,44.83],[69.95,54.85],[70.95,53.8],[72.86,56.54],[70.77,58.33],[68.77,56.33],[68.5,55.59],[53.23,45.89],[52.23,46.31]], bbox:{x:50.41,y:41.88,w:22.45,h:16.45} }
+      ] },  // 7
     ],
 
     steps: [
       {
         label: 'S1',
         tokens: [
-          { type:'text', content:'Look at the ' },
-          { type:'span_start', spanIndex:0 }, { type:'text', content:'penguins' }, { type:'span_end' }, { type:'ground', spanIndex:0 },
-          { type:'text', content:'.' },
+          { type:'text', content:'We first see ' },
+          { type:'span_start', spanIndex:0 }, { type:'text', content:'Round 3' }, { type:'span_end' }, { type:'ground', spanIndex:0 },
+          { type:'text', content:', ' },
+          { type:'span_start', spanIndex:1 }, { type:'text', content:'Round 4' }, { type:'span_end' }, { type:'ground', spanIndex:1 },
+          { type:'text', content:' labels.' },
         ]
       },
       {
         label: 'S2',
         tokens: [
-          { type:'text', content:'Look at out ' },
-          { type:'span_start', spanIndex:1 }, { type:'text', content:'arrows from penguins' }, { type:'span_end' }, { type:'ground', spanIndex:1 },
-          { type:'text', content:'.' },
-        ]
-      },
-      {
-        label: 'S3',
-        tokens: [
-          { type:'text', content:'It points to ' },
-          { type:'span_start', spanIndex:2 }, { type:'text', content:'smaller toothed whales' }, { type:'span_end' }, { type:'ground', spanIndex:2 },
-          { type:'text', content:' and ' },
-          { type:'span_start', spanIndex:3 }, { type:'text', content:'leopard seal' }, { type:'span_end' }, { type:'ground', spanIndex:3 },
-          { type:'text', content:'.' },
+          { type:'text', content:'In this transition, ' },
+          { type:'span_start', spanIndex:2 }, { type:'text', content:'Team Aurora' }, { type:'span_end' }, { type:'ground', spanIndex:2 },
+          { type:'text', content:' is increasing (see ' },
+          { type:'span_start', spanIndex:3 }, { type:'text', content:'line' }, { type:'span_end' }, { type:'ground', spanIndex:3 },
+          { type:'text', content:'), and ' },
+          { type:'span_start', spanIndex:4 }, { type:'text', content:'Team Blaze' }, { type:'span_end' }, { type:'ground', spanIndex:4 },
+          { type:'text', content:' (see ' },
+          { type:'span_start', spanIndex:5 }, { type:'text', content:'line' }, { type:'span_end' }, { type:'ground', spanIndex:5 },
+          { type:'text', content:'), ' },
+          { type:'span_start', spanIndex:6 }, { type:'text', content:'Team Dynamo' }, { type:'span_end' }, { type:'ground', spanIndex:6 },
+          { type:'text', content:' (see ' },
+          { type:'span_start', spanIndex:7 }, { type:'text', content:'line' }, { type:'span_end' }, { type:'ground', spanIndex:7 },
+          { type:'text', content:') are decreasing.' },
         ]
       },
       {
         label: 'Sf',
         tokens: [
-          { type:'span_start', spanIndex:2 }, { type:'text', content:'Smaller toothed whales' }, { type:'span_end' }, { type:'ground', spanIndex:2 },
-          { type:'text', content:' and ' },
-          { type:'span_start', spanIndex:3 }, { type:'text', content:'leopard seal' }, { type:'span_end' }, { type:'ground', spanIndex:3 },
-          { type:'text', content:' eats ' },
-          { type:'span_start', spanIndex:0 }, { type:'text', content:'penguins' }, { type:'span_end' }, { type:'ground', spanIndex:0 },
-          { type:'text', content:'.' },
+          { type:'text', content:'Therefore, only ' },
+          { type:'span_start', spanIndex:2 }, { type:'text', content:'Team Aurora' }, { type:'span_end' }, { type:'ground', spanIndex:2 },
+          { type:'text', content:' (see ' },
+          { type:'span_start', spanIndex:3 }, { type:'text', content:'line' }, { type:'span_end' }, { type:'ground', spanIndex:3 },
+          { type:'text', content:') has an increasing trend.' },
         ]
-      }
+      },
     ]
   },
 
@@ -218,6 +231,70 @@ const DOCOG_EXAMPLES = [
           { type:'text', content:' + ' },
           { type:'span_start', spanIndex:4 }, { type:'text', content:'20' }, { type:'span_end' }, { type:'ground', spanIndex:4 },
           { type:'text', content:').' },
+        ]
+      }
+    ]
+  },
+
+  /* ════════════════════ 1. FOOD WEB ════════════════════ */
+  {
+    id: 'foodweb',
+    label: 'Food Web',
+    image: 'qual/qual_res_6_foodweb.png',
+    question: 'Who eats penguins?',
+
+    spans: [
+      { text: 'penguins', masks: [
+        { points:[[65.14,39.5],[65.05,38],[68.68,37.75],[68.95,37],[69.05,35.38],[69.95,33.63],[69.59,30.38],[69.32,27.38],[69.41,23.75],[69.86,19],[72.41,15.13],[74.95,14.63],[75.68,16],[77.5,17.63],[77.59,18.5],[75.68,18.13],[75.05,18.5],[75.14,20],[77.05,26.88],[77.14,33.38],[76.14,34.38],[76.95,36.38],[76.14,37.13],[75.5,37.63],[77.23,37.88],[77.23,40.25],[72.77,40.63],[67.59,40.5]], bbox:{x:65.05,y:14.63,w:12.54,h:26} }
+      ] },
+      { text: 'arrows from penguins', masks: [
+        { points:[[60.59,25.75],[62.68,27.63],[63.32,26.75],[69.59,26.75],[69.68,25.37],[63.32,25.25],[63.41,24]], bbox:{x:60.59,y:24,w:9.09,h:3.63} },
+        { points:[[58.59,15.63],[59.32,19],[60.23,17.88],[68.95,23.88],[69.5,22.25],[61.14,16.63],[61.5,15.75]], bbox:{x:58.59,y:15.63,w:10.91,h:8.25} }
+      ] },
+      { text: 'smaller toothed whales', masks: [
+        { points:[[30.5,14],[33.95,10.13],[39.59,7.12],[39.77,1.75],[41.5,1.75],[42.77,6.25],[49.68,5.25],[50.95,6.13],[54.05,5.63],[53.14,7.25],[53.86,9.13],[54.32,10.75],[53.77,11.75],[51.32,9.63],[51.14,8.63],[45.95,11.63],[44.32,12.88],[62.77,12.5],[62.77,15.63],[55.5,15.75],[55.59,19.5],[46.41,19.5],[46.5,15.88],[42.59,15.75],[42.05,14.37],[39.41,15.5],[39.23,17.38],[36.68,17.88],[35.41,16.25],[32.23,16.88]], bbox:{x:30.5,y:1.75,w:32.27,h:17.75} }
+      ] },
+      { text: 'leopard seal', masks: [
+        { points:[[38.23,26.88],[41.86,25.75],[42.59,24.5],[43.5,25.5],[46.95,23.13],[48.41,23.13],[51.95,21.88],[56.14,23.25],[58.05,22.38],[59.59,24.25],[61.32,23.63],[60.95,25],[60.77,27],[59.68,27.5],[60.5,28.63],[60.86,29.88],[59.5,31],[58.14,30.63],[57.68,31.25],[60.86,31.87],[60.95,34.63],[44.95,34.88],[44.5,32.38],[44.77,30.63],[45.59,31.5],[53.23,31.75],[52.14,30.75],[48.05,30.63],[48.05,30.63]], bbox:{x:38.23,y:21.88,w:23.09,h:13} }
+      ] },
+    ],
+
+    steps: [
+      {
+        label: 'S1',
+        tokens: [
+          { type:'text', content:'Look at the ' },
+          { type:'span_start', spanIndex:0 }, { type:'text', content:'penguins' }, { type:'span_end' }, { type:'ground', spanIndex:0 },
+          { type:'text', content:'.' },
+        ]
+      },
+      {
+        label: 'S2',
+        tokens: [
+          { type:'text', content:'Look at out ' },
+          { type:'span_start', spanIndex:1 }, { type:'text', content:'arrows from penguins' }, { type:'span_end' }, { type:'ground', spanIndex:1 },
+          { type:'text', content:'.' },
+        ]
+      },
+      {
+        label: 'S3',
+        tokens: [
+          { type:'text', content:'It points to ' },
+          { type:'span_start', spanIndex:2 }, { type:'text', content:'smaller toothed whales' }, { type:'span_end' }, { type:'ground', spanIndex:2 },
+          { type:'text', content:' and ' },
+          { type:'span_start', spanIndex:3 }, { type:'text', content:'leopard seal' }, { type:'span_end' }, { type:'ground', spanIndex:3 },
+          { type:'text', content:'.' },
+        ]
+      },
+      {
+        label: 'Sf',
+        tokens: [
+          { type:'span_start', spanIndex:2 }, { type:'text', content:'Smaller toothed whales' }, { type:'span_end' }, { type:'ground', spanIndex:2 },
+          { type:'text', content:' and ' },
+          { type:'span_start', spanIndex:3 }, { type:'text', content:'leopard seal' }, { type:'span_end' }, { type:'ground', spanIndex:3 },
+          { type:'text', content:' eats ' },
+          { type:'span_start', spanIndex:0 }, { type:'text', content:'penguins' }, { type:'span_end' }, { type:'ground', spanIndex:0 },
+          { type:'text', content:'.' },
         ]
       }
     ]
@@ -515,83 +592,6 @@ const DOCOG_EXAMPLES = [
   },
 
 
-  /* ══════════════════════ 7. TEAM SCORE ══════════════════════ */
-  {
-    id: 'teamscore',
-    label: 'Teamscore',
-    image: 'qual/qual_res_8_teamscore.png',
-    question: 'From Round 3 to Round 4, which team has an increasing trend?',
-
-    spans: [
-      // one span = one mask = one GND token
-      { text: 'Round 3 label', masks: [
-        { points:[[41.59,87.66],[43.77,93.46],[63.41,81.96],[60.23,76.58]], bbox:{x:41.59,y:76.58,w:21.82,h:16.88} }
-      ] },  // 0
-      { text: 'Round 4 label', masks: [
-        { points:[[60.14,87.76],[77.86,77.74],[80.5,83.23],[62.41,92.83]], bbox:{x:60.14,y:77.74,w:20.36,h:15.09} }
-      ] },  // 1
-      { text: 'Team Aurora legend', masks: [
-        { points:[[14.05,14.35],[39.32,14.35],[39.32,18.57],[14.05,18.57]], bbox:{x:14.05,y:14.35,w:25.27,h:4.22} }
-      ] },  // 2
-      { text: 'Team Aurora line', masks: [
-        { points:[[51.77,33.33],[71.05,28.16],[72.32,29.96],[72.05,31.01],[51.95,36.39],[51.05,35.34]], bbox:{x:51.05,y:28.16,w:21.27,h:8.23} }
-      ] },  // 3
-      { text: 'Team Blaze legend', masks: [
-        { points:[[14.05,19.2],[38.23,19.2],[38.23,23.1],[14.05,23.1]], bbox:{x:14.05,y:19.2,w:24.18,h:3.9} }
-      ] },  // 4
-      { text: 'Team Blaze line', masks: [
-        { points:[[50.95,40.82],[52.32,37.34],[53.5,39.03],[70.14,43.67],[70.86,41.98],[72.32,45.68],[69.14,46.2],[69.59,44.51],[53.95,40.61],[53.77,41.35]], bbox:{x:50.95,y:37.34,w:21.37,h:8.86} }
-      ] },  // 5
-      { text: 'Team Dynamo legend', masks: [
-        { points:[[13.86,23.52],[41.05,23.52],[41.05,27.95],[13.86,27.95]], bbox:{x:13.86,y:23.52,w:27.19,h:4.43} }
-      ] },  // 6
-      { text: 'Team Dynamo line', masks: [
-        { points:[[50.41,44.3],[52.77,41.88],[54.5,43.99],[54.32,44.83],[69.95,54.85],[70.95,53.8],[72.86,56.54],[70.77,58.33],[68.77,56.33],[68.5,55.59],[53.23,45.89],[52.23,46.31]], bbox:{x:50.41,y:41.88,w:22.45,h:16.45} }
-      ] },  // 7
-    ],
-
-    steps: [
-      {
-        label: 'S1',
-        tokens: [
-          { type:'text', content:'We first see ' },
-          { type:'span_start', spanIndex:0 }, { type:'text', content:'Round 3' }, { type:'span_end' }, { type:'ground', spanIndex:0 },
-          { type:'text', content:', ' },
-          { type:'span_start', spanIndex:1 }, { type:'text', content:'Round 4' }, { type:'span_end' }, { type:'ground', spanIndex:1 },
-          { type:'text', content:' labels.' },
-        ]
-      },
-      {
-        label: 'S2',
-        tokens: [
-          { type:'text', content:'In this transition, ' },
-          { type:'span_start', spanIndex:2 }, { type:'text', content:'Team Aurora' }, { type:'span_end' }, { type:'ground', spanIndex:2 },
-          { type:'text', content:' is increasing (see ' },
-          { type:'span_start', spanIndex:3 }, { type:'text', content:'line' }, { type:'span_end' }, { type:'ground', spanIndex:3 },
-          { type:'text', content:'), and ' },
-          { type:'span_start', spanIndex:4 }, { type:'text', content:'Team Blaze' }, { type:'span_end' }, { type:'ground', spanIndex:4 },
-          { type:'text', content:' (see ' },
-          { type:'span_start', spanIndex:5 }, { type:'text', content:'line' }, { type:'span_end' }, { type:'ground', spanIndex:5 },
-          { type:'text', content:'), ' },
-          { type:'span_start', spanIndex:6 }, { type:'text', content:'Team Dynamo' }, { type:'span_end' }, { type:'ground', spanIndex:6 },
-          { type:'text', content:' (see ' },
-          { type:'span_start', spanIndex:7 }, { type:'text', content:'line' }, { type:'span_end' }, { type:'ground', spanIndex:7 },
-          { type:'text', content:') are decreasing.' },
-        ]
-      },
-      {
-        label: 'Sf',
-        tokens: [
-          { type:'text', content:'Therefore, only ' },
-          { type:'span_start', spanIndex:2 }, { type:'text', content:'Team Aurora' }, { type:'span_end' }, { type:'ground', spanIndex:2 },
-          { type:'text', content:' (see ' },
-          { type:'span_start', spanIndex:3 }, { type:'text', content:'line' }, { type:'span_end' }, { type:'ground', spanIndex:3 },
-          { type:'text', content:') has an increasing trend.' },
-        ]
-      },
-    ]
-  },
-
   /* ══════════════════════ 8. FLOWCHART ══════════════════════ */
   {
     id: 'flowchart',
@@ -680,8 +680,7 @@ const DOCOG_EXAMPLES = [
         ]
       },
     ]
-  },
-
+  }
 ];
 
 /* ══════════════════════════════════════════════════════════

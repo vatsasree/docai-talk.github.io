@@ -18,12 +18,12 @@ between the four systems.
 | 3 | **REPLICA** title card with the team (closes Part 1, like the other paper cards) |  |
 | 4 | Bridge — from rebuilding to grounding (Part 2 of 2) |  |
 | 5–6 | The grounding problem — why grounding matters; boxes, and where they break |  |
-| 7–22 | **M3Grounder** — chain-two-tools (OCR errors), losses, Fid-HTML recap and engines, benchmark, results | CVPR 2026 |
-| 23–35 | **DoCoG** — the $27.50 bill, why GIM, training data, why preference training, building the pairs, drift + anchor, both pills | ECCV 2026 Spotlight |
-| 36–50 | **DocLayout-VL** — three problems (carousels), what a layout model needs (masks · open-set · tree · promptable), SAM for documents, tasks incl. a promptable prompt→result carousel, HGC examples, losses with the paper's figures, curriculum by data, HOPLay-Docs-Bench (four tracks), results | ECCV 2026 |
-| 51 | Three papers, one recipe (abstracted architectures) |  |
-| 52–54 | What made this possible · the frontier · what we learned |  |
-| 55 | Thank you |  |
+| 7–21 | **M3Grounder** — chain two tools (OCR → SAM), losses, data engine (Fid-HTML recap → why Fid-HTML → two ways; curved text; charts), benchmark, results | CVPR 2026 |
+| 22–34 | **DoCoG** — the Net Sales chain, the $27.50 bill, why GIM (where it sits + the HDFC Bank example), training data, why preference training, building the pairs (rewards), drift + anchor, results, examples (Teamscore first), what and where (the pills) | ECCV 2026 Spotlight |
+| 35–48 | **DocLayout-VL** — three problems (columns and carousels one at a time), what a layout model needs, SAM for documents, tasks A–D, architecture, HGC examples, losses, curriculum, HOPLay-Docs-Bench, results | ECCV 2026 |
+| 49 | Three papers, one recipe (abstracted architectures) |  |
+| 50–51 | What made this possible · the frontier, growing one paper at a time |  |
+| 52 | Thank you |  |
 
 **No ablations.** Ablation results (component removed or added, cumulative build-ups, data-scale studies) were taken out of every paper's slides, the hosted REPLICA deck included, on 2026-10-26. Don't reintroduce them; main results and baseline comparisons stay.
 

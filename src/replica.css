@@ -370,3 +370,15 @@
 /* a dashed outline inside a build-up draws when the build-up appears, not on slide entry */
 .slide.in .frag:not(.show) .draw{stroke-dashoffset:var(--len,700)}
 .bench.dl{background:var(--dlvl)}
+
+/* the wrong value, underlined in red */
+.ulbad{text-decoration:underline;text-decoration-color:#d03b3b;text-decoration-thickness:.35vh;text-underline-offset:.5vh}
+/* Morpheus offers the two pills; "both pills" then takes the same spot */
+.pillswap{display:grid;grid-template-rows:auto auto;gap:1.6vh;align-content:center}
+.pillswap .p1{transition:opacity .3s}
+.pillswap:has(.p2.show) .p1{opacity:0}
+/* the frontier, one paper at a time: only the newest "ours" outline stays */
+.frontier .blob{transition:opacity .5s}
+.frontier:has(.fs2.show) .fs1 .blob,
+.frontier:has(.fs3.show) :is(.fs1,.fs2) .blob,
+.frontier:has(.fs4.show) :is(.fs1,.fs2,.fs3) .blob{opacity:0}

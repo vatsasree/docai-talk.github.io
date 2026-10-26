@@ -643,7 +643,8 @@
   }).observe(sub, {attributes: true, attributeFilter: ['class']});
 })();
 
-/* ---------- image carousels (.cyc): auto-rotate while their slide is on screen ---------- */
+/* ---------- image carousels (.cyc): auto-rotate while their slide is on screen; when a slide
+   reveals its carousels one by one, only the newest one rotates and the earlier ones stop ---------- */
 (function(){
   document.querySelectorAll('.cyc').forEach(box => {
     const figs = [...box.querySelectorAll('figure')];
@@ -655,10 +656,16 @@
       if(dots) [...dots.children].forEach((d,i) => d.classList.toggle('on', i === k)); };
     show(0);
     const slide = box.closest('.slide'), ms = +box.dataset.interval || 3600;
-    const sync = () => { const on = slide.classList.contains('on');
-      if(on && !timer) timer = setInterval(() => show(k + 1), ms);
-      if(!on && timer){ clearInterval(timer); timer = null; show(0); } };
-    new MutationObserver(sync).observe(slide, {attributes:true, attributeFilter:['class']});
+    const shown = c => { const f = c.closest('.frag'); return !f || f.classList.contains('show'); };
+    const newest = () => { const all = [...slide.querySelectorAll('.cyc')];
+      return !all.slice(all.indexOf(box) + 1).some(c => c.closest('.frag') && shown(c)); };
+    let was = false;
+    const sync = () => { const on = slide.classList.contains('on'), live = on && shown(box) && newest();
+      if(live && !timer) timer = setInterval(() => show(k + 1), ms);
+      if(!live && timer){ clearInterval(timer); timer = null; }
+      if(was && !on) show(0);
+      was = on; };
+    new MutationObserver(sync).observe(slide, {attributes:true, attributeFilter:['class'], subtree:true});
     sync();
   });
 })();
