@@ -22,8 +22,8 @@ between the four systems.
 | 27–40 | **DoCoG** — the $27.50 bill, why GIM, training data, why preference training, building the pairs, drift + anchor, ablations, both pills | ECCV 2026 Spotlight |
 | 41–55 | **DocLayout-VL** — three problems (carousels), what a layout model needs (masks · open-set · tree · promptable), SAM for documents, tasks incl. a promptable prompt→result carousel, HGC examples, losses with the paper's figures, curriculum by data | ECCV 2026 |
 | 56 | Three papers, one recipe (abstracted architectures) |  |
-| 57–60 | What made this possible · design choices · the frontier · what we learned |  |
-| 61 | Thank you |  |
+| 57–59 | What made this possible · the frontier · what we learned |  |
+| 60 | Thank you |  |
 
 **The REPLICA half** is `replica/slides.html`, the ICDAR deck, loaded in hosted
 mode (`?host=1`): it hides its own counter, progress bar and controls and drops

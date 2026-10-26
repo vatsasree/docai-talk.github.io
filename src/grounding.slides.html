@@ -1435,47 +1435,6 @@
   <div class="footer"><span class="act">Synthesis</span><span>Data · compute · design</span></div>
 </section>
 
-<!-- ====== S1c · DESIGN CHOICES AND THEIR RECEIPTS ====== -->
-<section class="slide" style="--accent:var(--blue)">
-  <div class="kicker">Stepping back</div>
-  <h2>Design choices and their evidence</h2>
-  <div class="vc" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.2vw;align-items:stretch">
-    <div class="card casc" style="animation-delay:.05s;border-top:6px solid var(--m3)">
-      <h3 style="color:var(--m3)">M3Grounder · grounding F1</h3>
-      <table class="abl" style="font-size:1.75vh">
-        <tbody>
-          <tr><td>three granularity heads, not one</td><td>63.6 → <b>79.0</b></td></tr>
-          <tr><td>full fine-tune, not LoRA</td><td>61.5 → <b>79.0</b></td></tr>
-          <tr><td>the two document priors <span class="tiny">(phrase F1)</span></td><td>74.0 → <b>79.0</b></td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="card casc" style="animation-delay:.2s;border-top:6px solid var(--docog)">
-      <h3 style="color:var(--docog)">DoCoG · final-answer grounding</h3>
-      <table class="abl" style="font-size:1.75vh">
-        <tbody>
-          <tr><td>GIM between VLM and segmenter</td><td>69.6 → <b>81.9</b></td></tr>
-          <tr><td>anchor loss under DPO</td><td>41.7 → <b>81.9</b></td></tr>
-          <tr><td>full fine-tune, not LoRA</td><td>65.5 → <b>81.9</b></td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="card casc" style="animation-delay:.35s;border-top:6px solid var(--dlvl)">
-      <h3 style="color:var(--dlvl)">DocLayout-VL · Open mIoU, hierarchical track</h3>
-      <table class="abl" style="font-size:1.75vh">
-        <tbody>
-          <tr><td>tree-sparse attention (HGC)</td><td>58.3 → <b>77.5</b></td></tr>
-          <tr><td>structure-aware losses</td><td>72.3 → <b>77.5</b></td></tr>
-          <tr><td>mask head, not box regression</td><td>32.5 → <b>58.3</b></td></tr>
-          <tr><td>…on curved regions <span class="tiny">(curved track)</span></td><td>39.7 → <b>87.9</b></td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <p class="small frag" style="text-align:center;margin-top:.8vh">No tricks: document priors and training constraints natural-image grounders never needed — each measured.</p>
-  <div class="footer"><span class="act">Synthesis</span><span>Design choices</span></div>
-</section>
-
 <!-- ====== S2 · THE FRONTIER ====== -->
 <section class="slide" style="--accent:var(--blue)">
   <div class="kicker">Where this takes the field</div>
