@@ -311,7 +311,7 @@
 
 /* ---- DoCoG: image carousel ---- */
 .cyc{position:relative;height:60vh;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
-.cyc figure{position:absolute;inset:0 0 4.4vh 0;margin:0;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transition:opacity .6s}
+.cyc figure{position:absolute;inset:0 0 4.4vh 0;margin:0;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transition:opacity .35s}
 .cyc figure.on{opacity:1}
 .cyc img{max-width:96%;max-height:calc(100% - 4vh);object-fit:contain}
 .cyc figcaption{font-size:1.9vh;font-weight:800;color:var(--docog);text-transform:uppercase;letter-spacing:.1em;margin-top:.6vh}
