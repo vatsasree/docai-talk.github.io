@@ -4986,18 +4986,6 @@
         </div>
       </section>
 
-      <!-- ═══════════ 22 · ABLATION (paper Table 3, as a chart) ═══════════ -->
-      <section class="slide vcenter" data-eyebrow="05 · Evaluation" data-frags="3" id="ablSlide"
-        data-notes="The ablation, built up cumulatively, and read on the same four axes as everything else — the navy line is Overall, gold is the visual-fidelity axis, violet is the physical-structure axis. The bands are our own four stages. Three stages, three numbers, and they add up: 0.53 at the start, 0.93 at the end. [CLICK] Stage one, Segment: hierarchical layout, Hi-SAM and Set-of-Mark take us from 0.53 to 0.71 — plus eighteen. Notice it is the physical-structure line that climbs, 0.34 to 0.69: better segmentation buys geometry. [CLICK] Stage two, Localize: 0.71 to 0.86, plus fifteen. And here is the part that matters — a single monolithic generator only reaches 0.76. The remaining ten points come from routing to six specialists, at the same model size. That is the agentic decomposition paying for itself. [CLICK] Stage four, Refine: 0.86 to 0.93, plus seven, with visual fidelity reaching 0.97. Eighteen, fifteen, seven — forty points in total, and the two biggest are decomposition and looking at the render. Assemble has no row of its own here: it is not optional, so there is nothing to ablate.">
-        <div class="kicker"> &nbsp;&nbsp; <span class="chint"></span></div>
-        <h2>Ablation studies <span class="srcnote"></span></h2>
-        <div class="slide-body">
-          <div class="ablwrap"><svg id="ablChart" viewBox="0 0 1700 706"
-              aria-label="Cumulative ablation: overall score, visual fidelity and global position across the four stages"></svg>
-          </div>
-        </div>
-      </section>
-
       <!-- ═══════════ QUALITATIVE ═══════════ -->
       <section class="slide" data-frags="4" data-eyebrow="05 · Evaluation" id="qualSlide"
         data-notes="Spot the difference. On the left the source scan; on the right REPLICA's Fid-HTML rendered live by your browser — real selectable text and real inline CSS, not an image of our output. Both sides are forced into the same rectangle, so any size difference you see would be a real layout error. [CLICK] A government notice with a table, in Gujarati. [CLICK] A dense receipt — small type, faint scan. [CLICK] A multi-column magazine spread. [CLICK] And a scientific paper with equations and figures. In every case the column boundaries, typography and spatial layout survive.">

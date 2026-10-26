@@ -19,11 +19,13 @@ between the four systems.
 | 4 | Bridge — from rebuilding to grounding (Part 2 of 2) |  |
 | 5–8 | The grounding problem |  |
 | 9–26 | **M3Grounder** — chain-two-tools (OCR errors), losses, Fid-HTML recap and engines, benchmark, results, why not LISA | CVPR 2026 |
-| 27–40 | **DoCoG** — the $27.50 bill, why GIM, training data, why preference training, building the pairs, drift + anchor, ablations, both pills | ECCV 2026 Spotlight |
-| 41–55 | **DocLayout-VL** — three problems (carousels), what a layout model needs (masks · open-set · tree · promptable), SAM for documents, tasks incl. a promptable prompt→result carousel, HGC examples, losses with the paper's figures, curriculum by data | ECCV 2026 |
-| 56 | Three papers, one recipe (abstracted architectures) |  |
-| 57–59 | What made this possible · the frontier · what we learned |  |
-| 60 | Thank you |  |
+| 27–39 | **DoCoG** — the $27.50 bill, why GIM, training data, why preference training, building the pairs, drift + anchor, both pills | ECCV 2026 Spotlight |
+| 40–53 | **DocLayout-VL** — three problems (carousels), what a layout model needs (masks · open-set · tree · promptable), SAM for documents, tasks incl. a promptable prompt→result carousel, HGC examples, losses with the paper's figures, curriculum by data | ECCV 2026 |
+| 54 | Three papers, one recipe (abstracted architectures) |  |
+| 55–57 | What made this possible · the frontier · what we learned |  |
+| 58 | Thank you |  |
+
+**No ablations.** Ablation results (component removed or added, cumulative build-ups, data-scale studies) were taken out of every paper's slides, the hosted REPLICA deck included, on 2026-10-26. Don't reintroduce them; main results and baseline comparisons stay.
 
 **The REPLICA half** is `replica/slides.html`, the ICDAR deck, loaded in hosted
 mode (`?host=1`): it hides its own counter, progress bar and controls and drops

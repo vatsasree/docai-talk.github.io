@@ -345,7 +345,6 @@
       <h3>𝓛<sub>bleed</sub> · bleed suppression</h3>
       <p class="small">SAM spills onto icons and graphics. Penalise every predicted mask pixel outside the ground-truth text.</p>
       <div class="lossimg"><img src="grounding/assets/m3_loss_bleed_ex.png" alt="The mask for '1 billion active users' spills onto the Facebook bar; the spill is penalised"></div>
-      <div class="lossnum"><b>84.4 → 86.5</b> block-level F1 on GDQA-Bench</div>
     </div>
     <div class="card losscard frag" style="--lc:#05539C">
       <h3>𝓛<sub>hier</sub> · hierarchical enclosure</h3>
@@ -354,10 +353,8 @@
         <img src="grounding/assets/m3_loss_hier_phrase.png" alt="A phrase mask overflowing beyond its line">
         <img src="grounding/assets/m3_loss_hier_line.png" alt="A line mask overflowing beyond its block, into the next column">
       </div>
-      <div class="lossnum"><b>74.0 → 78.2</b> phrase-level F1 on GDQA-Bench</div>
     </div>
   </div>
-  <p class="small frag" style="text-align:center;margin-top:1vh">Both together: <b>74.0 → 79.0</b> phrase-level F1.</p>
   <div class="footer"><span class="act">Paper 1</span><span>Document priors</span></div>
 </section>
 
@@ -727,8 +724,6 @@
         <div class="mot prob"><h4>Grounding alone</h4><p>a mask for “$27.50” has <b>nothing to point to</b></p></div>
         <div class="mot prob"><h4>Chain-of-thought alone</h4><p>“the cost is $50” can’t be checked without knowing <b>which cell</b> it read</p></div>
       </div>
-      <div class="keyidea frag" style="--accent:var(--docog)"><span class="tag">on DoCoG-Bench · answer / grounding</span>
-        <p>CoT only <b>78.1 / —</b> &nbsp;·&nbsp; answer-only grounding <b>73.3 / 69.3</b> &nbsp;·&nbsp; CoT + answer grounding <b>81.5 / 77.8</b> &nbsp;·&nbsp; every reading step grounded <b>84.1 / 80.3</b> &nbsp;·&nbsp; + preference training <b>85.8 / 81.9</b></p></div>
     </div>
   </div>
   <div class="footer"><span class="act">Paper 2</span><span>Why both</span></div>
@@ -784,10 +779,6 @@
     <div style="font-size:3vh;font-weight:800;color:var(--docog)">GIM</div>
     <div><b>Self-attention</b> among the [GND] tokens<div class="small">the pointers see each other, so they stay consistent</div></div>
     <div><b>Cross-attention</b> to the segmenter’s image features<div class="small">each pointer is anchored in the segmenter’s view of the page</div></div>
-  </div>
-  <div class="statrow frag" style="grid-auto-flow:column;margin-top:1.4vh">
-    <div class="stat"><div class="v bad" style="font-size:3.6vh">81.9 → 69.6</div><div class="l">final-answer grounding without GIM</div></div>
-    <div class="stat"><div class="v bad" style="font-size:3.6vh">81.9 → 77.0</div><div class="l">with GIM, but no image cross-attention</div></div>
   </div>
   <div class="footer"><span class="act">Paper 2</span><span>GIM</span></div>
 </section>
@@ -874,7 +865,6 @@
   </div>
   <div class="statrow frag" style="grid-auto-flow:column;margin-top:1vh">
     <div class="stat"><div class="v" style="font-size:3.6vh">20K</div><div class="l">preference pairs · DoCoG-PQA</div></div>
-    <div class="stat"><div class="v" style="font-size:3.6vh">74.0 → 85.5</div><div class="l">FlowVQA accuracy · its largest gain</div></div>
   </div>
   <div class="footer"><span class="act">Paper 2</span><span>DoCoG-PQA</span></div>
 </section>
@@ -904,10 +894,6 @@
       <text x="490" y="372" text-anchor="middle" font-size="14.5" fill="#8a4b00">keep each GIM-refined [GND] embedding close to its value in the SFT model</text>
     </g>
   </svg>
-  </div>
-  <div class="statrow" style="grid-auto-flow:column;margin:0">
-    <div class="stat frag"><div class="v bad" style="font-size:3.4vh">81.9 → 41.7</div><div class="l">final-answer grounding, without the anchor</div></div>
-    <div class="stat frag"><div class="v" style="font-size:3.4vh">84.1 → 85.8</div><div class="l">answer quality with the anchor · grounding kept at 81.9</div></div>
   </div>
   <div class="footer"><span class="act">Paper 2</span><span>DPO + anchor</span></div>
 </section>
@@ -950,23 +936,6 @@
     </div>
   </div>
   <div class="footer"><span class="act">Paper 2</span><span>Main results</span></div>
-</section>
-
-<!-- ====== D11b · ABLATIONS, SORTED ====== -->
-<section class="slide" style="--accent:var(--docog)">
-  <div class="kicker">Paper 2 · Ablations · DoCoG-Bench</div>
-  <h2>Which design choices mattered</h2>
-  <div class="abswap vc">
-    <div class="chartcard p1">
-      <h3><span class="mchip" style="background:#6d28d9">answer quality</span> drop when the piece is removed · full model 85.8</h3>
-      <svg viewBox="0 0 760 328" role="img" aria-label="Drop in answer quality per removed component"><text x="6" y="22" font-size="12.5" font-weight="800" fill="#8a97a5" letter-spacing=".06em">TRAINING</text><text x="300" y="46" text-anchor="end" font-size="14" font-weight="800" fill="#16222e">full fine-tune (vs LoRA)</text><path d="M310 32 h240.8 a4 4 0 0 1 4 4 v12 a4 4 0 0 1 -4 4 h-240.8 z" fill="#6d28d9"/><text x="558.8" y="47" font-size="14" font-weight="800" fill="#6d28d9">−17.2</text><text x="612.8" y="47" font-size="12" font-weight="800" fill="#6d28d9">biggest</text><text x="300" y="74" text-anchor="end" font-size="14" fill="#16222e">anchor loss</text><path d="M310 60 h107.8 a4 4 0 0 1 4 4 v12 a4 4 0 0 1 -4 4 h-107.8 z" fill="#c4b5fd"/><text x="425.8" y="75" font-size="14" fill="#16222e">−7.7</text><text x="300" y="102" text-anchor="end" font-size="14" fill="#16222e">preference training</text><path d="M310 88 h23.8 a4 4 0 0 1 4 4 v12 a4 4 0 0 1 -4 4 h-23.8 z" fill="#c4b5fd"/><text x="341.8" y="103" font-size="14" fill="#16222e">−1.7</text><text x="6" y="136" font-size="12.5" font-weight="800" fill="#8a97a5" letter-spacing=".06em">REASONING + GROUNDING</text><text x="300" y="160" text-anchor="end" font-size="14" font-weight="800" fill="#16222e">chain-of-thought</text><path d="M310 146 h175.0 a4 4 0 0 1 4 4 v12 a4 4 0 0 1 -4 4 h-175.0 z" fill="#6d28d9"/><text x="493.0" y="161" font-size="14" font-weight="800" fill="#6d28d9">−12.5</text><text x="547.0" y="161" font-size="12" font-weight="800" fill="#6d28d9">biggest</text><text x="300" y="188" text-anchor="end" font-size="14" fill="#16222e">any grounding</text><path d="M310 174 h107.8 a4 4 0 0 1 4 4 v12 a4 4 0 0 1 -4 4 h-107.8 z" fill="#c4b5fd"/><text x="425.8" y="189" font-size="14" fill="#16222e">−7.7</text><text x="300" y="216" text-anchor="end" font-size="14" fill="#16222e">ground every step (vs answer only)</text><path d="M310 202 h60.2 a4 4 0 0 1 4 4 v12 a4 4 0 0 1 -4 4 h-60.2 z" fill="#c4b5fd"/><text x="378.2" y="217" font-size="14" fill="#16222e">−4.3</text><text x="6" y="250" font-size="12.5" font-weight="800" fill="#8a97a5" letter-spacing=".06em">GIM</text><text x="300" y="274" text-anchor="end" font-size="14" fill="#16222e">GIM</text><path d="M310 260 h71.4 a4 4 0 0 1 4 4 v12 a4 4 0 0 1 -4 4 h-71.4 z" fill="#c4b5fd"/><text x="389.4" y="275" font-size="14" fill="#16222e">−5.1</text><text x="300" y="302" text-anchor="end" font-size="14" fill="#16222e">GIM image attention</text><path d="M310 288 h36.4 a4 4 0 0 1 4 4 v12 a4 4 0 0 1 -4 4 h-36.4 z" fill="#c4b5fd"/><text x="354.4" y="303" font-size="14" fill="#16222e">−2.6</text></svg>
-    </div>
-    <div class="chartcard p2 frag">
-      <h3><span class="mchip" style="background:#c2410c">final-answer grounding</span> drop when the piece is removed · full model 81.9</h3>
-      <svg viewBox="0 0 760 328" role="img" aria-label="Drop in final-answer grounding per removed component"><text x="6" y="22" font-size="12.5" font-weight="800" fill="#8a97a5" letter-spacing=".06em">TRAINING</text><text x="300" y="46" text-anchor="end" font-size="14" font-weight="800" fill="#16222e">anchor loss</text><path d="M310 32 h442.2 a4 4 0 0 1 4 4 v12 a4 4 0 0 1 -4 4 h-442.2 z" fill="#c2410c"/><text x="760.2" y="47" font-size="14" font-weight="800" fill="#c2410c">−40.2</text><text x="814.2" y="47" font-size="12" font-weight="800" fill="#c2410c">biggest</text><text x="300" y="74" text-anchor="end" font-size="14" font-weight="800" fill="#16222e">full fine-tune (vs LoRA)</text><path d="M310 60 h180.4 a4 4 0 0 1 4 4 v12 a4 4 0 0 1 -4 4 h-180.4 z" fill="#c2410c"/><text x="498.4" y="75" font-size="14" font-weight="800" fill="#c2410c">−16.4</text><text x="552.4" y="75" font-size="12" font-weight="800" fill="#c2410c">biggest</text><text x="300" y="102" text-anchor="end" font-size="14" fill="#16222e">preference training</text><path d="M310 88 h17.6 a4 4 0 0 1 4 4 v12 a4 4 0 0 1 -4 4 h-17.6 z" fill="#fdba74"/><text x="335.6" y="103" font-size="14" fill="#16222e">−1.6</text><text x="6" y="136" font-size="12.5" font-weight="800" fill="#8a97a5" letter-spacing=".06em">REASONING + GROUNDING</text><text x="300" y="160" text-anchor="end" font-size="14" fill="#16222e">chain-of-thought</text><path d="M310 146 h138.6 a4 4 0 0 1 4 4 v12 a4 4 0 0 1 -4 4 h-138.6 z" fill="#fdba74"/><text x="456.6" y="161" font-size="14" fill="#16222e">−12.6</text><text x="300" y="188" text-anchor="end" font-size="14" fill="#16222e">ground every step (vs answer only)</text><path d="M310 174 h45.1 a4 4 0 0 1 4 4 v12 a4 4 0 0 1 -4 4 h-45.1 z" fill="#fdba74"/><text x="363.1" y="189" font-size="14" fill="#16222e">−4.1</text><text x="6" y="222" font-size="12.5" font-weight="800" fill="#8a97a5" letter-spacing=".06em">GIM</text><text x="300" y="246" text-anchor="end" font-size="14" fill="#16222e">GIM</text><path d="M310 232 h135.3 a4 4 0 0 1 4 4 v12 a4 4 0 0 1 -4 4 h-135.3 z" fill="#fdba74"/><text x="453.3" y="247" font-size="14" fill="#16222e">−12.3</text><text x="300" y="274" text-anchor="end" font-size="14" fill="#16222e">GIM image attention</text><path d="M310 260 h53.9 a4 4 0 0 1 4 4 v12 a4 4 0 0 1 -4 4 h-53.9 z" fill="#fdba74"/><text x="371.9" y="275" font-size="14" fill="#16222e">−4.9</text></svg>
-    </div>
-  </div>
-  <div class="footer"><span class="act">Paper 2</span><span>Ablations</span></div>
 </section>
 
 <!-- ====== D12 · QUAL ====== -->
@@ -1245,7 +1214,6 @@
     <div style="display:flex;flex-direction:column;gap:1.6vh">
       <div class="card"><p class="small">Each <span class="tok l">[LAY]</span> attends only to its <b>parent, children and siblings</b> — the coloured blocks in the mask.</p></div>
       <div class="card"><p class="small">So a headline stays with <i>its</i> article, an item with <i>its</i> menu section — regions of different branches never merge.</p></div>
-      <div class="stat frag"><div class="v" style="font-size:3.6vh">58.3 → 77.5</div><div class="l">hierarchical-track Open mIoU, without → with HGC</div></div>
     </div>
   </div>
   <div class="footer"><span class="act">Paper 3</span><span>HGC</span></div>
@@ -1277,13 +1245,11 @@
         <img src="grounding/assets/dlvl_loss_contain.jpg" alt="A predicted child mask bleeding outside its ground-truth parent is penalised">
         <img src="grounding/assets/dlvl_loss_overlap.jpg" alt="A predicted sibling mask bleeding into its neighbouring sibling is penalised">
       </div>
-      <div class="lossnum"><b>72.3 → 77.5</b> hierarchical-track Open mIoU</div>
     </div>
     <div class="card losscard frag" style="--lc:#c2410c">
       <h3>𝓛<sub>bg</sub> · no mask on empty page</h3>
       <p class="small">Every predicted pixel outside the page’s ground-truth foreground — whitespace and background — is penalised.</p>
       <div class="lossimg"><img src="grounding/assets/dlvl_loss_bg.jpg" alt="Predicted masks bleeding into the background are penalised"></div>
-      <div class="lossnum"><b>69.2 → 72.3</b> hierarchical-track Open mIoU</div>
     </div>
   </div>
   <p class="small frag" style="text-align:center;margin-top:1vh">M3Grounder’s two priors, now on a tree: enclosure → containment, bleed → background.</p>
@@ -1311,7 +1277,6 @@
       <p class="small">learn to be asked · “segment only the Hindi text”</p>
     </div>
   </div>
-  <p class="small frag" style="text-align:center;margin-top:1.2vh">Train the three jointly instead: overall 79.4 → 76.3, hierarchy 77.5 → 68.7.</p>
   <div class="footer"><span class="act">Paper 3</span><span>Curriculum</span></div>
 </section>
 
@@ -1345,35 +1310,6 @@
     </div>
   </div>
   <div class="footer"><span class="act">Paper 3</span><span>Main results</span></div>
-</section>
-
-<!-- ====== L14 · WHAT MATTERS MORE ====== -->
-<section class="slide" style="--accent:var(--dlvl)">
-  <div class="kicker">Paper 3 · One question we kept being asked</div>
-  <h2>What matters more — <span class="k">architecture</span>, or <span class="k">scale of data</span>?</h2>
-  <div class="vc" style="display:flex;flex:1;align-items:center;justify-content:center">
-    <div class="chartcard frag" style="width:76%">
-      <h3>Hierarchy quality vs training-data fraction (Qwen3-VL-8B backbone)</h3><p class="sub">Open mIoU, hierarchical track · one component added at a time · 25%, 50%, 100% data</p>
-      <svg viewBox="0 0 784 370" role="img" aria-label="Slopegraph: configurations at 25, 50 and 100 percent of the data">
-        <text x="640" y="30" font-size="13.5" fill="#b42318" font-weight="700">the gap never closes</text>
-        <g stroke="#e1e0d9" stroke-width="1"><line x1="140" y1="40" x2="140" y2="340"/><line x1="320" y1="40" x2="320" y2="340"/><line x1="500" y1="40" x2="500" y2="340"/></g>
-        <g font-size="13.5" fill="#52514e" text-anchor="middle"><text x="140" y="362">25% data</text><text x="320" y="362">50%</text><text x="500" y="362">100% data</text></g>
-        <g stroke-linecap="round">
-          <polyline class="draw" style="--len:420" points="140 254.8 320 249.7 500 242.5" fill="none" stroke="#a5b2be" stroke-width="2" stroke-linejoin="round"/><polyline class="draw" style="--len:420" points="140 197.2 320 180.7 500 165.1" fill="none" stroke="#7d8b99" stroke-width="2" stroke-linejoin="round"/><polyline class="draw" style="--len:420" points="140 160.6 320 142.9 500 132.4" fill="none" stroke="#566573" stroke-width="2" stroke-linejoin="round"/><polyline class="draw" style="--len:420" points="140 149.5 320 129.4 500 107.5" fill="none" stroke="#0E7C61" stroke-width="3.5" stroke-linejoin="round"/>
-        </g>
-        <g stroke="#fff" stroke-width="2">
-          <circle cx="140" cy="254.8" r="5" fill="#a5b2be"/><circle cx="320" cy="249.7" r="5" fill="#a5b2be"/><circle cx="500" cy="242.5" r="5" fill="#a5b2be"/><circle cx="140" cy="197.2" r="5" fill="#7d8b99"/><circle cx="320" cy="180.7" r="5" fill="#7d8b99"/><circle cx="500" cy="165.1" r="5" fill="#7d8b99"/><circle cx="140" cy="160.6" r="5" fill="#566573"/><circle cx="320" cy="142.9" r="5" fill="#566573"/><circle cx="500" cy="132.4" r="5" fill="#566573"/><circle cx="140" cy="149.5" r="6.5" fill="#0E7C61"/><circle cx="320" cy="129.4" r="6.5" fill="#0E7C61"/><circle cx="500" cy="107.5" r="6.5" fill="#0E7C61"/>
-        </g>
-        <g font-size="13.5" fill="#16222e">
-          <text x="512" y="247.5">VLM only (boxes) · 32.5</text><text x="128" y="259.8" text-anchor="end">28.4</text><text x="512" y="170.1">+ SAM head · 58.3</text><text x="128" y="202.2" text-anchor="end">47.6</text><text x="512" y="137.4">+ HGC · 69.2</text><text x="128" y="170" text-anchor="end">59.8</text><text x="512" y="112.5" font-weight="700">full (+ structure losses) · 77.5</text><text x="128" y="147" text-anchor="end">63.5</text>
-        </g>
-        <path d="M732 242.5 v-127.0" stroke="#b42318" stroke-width="2" marker-end="url(#arr8)" stroke-dasharray="6 4"/>
-        <defs><marker id="arr8" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#b42318"/></marker></defs>
-      </svg>
-      <p class="small" style="text-align:center;margin-top:.4vh"><b>Both — but architecture wins.</b></p>
-    </div>
-  </div>
-  <div class="footer"><span class="act">Paper 3</span><span>Architecture vs data</span></div>
 </section>
 
 <!-- ====== L16 · DLVL PAPER CARD ====== -->
