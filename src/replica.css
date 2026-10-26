@@ -354,3 +354,15 @@
 .growc{transform-box:view-box;transform-origin:480px 215px;transform:scale(.05);transition:transform 1.1s cubic-bezier(.2,.8,.2,1) var(--d,0s)}
 .slide.on .growc{transform:scale(1)}
 .slide.on .frag:not(.show) .growc{transform:scale(.05)}
+
+/* ---- promptable carousel: prompt on the left, result on the right ---- */
+.pcyc figure.pframe{inset:0 0 4.4vh 0;flex-direction:row;align-items:center;gap:2vw;padding:2vh 2vw}
+.pcyc .pq{flex:0 0 38%;display:flex;flex-direction:column;gap:2vh}
+.pcyc .pin{position:relative;background:#e9f2ef;border:2px solid var(--dlvl);border-radius:16px;padding:2vh 1.6vw;font-size:2.5vh;font-weight:700;color:#16222e;line-height:1.35}
+.pcyc .pin::before{content:"prompt";position:absolute;top:-1.5vh;left:1.2vw;background:var(--dlvl);color:#fff;font-size:1.5vh;font-weight:800;letter-spacing:.08em;text-transform:uppercase;border-radius:999px;padding:.2vh .9vh}
+.pcyc .pout{font-size:2vh;color:#33424f;line-height:1.45}
+.pcyc .pout span{display:block;font-size:1.6vh;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--dlvl);margin-bottom:.4vh}
+.pcyc img{flex:1;min-width:0;max-height:100%;max-width:none;object-fit:contain}
+.needcard .small{margin:0}
+/* paper cards: keep the title clear of the conference logo */
+.divider:has(.venuelogo) > h2, .divider:has(.venuelogo) > p{max-width:calc(100% - 22vw)}

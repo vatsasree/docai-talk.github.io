@@ -14,13 +14,13 @@ between the four systems.
 | Slides | Part | |
 |---|---|---|
 | 1 | Title — *Grounding, Reasoning, and Structure with Multimodal Foundation Models* |  |
-| 2 | **REPLICA** title card with the team | ICDAR 2026 Oral |
-| 3 | **REPLICA** — the ICDAR deck, hosted full-screen |  |
+| 2 | **REPLICA** — the ICDAR deck, hosted full-screen | ICDAR 2026 Oral |
+| 3 | **REPLICA** title card with the team (closes Part 1, like the other paper cards) |  |
 | 4 | Bridge — from rebuilding to grounding (Part 2 of 2) |  |
 | 5–8 | The grounding problem |  |
 | 9–26 | **M3Grounder** — chain-two-tools (OCR errors), losses, Fid-HTML recap and engines, benchmark, results, why not LISA | CVPR 2026 |
 | 27–40 | **DoCoG** — the $27.50 bill, why GIM, training data, why preference training, building the pairs, drift + anchor, ablations, both pills | ECCV 2026 Spotlight |
-| 41–55 | **DocLayout-VL** — three problems (carousels), what a layout model needs, SAM for documents, tasks, HGC examples, curriculum by data | ECCV 2026 |
+| 41–55 | **DocLayout-VL** — three problems (carousels), what a layout model needs (masks · open-set · tree · promptable), SAM for documents, tasks incl. a promptable prompt→result carousel, HGC examples, losses with the paper's figures, curriculum by data | ECCV 2026 |
 | 56 | Three papers, one recipe (abstracted architectures) |  |
 | 57–60 | What made this possible · design choices · the frontier · what we learned |  |
 | 61 | Thank you |  |
